@@ -1,3 +1,3 @@
-defmodule Elasticsearcher.Test.Cluster do
-  use Elasticsearcher.Cluster, otp_app: :elasticsearcher
+defmodule Snap.Test.Cluster do
+  use Snap.Cluster, otp_app: :snap
 end

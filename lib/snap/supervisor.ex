@@ -1,4 +1,4 @@
-defmodule Elasticsearcher.Cluster.Supervisor do
+defmodule Snap.Cluster.Supervisor do
   use Supervisor
   @timeout 60_000
 
@@ -7,15 +7,11 @@ defmodule Elasticsearcher.Cluster.Supervisor do
   end
 
   def with_connection(cluster, fun) do
-    :poolboy.transaction(
-      pool_name(cluster),
-      fun,
-      @timeout
-    )
+    :poolboy.transaction(pool_name(cluster), fun, @timeout)
   end
 
   def config(cluster) do
-    Elasticsearcher.Config.get(config_name(cluster))
+    Snap.Config.get(config_name(cluster))
   end
 
   ## Callbacks
@@ -29,7 +25,7 @@ defmodule Elasticsearcher.Cluster.Supervisor do
         poolboy_child_spec(cluster, config),
         poolboy_worker_args(config)
       ),
-      {Elasticsearcher.Config, {config_name(cluster), config}}
+      {Snap.Config, {config_name(cluster), config}}
     ]
 
     Supervisor.init(children, strategy: :one_for_one)
@@ -41,7 +37,7 @@ defmodule Elasticsearcher.Cluster.Supervisor do
 
     [
       name: {:local, pool_name(cluster)},
-      worker_module: Elasticsearcher.Connection,
+      worker_module: Snap.Connection,
       size: size,
       overflow: overflow
     ]

@@ -1,10 +1,10 @@
 defmodule ElasticsearcherTest do
   use ExUnit.Case
 
-  alias Elasticsearcher.Test.Cluster
+  alias Snap.Test.Cluster
 
   test "getting server status" do
-    {:ok, %{"status" => status}} = Elasticsearcher.get(Cluster, "/_cluster/health")
+    {:ok, %{"status" => status}} = Snap.get(Cluster, "/_cluster/health")
     assert not is_nil(status)
   end
 

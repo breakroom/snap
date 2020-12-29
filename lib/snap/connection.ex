@@ -1,4 +1,4 @@
-defmodule Elasticsearcher.Connection do
+defmodule Snap.Connection do
   use GenServer
 
   require Logger

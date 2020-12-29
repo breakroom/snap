@@ -1,4 +1,4 @@
-defmodule Elasticsearcher.Cluster do
+defmodule Snap.Cluster do
   defmacro __using__(opts) do
     quote do
       def init(config) do
@@ -8,11 +8,11 @@ defmodule Elasticsearcher.Cluster do
       defoverridable init: 1
 
       def with_connection(fun) do
-        Elasticsearcher.Cluster.Supervisor.with_connection(__MODULE__, fun)
+        Snap.Cluster.Supervisor.with_connection(__MODULE__, fun)
       end
 
       def config() do
-        Elasticsearcher.Cluster.Supervisor.config(__MODULE__)
+        Snap.Cluster.Supervisor.config(__MODULE__)
       end
 
       def child_spec(opts) do
@@ -27,7 +27,7 @@ defmodule Elasticsearcher.Cluster do
         otp_app = unquote(opts[:opt_app])
         config = Application.get_env(otp_app, __MODULE__, config)
 
-        Elasticsearcher.Cluster.Supervisor.start_link(__MODULE__, otp_app, config)
+        Snap.Cluster.Supervisor.start_link(__MODULE__, otp_app, config)
       end
     end
   end

@@ -1,7 +1,7 @@
-defmodule Elasticsearcher do
+defmodule Snap do
   def get(cluster, path) do
     cluster.with_connection(fn pid ->
-      Elasticsearcher.Connection.request(pid, "GET", path, [], nil)
+      Snap.Connection.request(pid, "GET", path, [], nil)
     end)
     |> parse_response()
   end

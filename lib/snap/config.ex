@@ -1,4 +1,4 @@
-defmodule Elasticsearcher.Config do
+defmodule Snap.Config do
   use GenServer
 
   def start_link({name, config}) do
