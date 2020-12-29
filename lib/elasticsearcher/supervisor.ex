@@ -48,7 +48,7 @@ defmodule Elasticsearcher.Cluster.Supervisor do
   end
 
   defp poolboy_worker_args(config) do
-    url = Map.get(config, :url, "http://localhost:9200")
+    url = Map.fetch!(config, :url)
     %URI{host: host, port: port, scheme: scheme} = URI.parse(url)
     scheme = String.to_atom(scheme)
 
