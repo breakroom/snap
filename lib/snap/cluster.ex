@@ -15,6 +15,10 @@ defmodule Snap.Cluster do
         Snap.Cluster.Supervisor.config(__MODULE__)
       end
 
+      def otp_app() do
+        unquote(opts[:otp_app])
+      end
+
       def child_spec(opts) do
         %{
           id: __MODULE__,
@@ -24,8 +28,10 @@ defmodule Snap.Cluster do
       end
 
       def start_link(config \\ []) do
-        otp_app = unquote(opts[:opt_app])
+        otp_app = unquote(opts[:otp_app])
         config = Application.get_env(otp_app, __MODULE__, config)
+
+        {:ok, config} = init(config)
 
         Snap.Cluster.Supervisor.start_link(__MODULE__, otp_app, config)
       end

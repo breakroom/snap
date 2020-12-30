@@ -28,7 +28,8 @@ defmodule Snap.MixProject do
       {:mint, "~> 1.0"},
       {:castore, "~> 0.1.0"},
       {:poolboy, "~> 1.5.1"},
-      {:jason, "~> 1.0"}
+      {:jason, "~> 1.0"},
+      {:telemetry, "~> 0.4"}
     ]
   end
 end
