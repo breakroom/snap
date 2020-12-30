@@ -1,6 +1,8 @@
 defmodule Snap.Cluster.Supervisor do
   use Supervisor
   @timeout 60_000
+  @default_pool_size 5
+  @default_pool_overflow 2
 
   def start_link(cluster, otp_app, config) do
     Supervisor.start_link(__MODULE__, {cluster, otp_app, config}, name: cluster)
@@ -32,8 +34,8 @@ defmodule Snap.Cluster.Supervisor do
   end
 
   defp poolboy_child_spec(cluster, config) do
-    size = Map.get(config, :pool_size, 5)
-    overflow = Map.get(config, :pool_overflow, 2)
+    size = Map.get(config, :pool_size, @default_pool_size)
+    overflow = Map.get(config, :pool_overflow, @default_pool_overflow)
 
     [
       name: {:local, pool_name(cluster)},
