@@ -1,18 +1,27 @@
 defmodule Snap.Cluster do
   defmacro __using__(opts) do
     quote do
+      alias Snap.Cluster.Supervisor
+
       def init(config) do
         {:ok, config}
       end
 
       defoverridable init: 1
 
-      def with_connection(fun) do
-        Snap.Cluster.Supervisor.with_connection(__MODULE__, fun)
+      def request(method, path, headers, body \\ nil, opts \\ []) do
+        pool_name = Supervisor.connection_pool_name(__MODULE__)
+        config = Supervisor.config(__MODULE__)
+
+        root_url = Map.fetch!(config, :url)
+        url = URI.merge(root_url, path)
+        req = Finch.build(method, url, headers, body)
+
+        Finch.request(req, pool_name, opts)
       end
 
       def config() do
-        Snap.Cluster.Supervisor.config(__MODULE__)
+        Supervisor.config(__MODULE__)
       end
 
       def otp_app() do
@@ -33,7 +42,7 @@ defmodule Snap.Cluster do
 
         {:ok, config} = init(config)
 
-        Snap.Cluster.Supervisor.start_link(__MODULE__, otp_app, config)
+        Supervisor.start_link(__MODULE__, otp_app, config)
       end
     end
   end

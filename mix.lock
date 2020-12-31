@@ -1,7 +1,10 @@
 %{
   "castore": {:hex, :castore, "0.1.8", "1b61eaba71bb755b756ac42d4741f4122f8beddb92456a84126d6177ec0af1fc", [:mix], [], "hexpm", "23ab8305baadb057bc689adc0088309f808cb2247dc9a48b87849bb1d242bb6c"},
+  "finch": {:hex, :finch, "0.6.0", "b2d5dc82603ee88bcd05ad06ee57ad2b3a07e0f9fdcd2a28087d8fb61e09aaf4", [:mix], [{:castore, "~> 0.1", [hex: :castore, repo: "hexpm", optional: false]}, {:mint, "~> 1.2", [hex: :mint, repo: "hexpm", optional: false]}, {:nimble_options, "~> 0.3.5", [hex: :nimble_options, repo: "hexpm", optional: false]}, {:nimble_pool, "~> 0.2", [hex: :nimble_pool, repo: "hexpm", optional: false]}, {:telemetry, "~> 0.4", [hex: :telemetry, repo: "hexpm", optional: false]}], "hexpm", "668692f629943711e935acc5c426d7ff5bbc391b162b27775dabbf0fbbb31dd6"},
   "jason": {:hex, :jason, "1.2.2", "ba43e3f2709fd1aa1dce90aaabfd039d000469c05c56f0b8e31978e03fa39052", [:mix], [{:decimal, "~> 1.0 or ~> 2.0", [hex: :decimal, repo: "hexpm", optional: true]}], "hexpm", "18a228f5f0058ee183f29f9eae0805c6e59d61c3b006760668d8d18ff0d12179"},
   "mint": {:hex, :mint, "1.2.0", "65e9d75c60c456a5fb1b800febb88f061f56157d103d755b99fcaeaeb3e956f3", [:mix], [{:castore, "~> 0.1.0", [hex: :castore, repo: "hexpm", optional: true]}], "hexpm", "19cbb3a5be91b7df4a35377ba94b26199481a541add055cf5d1d4299b55125ab"},
+  "nimble_options": {:hex, :nimble_options, "0.3.5", "a4f6820cdcb4ee444afd78635f323e58e8a5ddf2fbbe9b9d283a99f972034bae", [:mix], [], "hexpm", "f5507cc90033a8d12769522009c80aa9164af6bab245dbd4ad421d008455f1e1"},
+  "nimble_pool": {:hex, :nimble_pool, "0.2.3", "4b84df87cf8b40c7363782a99faad6aa2bb0811bcd3d275b5402ae4bab1f1251", [:mix], [], "hexpm", "a6bf677d3499ef1639c42bf16b8a72bf490f5fed70206d5851d43dd750c7eaca"},
   "poolboy": {:hex, :poolboy, "1.5.2", "392b007a1693a64540cead79830443abf5762f5d30cf50bc95cb2c1aaafa006b", [:rebar3], [], "hexpm", "dad79704ce5440f3d5a3681c8590b9dc25d1a561e8f5a9c995281012860901e3"},
   "telemetry": {:hex, :telemetry, "0.4.2", "2808c992455e08d6177322f14d3bdb6b625fbcfd233a73505870d8738a2f4599", [:rebar3], [], "hexpm", "2d1419bd9dda6a206d7b5852179511722e2b18812310d304620c7bd92a13fcef"},
 }

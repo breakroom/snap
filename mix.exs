@@ -25,9 +25,8 @@ defmodule Snap.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:mint, "~> 1.0"},
+      {:finch, "~> 0.6"},
       {:castore, "~> 0.1.0"},
-      {:poolboy, "~> 1.5.1"},
       {:jason, "~> 1.0"},
       {:telemetry, "~> 0.4"}
     ]

@@ -24,10 +24,10 @@ defmodule Snap do
 
   defp parse_response(response) do
     case response do
-      {:ok, %{data: data, status: status}} when status >= 200 and status < 300 ->
+      {:ok, %Finch.Response{body: data, status: status}} when status >= 200 and status < 300 ->
         Jason.decode(data)
 
-      {:ok, %{data: data}} ->
+      {:ok, %Finch.Response{body: data}} ->
         with {:ok, json} <- Jason.decode(data) do
           exception = Snap.Exception.exception_from_response(json)
           {:error, exception}
@@ -45,14 +45,10 @@ defmodule Snap do
     start_time = System.os_time()
 
     with {:ok, {method, path, headers, body}} <- auth.sign(config, method, path, headers, body) do
-      {response, queue_time, query_time} =
-        cluster.with_connection(fn pid ->
-          queue_time = System.os_time() - start_time
-          response = Snap.Connection.request(pid, method, path, headers, body)
-          query_time = System.os_time() - queue_time - start_time
+      queue_time = System.os_time() - start_time
 
-          {response, queue_time, query_time}
-        end)
+      response = cluster.request(method, path, headers, body, opts)
+      query_time = System.os_time() - queue_time - start_time
 
       result = parse_response(response)
 

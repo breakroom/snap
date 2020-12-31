@@ -44,7 +44,7 @@ defmodule Snap.Indexes do
     end
   end
 
-  def list(cluster, opts) do
+  def list(cluster, opts \\ []) do
     with {:ok, indexes} <- Snap.get(cluster, "/_cat/indices?format=json", opts) do
       indexes =
         indexes

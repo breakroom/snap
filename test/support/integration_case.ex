@@ -7,7 +7,7 @@ defmodule Snap.IntegrationCase do
 
   # Clean out any indexes remaining after each test run
   setup do
-    {:ok, indexes} = Snap.Indexes.list(Cluster, @prefix)
+    {:ok, indexes} = Snap.Indexes.list(Cluster)
 
     indexes
     |> Enum.filter(&String.starts_with?(&1, @prefix))
