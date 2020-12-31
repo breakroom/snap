@@ -1,5 +1,5 @@
 defmodule Snap.BulkTest do
-  use ExUnit.Case
+  use Snap.IntegrationCase
 
   alias Snap
   alias Snap.Bulk
@@ -8,9 +8,7 @@ defmodule Snap.BulkTest do
 
   describe "perform/4" do
     test "running actions in 2 chunks with no errors" do
-      index = "test"
-
-      Snap.put(Cluster, "/#{index}", %{})
+      {:ok, _} = Snap.Indexes.create(Cluster, @test_index, %{})
 
       doc = %{foo: "bar"}
 
@@ -23,15 +21,13 @@ defmodule Snap.BulkTest do
 
       result =
         actions
-        |> Bulk.perform(Cluster, index, page_size: 2, page_wait: 10)
+        |> Bulk.perform(Cluster, @test_index, page_size: 2, page_wait: 10)
 
       assert result == :ok
     end
 
     test "running actions in 2 chunks with an error" do
-      index = "test"
-
-      Snap.put(Cluster, "/#{index}", %{})
+      {:ok, _} = Snap.Indexes.create(Cluster, @test_index, %{})
 
       doc = %{foo: "bar"}
 
@@ -43,7 +39,7 @@ defmodule Snap.BulkTest do
 
       {:error, errors} =
         actions
-        |> Bulk.perform(Cluster, index, page_size: 2, page_wait: 10)
+        |> Bulk.perform(Cluster, @test_index, page_size: 2, page_wait: 10)
 
       assert Enum.count(errors) == 1
 

@@ -1,4 +1,4 @@
-defmodule ElasticsearcherTest do
+defmodule SnapTest do
   use ExUnit.Case
 
   alias Snap.Test.Cluster
@@ -8,14 +8,12 @@ defmodule ElasticsearcherTest do
     assert not is_nil(status)
   end
 
-  test "deleting a missing index" do
-    {:error, exception} = Snap.delete(Cluster, "/missing-index")
-    assert exception.status == 404
-    assert exception.type == "index_not_found_exception"
-  end
-
   test "getting config" do
     %{url: url} = Cluster.config()
     assert url == "http://localhost:9200"
+  end
+
+  test "getting otp_app" do
+    assert :snap == Cluster.otp_app()
   end
 end

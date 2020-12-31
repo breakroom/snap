@@ -1,25 +1,25 @@
 defmodule Snap do
   @default_headers [{"content-type", "application/json"}]
-  def get(cluster, path) do
-    signed_request(cluster, "GET", path, @default_headers, nil)
+  def get(cluster, path, opts \\ []) do
+    signed_request(cluster, "GET", path, @default_headers, nil, opts)
   end
 
-  def post(cluster, path, data) do
+  def post(cluster, path, data, opts \\ []) do
     body = encode_body(data)
-    signed_request(cluster, "POST", path, @default_headers, body)
+    signed_request(cluster, "POST", path, @default_headers, body, opts)
   end
 
-  def put(cluster, path, data) do
+  def put(cluster, path, data, opts \\ []) do
     body = encode_body(data)
-    signed_request(cluster, "PUT", path, @default_headers, body)
+    signed_request(cluster, "PUT", path, @default_headers, body, opts)
   end
 
-  def delete(cluster, path) do
-    signed_request(cluster, "DELETE", path, @default_headers, nil)
+  def delete(cluster, path, opts \\ []) do
+    signed_request(cluster, "DELETE", path, @default_headers, nil, opts)
   end
 
-  def request(cluster, method, path, headers, body) do
-    signed_request(cluster, method, path, headers, body)
+  def request(cluster, method, path, headers, body, opts \\ []) do
+    signed_request(cluster, method, path, headers, body, opts)
   end
 
   defp parse_response(response) do
@@ -38,7 +38,7 @@ defmodule Snap do
     end
   end
 
-  defp signed_request(cluster, method, path, headers, body) do
+  defp signed_request(cluster, method, path, headers, body, opts) do
     config = cluster.config()
     auth = Map.fetch!(config, :auth)
 
