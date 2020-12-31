@@ -13,11 +13,14 @@ defmodule Snap.Cluster do
         pool_name = Supervisor.connection_pool_name(__MODULE__)
         config = Supervisor.config(__MODULE__)
 
-        root_url = Map.fetch!(config, :url)
-        url = URI.merge(root_url, path)
-        req = Finch.build(method, url, headers, body)
+        request_opts = Keyword.take(opts, [:pool_timeout, :receive_timeout])
+        url_opts = Keyword.drop(opts, [:pool_timeout, :receive_timeout]) |> Enum.into(%{})
 
-        Finch.request(req, pool_name, opts)
+        root_url = Map.fetch!(config, :url)
+        url = Snap.Request.assemble_url(root_url, path, url_opts)
+
+        Finch.build(method, url, headers, body)
+        |> Finch.request(pool_name, request_opts)
       end
 
       def config() do

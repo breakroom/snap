@@ -1,5 +1,6 @@
 defmodule Snap do
   @default_headers [{"content-type", "application/json"}]
+
   def get(cluster, path, opts \\ []) do
     signed_request(cluster, "GET", path, @default_headers, nil, opts)
   end
