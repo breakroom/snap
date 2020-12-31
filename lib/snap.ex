@@ -1,18 +1,25 @@
 defmodule Snap do
+  @default_headers [{"content-type", "application/json"}]
   def get(cluster, path) do
-    signed_request(cluster, "GET", path, [], nil)
+    signed_request(cluster, "GET", path, @default_headers, nil)
   end
 
   def post(cluster, path, data) do
-    signed_request(cluster, "POST", path, [], data)
+    body = encode_body(data)
+    signed_request(cluster, "POST", path, @default_headers, body)
   end
 
   def put(cluster, path, data) do
-    signed_request(cluster, "PUT", path, [], data)
+    body = encode_body(data)
+    signed_request(cluster, "PUT", path, @default_headers, body)
   end
 
   def delete(cluster, path) do
-    signed_request(cluster, "DELETE", path, [], nil)
+    signed_request(cluster, "DELETE", path, @default_headers, nil)
+  end
+
+  def request(cluster, method, path, headers, body) do
+    signed_request(cluster, method, path, headers, body)
   end
 
   defp parse_response(response) do
@@ -80,5 +87,12 @@ defmodule Snap do
 
   defp telemetry_metadata(method, path, _headers, body, result) do
     %{method: method, path: path, body: body, result: result}
+  end
+
+  defp encode_body(body) when is_nil(body), do: nil
+  defp encode_body(body) when is_binary(body), do: body
+
+  defp encode_body(body) when is_map(body) do
+    Jason.encode!(body)
   end
 end
