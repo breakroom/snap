@@ -18,6 +18,7 @@ defmodule Snap.IntegrationCase do
 
   using do
     quote do
+      @moduletag :integration
       @test_index "snap-test"
     end
   end

@@ -13,10 +13,10 @@ defmodule Snap.Indexes do
   def hotswap(stream, cluster, alias, mapping, opts \\ []) do
     index = generate_index_name(alias)
 
-    with {:ok, _} <- create(cluster, index, mapping, opts),
+    with {:ok, _} <- create(cluster, index, mapping),
          :ok <- Bulk.perform(stream, cluster, index, opts),
-         :ok <- refresh(cluster, index, opts),
-         :ok <- alias(cluster, index, alias, opts) do
+         :ok <- refresh(cluster, index),
+         :ok <- alias(cluster, index, alias) do
       :ok
     end
   end
