@@ -9,6 +9,8 @@ low level operations.
 
 See the full [API docs](https://hexdocs.pm/snap).
 
+**Disclaimer**: Snap is new and may not be production ready yet.
+
 ## Features
 
 - Versioned index management with zero-downtime hotswapping (compatible with [`elasticsearch`](https://github.com/danielberkompas/elasticsearch-elixir))
