@@ -5,7 +5,7 @@ defmodule Snap.MixProject do
     [
       app: :snap,
       version: "0.1.0",
-      elixir: "~> 1.11",
+      elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
@@ -25,7 +25,8 @@ defmodule Snap.MixProject do
             Snap.Bulk.Action.Delete
           ]
         ]
-      ]
+      ],
+      dialyzer: dialyzer()
     ]
   end
 
@@ -36,8 +37,15 @@ defmodule Snap.MixProject do
     ]
   end
 
-  defp elixirc_paths(env) when env in ~w(test dev)a, do: ["lib", "test/support"]
+  defp elixirc_paths(env) when env in ~w(test)a, do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
+
+  defp dialyzer do
+    [
+      plt_core_path: "priv/plts",
+      plt_file: {:no_warn, "priv/plts/dialyzer.plt"}
+    ]
+  end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
@@ -46,7 +54,8 @@ defmodule Snap.MixProject do
       {:castore, "~> 0.1.0"},
       {:jason, "~> 1.0"},
       {:telemetry, "~> 0.4"},
-      {:ex_doc, "~> 0.23", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.23", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.0", only: :dev, runtime: false}
     ]
   end
 end
