@@ -1,95 +1,24 @@
 defmodule Snap do
-  @default_headers [{"content-type", "application/json"}]
+  @moduledoc """
+  The Snap module handles basic interaction with Elasticsearch: making simple
+  requests and parsing responses.
+  """
 
-  def get(cluster, path, opts \\ []) do
-    signed_request(cluster, "GET", path, @default_headers, nil, opts)
+  alias Snap.Request
+
+  def get(cluster, path, params \\ [], headers \\ [], opts \\ []) do
+    Request.request(cluster, "GET", path, nil, params, headers, opts)
   end
 
-  def post(cluster, path, data, opts \\ []) do
-    body = encode_body(data)
-    signed_request(cluster, "POST", path, @default_headers, body, opts)
+  def post(cluster, path, body \\ nil, params \\ [], headers \\ [], opts \\ []) do
+    Request.request(cluster, "POST", path, body, params, headers, opts)
   end
 
-  def put(cluster, path, data, opts \\ []) do
-    body = encode_body(data)
-    signed_request(cluster, "PUT", path, @default_headers, body, opts)
+  def put(cluster, path, body \\ nil, params \\ [], headers \\ [], opts \\ []) do
+    Request.request(cluster, "PUT", path, body, params, headers, opts)
   end
 
-  def delete(cluster, path, opts \\ []) do
-    signed_request(cluster, "DELETE", path, @default_headers, nil, opts)
-  end
-
-  def request(cluster, method, path, headers, body, opts \\ []) do
-    signed_request(cluster, method, path, headers, body, opts)
-  end
-
-  defp parse_response(response) do
-    case response do
-      {:ok, %Finch.Response{body: data, status: status}} when status >= 200 and status < 300 ->
-        Jason.decode(data)
-
-      {:ok, %Finch.Response{body: data}} ->
-        with {:ok, json} <- Jason.decode(data) do
-          exception = Snap.Exception.exception_from_response(json)
-          {:error, exception}
-        end
-
-      err ->
-        err
-    end
-  end
-
-  defp signed_request(cluster, method, path, headers, body, opts) do
-    config = cluster.config()
-    auth = Map.fetch!(config, :auth)
-
-    start_time = System.os_time()
-
-    with {:ok, {method, path, headers, body}} <- auth.sign(config, method, path, headers, body) do
-      queue_time = System.os_time() - start_time
-
-      response = cluster.request(method, path, headers, body, opts)
-      query_time = System.os_time() - queue_time - start_time
-
-      result = parse_response(response)
-
-      decode_time = System.os_time() - query_time - queue_time - start_time
-      total_time = queue_time + query_time + decode_time
-
-      event = telemetry_prefix(cluster) ++ [:request]
-
-      measurements = %{
-        queue_time: queue_time,
-        query_time: query_time,
-        decode_time: decode_time,
-        total_time: total_time
-      }
-
-      metadata = telemetry_metadata(method, path, headers, body, result)
-
-      :telemetry.execute(event, measurements, metadata)
-
-      result
-    end
-  end
-
-  defp telemetry_prefix(cluster) do
-    config = cluster.config()
-
-    Map.get_lazy(config, :telemetry_prefix, fn ->
-      otp_app = cluster.otp_app()
-      [otp_app, :snap]
-    end)
-  end
-
-  defp telemetry_metadata(method, path, _headers, body, result) do
-    %{method: method, path: path, body: body, result: result}
-  end
-
-  defp encode_body(body) when is_nil(body), do: nil
-  defp encode_body(body) when is_binary(body), do: body
-
-  defp encode_body(body) when is_map(body) do
-    Jason.encode!(body)
+  def delete(cluster, path, params \\ [], headers \\ [], opts \\ []) do
+    Request.request(cluster, "DELETE", path, nil, params, headers, opts)
   end
 end

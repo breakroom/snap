@@ -31,7 +31,7 @@ defmodule Snap.Bulk do
 
     headers = [{"content-type", "application/x-ndjson"}]
 
-    result = Snap.request(cluster, "POST", "/#{index}/_bulk", headers, body)
+    result = Snap.post(cluster, "/#{index}/_bulk", body, [], headers)
 
     case result do
       {:ok, %{"errors" => true, "items" => items}} ->

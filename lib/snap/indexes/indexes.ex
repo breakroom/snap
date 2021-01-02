@@ -3,11 +3,11 @@ defmodule Snap.Indexes do
   alias Snap
 
   def create(cluster, index, mapping, opts \\ []) do
-    Snap.put(cluster, "/#{index}", mapping, opts)
+    Snap.put(cluster, "/#{index}", mapping, [], [], opts)
   end
 
   def delete(cluster, index, opts \\ []) do
-    Snap.delete(cluster, "/#{index}", opts)
+    Snap.delete(cluster, "/#{index}", [], [], opts)
   end
 
   def hotswap(stream, cluster, alias, mapping, opts \\ []) do
@@ -22,7 +22,7 @@ defmodule Snap.Indexes do
   end
 
   def refresh(cluster, index, opts \\ []) do
-    with {:ok, _} <- Snap.post(cluster, "/#{index}/_refresh", nil, opts) do
+    with {:ok, _} <- Snap.post(cluster, "/#{index}/_refresh", nil, [], [], opts) do
       :ok
     end
   end
@@ -45,9 +45,7 @@ defmodule Snap.Indexes do
   end
 
   def list(cluster, opts \\ []) do
-    opts = Keyword.put(opts, :format, "json")
-
-    with {:ok, indexes} <- Snap.get(cluster, "/_cat/indices", opts) do
+    with {:ok, indexes} <- Snap.get(cluster, "/_cat/indices", [format: "json"], [], opts) do
       indexes =
         indexes
         |> Enum.map(& &1["index"])
@@ -58,9 +56,7 @@ defmodule Snap.Indexes do
   end
 
   def list_starting_with(cluster, prefix, opts \\ []) do
-    opts = Keyword.put(opts, :format, "json")
-
-    with {:ok, indexes} <- Snap.get(cluster, "/_cat/indices", opts) do
+    with {:ok, indexes} <- Snap.get(cluster, "/_cat/indices", [format: "json"], [], opts) do
       prefix = prefix |> to_string() |> Regex.escape()
       {:ok, regex} = Regex.compile("^#{prefix}-[0-9]+$")
 

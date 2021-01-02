@@ -1,7 +1,33 @@
 defmodule Snap.Cluster do
+  @moduledoc """
+  Defines a cluster.
+
+  A cluster maps to an Elasticsearch endpoint.
+
+  When used, the cluster expects :otp_app as an option. The :otp_app should
+  point to an OTP application that has the cluster configuration. For
+  example, this cluster:
+
+  ```
+  defmodule MyApp.Cluster do
+    use Snap.Cluster, otp_app: :my_app
+  end
+  ```
+
+  Can be configured with:
+
+  ```
+  config :my_app, MyApp.Cluster,
+    url: "http://localhost:9200",
+    username: "username",
+    password: "password",
+    pool_size: 10
+  ```
+  """
   defmacro __using__(opts) do
     quote do
       alias Snap.Cluster.Supervisor
+      alias Snap.Request
 
       def init(config) do
         {:ok, config}
@@ -9,26 +35,31 @@ defmodule Snap.Cluster do
 
       defoverridable init: 1
 
-      def request(method, path, headers, body \\ nil, opts \\ []) do
-        pool_name = Supervisor.connection_pool_name(__MODULE__)
-        config = Supervisor.config(__MODULE__)
-
-        request_opts = Keyword.take(opts, [:pool_timeout, :receive_timeout])
-        url_opts = Keyword.drop(opts, [:pool_timeout, :receive_timeout]) |> Enum.into(%{})
-
-        root_url = Map.fetch!(config, :url)
-        url = Snap.Request.assemble_url(root_url, path, url_opts)
-
-        Finch.build(method, url, headers, body)
-        |> Finch.request(pool_name, request_opts)
-      end
-
+      @doc """
+      Returns the config map that the Cluster was defined with.
+      """
       def config() do
         Supervisor.config(__MODULE__)
       end
 
       def otp_app() do
         unquote(opts[:otp_app])
+      end
+
+      def get(path, params \\ [], headers \\ [], opts \\ []) do
+        Request.request(__MODULE__, "GET", path, nil, params, headers, opts)
+      end
+
+      def post(path, body \\ nil, params \\ [], headers \\ [], opts \\ []) do
+        Request.request(__MODULE__, "POST", path, body, params, headers, opts)
+      end
+
+      def put(path, body \\ nil, params \\ [], headers \\ [], opts \\ []) do
+        Request.request(__MODULE__, "PUT", path, body, params, headers, opts)
+      end
+
+      def delete(path, params \\ [], headers \\ [], opts \\ []) do
+        Request.request(__MODULE__, "DELETE", path, nil, params, headers, opts)
       end
 
       def child_spec(opts) do
