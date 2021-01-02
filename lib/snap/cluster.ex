@@ -163,4 +163,17 @@ defmodule Snap.Cluster do
     * `Jason.DecodeError`
   """
   @callback delete(path, params, headers, opts) :: result()
+
+  @doc """
+  Returns the config in use by this cluster.
+  """
+  @callback config() :: Keyword.t()
+
+  @doc """
+  Sets up the config for the cluster.
+
+  Override this to dynamically load a config from somewhere other than your
+  application config.
+  """
+  @callback init(Keyword.t() | nil) :: {:ok, Keyword.t()}
 end

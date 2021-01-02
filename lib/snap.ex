@@ -9,10 +9,10 @@ defmodule Snap do
     to stream actions (such as `Snap.Bulk.Action.Create`) to be performed
     against the `Snap.Cluster`.
 
-  * `Snap.Indexes` - a convenience wrapped around Elasticsearch indexes,
-    allowing the creation, deleting and aliasing of indexes, along with hotswap
-    functionality to bulk load documents into an aliased index, switching to it
-    atomically.
+  * `Snap.Indexes` - a convenience wrapper around the Elasticsearch indexes
+    APIs, allowing the creation, deleting and aliasing of indexes, along with
+    hotswap functionality to bulk load documents into an aliased index,
+    switching to it atomically.
 
   Additionally, there are other supporting modules:
 
@@ -30,7 +30,7 @@ defmodule Snap do
   end
   ```
 
-  The configuration for the cluster is defined in your config:
+  The configuration for the cluster can be defined in your config:
 
   ```
   config :my_app, MyApp.Cluster,
@@ -38,6 +38,8 @@ defmodule Snap do
     username: "username",
     password: "password"
   ```
+
+  Or you can load it dynamically by implementing `c:Snap.Cluster.init/1`.
 
   Each cluster defines `start_link/1` which must be invoked before using the
   cluster and optionally accepts an explicit config. It creates the
