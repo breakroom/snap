@@ -9,7 +9,7 @@ defmodule Snap.TelemetryTest do
       assert %{result: {:ok, _}, method: "GET", path: "/_cluster/health", body: nil} = metadata
 
       assert measurements.total_time ==
-               measurements.query_time + measurements.decode_time + measurements.queue_time
+               measurements.response_time + measurements.decode_time
 
       send(self(), :logged)
     end

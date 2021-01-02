@@ -19,7 +19,7 @@ defmodule Snap do
   * `Snap.Auth` - defines how an HTTP request is modified to include
     authentication headers. `Snap.Auth.Plain` implements HTTP Basic Auth.
 
-  ## Clusters
+  ## Set up
 
   `Snap.Cluster` is a wrapped around an Elasticsearch cluster. We can define
   it like so:
@@ -54,7 +54,39 @@ defmodule Snap do
     opts = [strategy: :one_for_one, name: MyApp.Supervisor]
     Supervisor.start_link(children, opts)
   end
-  ```
+
+  ## Config
+
+  The following configuration options are supported:
+
+  * `url` - the URL of the Elasticsearch HTTP endpoint (required)
+  * `username` - the username used to access the cluster
+  * `password` - the password used to access the cluster
+  * `auth` - the auth module used to configure the HTTP authentication headers
+    (defaults to `Snap.Auth.Plain`)
+  * `pool_size` - the maximum size of the HTTP connection pool
+  * `telemetry_prefix` - the prefix of the telemetry events (default to
+    `[:my_app, :snap]`)
+
+  ## Telemetry
+
+  Snap supports sending `Telemetry` events on each HTTP request. It sends one
+  event per query, of the name `[:my_app, :snap, :request]`.
+
+  The telemetry event has the following measurements:
+
+  * `response_time` - how long the request took to return
+  * `decode_time` - how long the response took to decode into a map or
+    exception
+  * `total_time` - how long everything took in total
+
+  In addition, the metadata contains a map of:
+
+  * `method` - the HTTP method used
+  * `path` - the path requested
+  * `headers` - a list of the headers sent
+  * `body` - the body sent
+  * `result` - the result returned to the user
   """
 
   alias Snap.Request

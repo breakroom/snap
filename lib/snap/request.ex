@@ -20,24 +20,21 @@ defmodule Snap.Request do
     start_time = System.os_time()
 
     with {:ok, {method, url, headers, body}} <- auth.sign(config, method, url, headers, body) do
-      queue_time = System.os_time() - start_time
-
       response =
         Finch.build(method, url, headers, body)
         |> Finch.request(conn_pool_name, opts)
 
-      query_time = System.os_time() - queue_time - start_time
+      response_time = System.os_time() - start_time
 
       result = parse_response(response)
 
-      decode_time = System.os_time() - query_time - queue_time - start_time
-      total_time = queue_time + query_time + decode_time
+      decode_time = System.os_time() - response_time - start_time
+      total_time = response_time + decode_time
 
       event = telemetry_prefix(cluster) ++ [:request]
 
       measurements = %{
-        queue_time: queue_time,
-        query_time: query_time,
+        response_time: response_time,
         decode_time: decode_time,
         total_time: total_time
       }

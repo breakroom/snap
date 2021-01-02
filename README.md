@@ -9,7 +9,7 @@ low level operations.
 
 ## Features
 
-- Versioned index management with hotswapping (compatible with [`elasticsearch`](https://github.com/danielberkompas/elasticsearch-elixir))
+- Versioned index management with zero-downtime hotswapping (compatible with [`elasticsearch`](https://github.com/danielberkompas/elasticsearch-elixir))
 - Streaming bulk operations
 - Connection pooling
 - Telemetry events
