@@ -8,7 +8,7 @@ defmodule Snap.Auth do
   @type headers :: Mint.Types.headers()
   @type body :: iodata()
   @type opts :: Keyword.t()
-  @type config :: map()
+  @type config :: Keyword.t()
 
   @type response :: {:ok, {method, url, headers, body}} | {:error, term()}
 

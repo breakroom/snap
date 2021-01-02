@@ -18,8 +18,8 @@ defmodule Snap.Auth.Plain do
   @behaviour Snap.Auth
 
   def sign(config, method, path, headers, body) do
-    with {:ok, username} when is_binary(username) <- Map.fetch(config, :username),
-         {:ok, password} when is_binary(password) <- Map.fetch(config, :password) do
+    with {:ok, username} when is_binary(username) <- Keyword.fetch(config, :username),
+         {:ok, password} when is_binary(password) <- Keyword.fetch(config, :password) do
       auth_headers = [{"Authorization", encode_header(username, password)}]
 
       new_headers = headers ++ auth_headers

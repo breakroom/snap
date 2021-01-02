@@ -30,8 +30,8 @@ defmodule Snap.Cluster.Supervisor do
   end
 
   defp finch_config(cluster, config) do
-    url = Map.fetch!(config, :url)
-    size = Map.get(config, :pool_size, @default_pool_size)
+    url = Keyword.fetch!(config, :url)
+    size = Keyword.get(config, :pool_size, @default_pool_size)
 
     [
       name: connection_pool_name(cluster),

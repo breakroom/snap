@@ -9,7 +9,7 @@ defmodule SnapTest do
   end
 
   test "getting config" do
-    %{url: url} = Cluster.config()
+    url = Cluster.config() |> Keyword.fetch!(:url)
     assert url == "http://localhost:9200"
   end
 

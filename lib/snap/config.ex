@@ -1,22 +1,12 @@
 defmodule Snap.Config do
   @moduledoc false
-  use GenServer
+  use Agent
 
   def start_link({name, config}) do
-    GenServer.start_link(__MODULE__, config, name: name)
+    Agent.start_link(fn -> config end, name: name)
   end
 
   def get(pid) do
-    GenServer.call(pid, :get)
-  end
-
-  ## Callbacks
-
-  def init(config) do
-    {:ok, config}
-  end
-
-  def handle_call(:get, _from, config) do
-    {:reply, config, config}
+    Agent.get(pid, & &1)
   end
 end

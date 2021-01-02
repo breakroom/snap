@@ -4,11 +4,11 @@ defmodule Snap.Request do
 
   def request(cluster, method, path, body \\ nil, params \\ [], headers \\ [], opts \\ []) do
     config = cluster.config()
-    auth = Map.fetch!(config, :auth)
+    auth = Keyword.fetch!(config, :auth)
 
     url =
       config
-      |> Map.fetch!(:url)
+      |> Keyword.fetch!(:url)
       |> URI.merge(path)
       |> append_query_params(params)
 
@@ -69,7 +69,7 @@ defmodule Snap.Request do
   defp telemetry_prefix(cluster) do
     config = cluster.config()
 
-    Map.get_lazy(config, :telemetry_prefix, fn ->
+    Keyword.get_lazy(config, :telemetry_prefix, fn ->
       otp_app = cluster.otp_app()
       [otp_app, :snap]
     end)

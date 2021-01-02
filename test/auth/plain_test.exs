@@ -4,7 +4,7 @@ defmodule Snap.Auth.PlainTest do
   alias Snap.Auth.Plain
 
   test "without a username and password in the config" do
-    config = %{}
+    config = []
     method = "GET"
     path = "/_cluster/health"
     headers = []
@@ -18,7 +18,7 @@ defmodule Snap.Auth.PlainTest do
   end
 
   test "with a username and password in the config" do
-    config = %{username: "testing", password: "password"}
+    config = [username: "testing", password: "password"]
     method = "GET"
     path = "/_cluster/health"
     headers = []
