@@ -8,7 +8,24 @@ defmodule Snap.MixProject do
       elixir: "~> 1.11",
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
-      deps: deps()
+      deps: deps(),
+      name: "Snap",
+      source_url: "https://github.com/tomtaylor/snap",
+      docs: [
+        main: "Snap",
+        groups_for_modules: [
+          Authentication: [
+            Snap.Auth,
+            Snap.Auth.Plain
+          ],
+          "Bulk operations": [
+            Snap.Bulk.Action.Create,
+            Snap.Bulk.Action.Index,
+            Snap.Bulk.Action.Update,
+            Snap.Bulk.Action.Delete
+          ]
+        ]
+      ]
     ]
   end
 
@@ -28,7 +45,8 @@ defmodule Snap.MixProject do
       {:finch, "~> 0.6"},
       {:castore, "~> 0.1.0"},
       {:jason, "~> 1.0"},
-      {:telemetry, "~> 0.4"}
+      {:telemetry, "~> 0.4"},
+      {:ex_doc, "~> 0.23", only: :dev, runtime: false}
     ]
   end
 end

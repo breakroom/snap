@@ -4,8 +4,8 @@ defmodule Snap.Cluster do
 
   A cluster maps to an Elasticsearch endpoint.
 
-  When used, the cluster expects :otp_app as an option. The :otp_app should
-  point to an OTP application that has the cluster configuration. For
+  When used, the cluster expects `:otp_app` as an option. The `:otp_app`
+  should point to an OTP application that has the cluster configuration. For
   example, this cluster:
 
   ```
@@ -42,6 +42,9 @@ defmodule Snap.Cluster do
         Supervisor.config(__MODULE__)
       end
 
+      @doc """
+      Returns the otp_app that the Cluster was defined with.
+      """
       def otp_app() do
         unquote(opts[:otp_app])
       end
@@ -80,4 +83,79 @@ defmodule Snap.Cluster do
       end
     end
   end
+
+  @typedoc "The path of the HTTP endpoint"
+  @type path :: String.t()
+
+  @typedoc "The query params, which will be appended to the path"
+  @type params :: Keyword.t()
+
+  @typedoc "The body of the HTTP request"
+  @type body :: String.t() | nil | binary() | map()
+
+  @typedoc "Any additional HTTP headers sent with the request"
+  @type headers :: Mint.Types.headers()
+
+  @typedoc "Options passed through to the request"
+  @type opts :: Keyword.t()
+
+  @typedoc "The result from an HTTP operation"
+  @type result ::
+          {:ok, map()} | {:error, %Snap.Exception{} | Mint.Types.error() | Jason.DecodeError.t()}
+
+  @doc """
+  Sends a GET request.
+
+  Returns either:
+
+  * `{:ok, response}` - where response is a map representing the parsed JSON response.
+  * `{:error, error}` - where the error can be a struct of either:
+    * `Snap.Exception`
+    * `Mint.TransportError`
+    * `Mint.HTTPError`
+    * `Jason.DecodeError`
+  """
+  @callback get(path, params, headers, opts) :: result()
+
+  @doc """
+  Sends a POST request.
+
+  Returns either:
+
+  * `{:ok, response}` - where response is a map representing the parsed JSON response.
+  * `{:error, error}` - where the error can be a struct of either:
+    * `Snap.Exception`
+    * `Mint.TransportError`
+    * `Mint.HTTPError`
+    * `Jason.DecodeError`
+  """
+  @callback post(path, body, params, headers, opts) :: result()
+
+  @doc """
+  Sends a PUT request.
+
+  Returns either:
+
+  * `{:ok, response}` - where response is a map representing the parsed JSON response.
+  * `{:error, error}` - where the error can be a struct of either:
+    * `Snap.Exception`
+    * `Mint.TransportError`
+    * `Mint.HTTPError`
+    * `Jason.DecodeError`
+  """
+  @callback put(path, body, params, headers, opts) :: result()
+
+  @doc """
+  Sends a DELETE request.
+
+  Returns either:
+
+  * `{:ok, response}` - where response is a map representing the parsed JSON response.
+  * `{:error, error}` - where the error can be a struct of either:
+    * `Snap.Exception`
+    * `Mint.TransportError`
+    * `Mint.HTTPError`
+    * `Jason.DecodeError`
+  """
+  @callback delete(path, params, headers, opts) :: result()
 end

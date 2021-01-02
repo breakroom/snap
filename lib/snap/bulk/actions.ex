@@ -1,4 +1,6 @@
 defmodule Snap.Bulk.Actions do
+  @moduledoc false
+
   alias Snap.Bulk.Action.{Create, Index, Update, Delete}
 
   @doc """

@@ -1,4 +1,5 @@
 defmodule Snap.Request do
+  @moduledoc false
   @default_headers [{"content-type", "application/json"}, {"accept", "application/json"}]
 
   def request(cluster, method, path, body \\ nil, params \\ [], headers \\ [], opts \\ []) do
@@ -18,7 +19,7 @@ defmodule Snap.Request do
 
     start_time = System.os_time()
 
-    with {:ok, {method, path, headers, body}} <- auth.sign(config, method, path, headers, body) do
+    with {:ok, {method, url, headers, body}} <- auth.sign(config, method, url, headers, body) do
       queue_time = System.os_time() - start_time
 
       response =

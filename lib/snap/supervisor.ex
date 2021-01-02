@@ -1,4 +1,6 @@
 defmodule Snap.Cluster.Supervisor do
+  @moduledoc false
+
   use Supervisor
   @default_pool_size 5
 

@@ -1,4 +1,5 @@
 defmodule Snap.Test.Cluster do
+  @moduledoc false
   use Snap.Cluster, otp_app: :snap
 
   def init(config) do

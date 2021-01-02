@@ -1,4 +1,5 @@
 defmodule Snap.Config do
+  @moduledoc false
   use GenServer
 
   def start_link({name, config}) do

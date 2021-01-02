@@ -1,4 +1,20 @@
 defmodule Snap.Auth.Plain do
+  @moduledoc """
+  Implements HTTP Basic Auth, if necessary.
+
+  If the cluster config defines a username and password for the Elasticsearch
+  cluster it add Basic auth.
+
+  ```
+  config :my_app, MyApp.Cluster,
+    url: "http://localhost:9200",
+    username: "foo",
+    password: "bar
+  ```
+
+  If no username or password is defined, no auth header is added, making it
+  suitable for local development.
+  """
   @behaviour Snap.Auth
 
   def sign(config, method, path, headers, body) do

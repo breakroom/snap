@@ -1,16 +1,19 @@
 defmodule Snap.Auth do
   @moduledoc """
-  The `Snap.Auth` behaviour can be implemented by modules to define how `snap`
-  transforms HTTP requests to add authentication.
+  Defines how HTTP request is transformed to add authentication.
   """
 
   @type method :: String.t()
-  @type path :: String.t()
+  @type url :: String.t()
   @type headers :: Mint.Types.headers()
   @type body :: iodata()
   @type opts :: Keyword.t()
+  @type config :: map()
 
-  @type response :: {:ok, {method, path, headers, body}} | {:error, term()}
+  @type response :: {:ok, {method, url, headers, body}} | {:error, term()}
 
-  @callback sign(map(), method, path, headers, body) :: response()
+  @doc """
+  Modifies an HTTP request to include authentication details
+  """
+  @callback sign(config, method, url, headers, body) :: response()
 end

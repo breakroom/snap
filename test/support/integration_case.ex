@@ -1,4 +1,5 @@
 defmodule Snap.IntegrationCase do
+  @moduledoc false
   use ExUnit.CaseTemplate
 
   alias Snap.Test.Cluster
