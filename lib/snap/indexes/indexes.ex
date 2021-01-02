@@ -103,7 +103,7 @@ defmodule Snap.Indexes do
         indexes
         |> Enum.map(& &1["index"])
         |> Enum.filter(&Regex.match?(regex, &1))
-        |> Enum.sort_by(&sort_index_by_timestamp/1, :asc)
+        |> Enum.sort_by(&sort_index_by_timestamp/1)
 
       {:ok, indexes}
     end
@@ -117,7 +117,7 @@ defmodule Snap.Indexes do
   def cleanup(cluster, alias, preserve \\ 2, opts \\ []) do
     with {:ok, indexes} <- list_starting_with(cluster, alias, opts) do
       indexes
-      |> Enum.sort_by(&sort_index_by_timestamp/1, :desc)
+      |> Enum.sort_by(&sort_index_by_timestamp/1, &>=/2)
       |> Enum.drop(preserve)
       |> Enum.reduce_while(:ok, fn index, ok ->
         case delete(cluster, index, opts) do
