@@ -1,9 +1,51 @@
 defmodule Snap.Bulk do
+  @moduledoc """
+  Supports streaming bulk operations against a `Snap.Cluster`.
+  """
+
   @default_page_size 5000
   @default_page_wait 15_000
 
   alias Snap.Bulk.Actions
 
+  @doc """
+  Performs a bulk operation.
+
+  Takes an `Enumerable` of action structs, where each struct is one of:
+
+  * `Snap.Bulk.Action.Create`
+  * `Snap.Bulk.Action.Index`
+  * `Snap.Bulk.Action.Update`
+  * `Snap.Bulk.Action.Delete`
+
+  ```
+  actions = [
+    %Snap.Bulk.Action.Create{_id: 1, doc: %{foo: "bar"}},
+    %Snap.Bulk.Action.Create{_id: 2, doc: %{foo: "bar"}},
+    %Snap.Bulk.Action.Create{_id: 3, doc: %{foo: "bar"}}
+  ]
+
+  actions
+  |> Snap.Bulk.perform(Cluster, "index")
+  ```
+
+  It chunks the `Enumerable` into pages, and pauses between pages for
+  Elasticsearch to catch up. Uses `Stream` under the hood, so you can lazily
+  feed it a stream of actions, such as out of an `Ecto.Repo` to bulk load
+  documents from an SQL database.
+
+  If no errors occur on any page it returns `:ok`. If any errors occur, on
+  any page, it returns `{:error, [%Snap.Exception{}...]}`. It will continue
+  to the end, even if errors occur.
+
+  Options:
+
+  * `page_size` - defines the size of each page, defaulting to 5000 actions.
+  * `page_wait` - defines wait period between pages in ms, defaulting to
+    15000ms.
+  """
+  @spec perform(Enumerable.t(), module(), String.t(), Keyword.t()) ::
+          :ok | {:error, [Snap.Exception.t()]}
   def perform(stream, cluster, index, opts) do
     page_size = Keyword.get(opts, :page_size, @default_page_size)
     page_wait = Keyword.get(opts, :page_wait, @default_page_wait)

@@ -101,7 +101,7 @@ defmodule Snap.Cluster do
 
   @typedoc "The result from an HTTP operation"
   @type result ::
-          {:ok, map()} | {:error, %Snap.Exception{} | Mint.Types.error() | Jason.DecodeError.t()}
+          {:ok, map()} | {:error, Snap.Exception.t() | Mint.Types.error() | Jason.DecodeError.t()}
 
   @doc """
   Sends a GET request.

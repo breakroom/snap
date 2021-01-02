@@ -1,11 +1,20 @@
 defmodule Snap.Indexes do
+  @moduledoc """
+  Helper functions around index management.
+  """
   alias Snap.Bulk
   alias Snap
 
+  @doc """
+  Creates an index.
+  """
   def create(cluster, index, mapping, opts \\ []) do
     Snap.put(cluster, "/#{index}", mapping, [], [], opts)
   end
 
+  @doc """
+  Deletes an index.
+  """
   def delete(cluster, index, opts \\ []) do
     Snap.delete(cluster, "/#{index}", [], [], opts)
   end
@@ -21,12 +30,19 @@ defmodule Snap.Indexes do
     end
   end
 
+  @doc """
+  Refreshes an index.
+  """
+  @spec refresh(cluster :: module(), index :: String.t(), opts :: Keyword.t()) :: any
   def refresh(cluster, index, opts \\ []) do
     with {:ok, _} <- Snap.post(cluster, "/#{index}/_refresh", nil, [], [], opts) do
       :ok
     end
   end
 
+  @doc """
+  Creates an alias for a versioned index, removing any existing aliases.
+  """
   def alias(cluster, index, alias, opts \\ []) do
     with {:ok, indexes} <- list_starting_with(cluster, alias, opts) do
       indexes = Enum.reject(indexes, &(&1 == index))
@@ -44,6 +60,9 @@ defmodule Snap.Indexes do
     end
   end
 
+  @doc """
+  Lists all the indexes in the cluster.
+  """
   def list(cluster, opts \\ []) do
     with {:ok, indexes} <- Snap.get(cluster, "/_cat/indices", [format: "json"], [], opts) do
       indexes =

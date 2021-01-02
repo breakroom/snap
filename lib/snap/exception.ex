@@ -17,6 +17,15 @@ defmodule Snap.Exception do
   @enforce_keys @keys
   defexception @keys
 
+  @type t :: %__MODULE__{
+          status: integer() | nil,
+          line: integer() | nil,
+          col: integer() | nil,
+          message: String.t() | nil,
+          type: String.t() | nil,
+          raw: map() | nil
+        }
+
   def exception_from_response(response) do
     attrs = build(response)
     struct(Exception, attrs)

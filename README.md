@@ -1,11 +1,23 @@
 # Snap
 
-**TODO: Add description**
+- [API documentation](https://hexdocs.pm/snap)
+
+Snap is an Elasticsearch client. It provides a flexible, performant API on
+top of your Elasticsearch cluster, supporting high level features like
+versioned index management, while also providing a convenient interface into
+low level operations.
+
+## Features
+
+- Versioned index management with hotswapping (compatible with [`elasticsearch`](https://github.com/danielberkompas/elasticsearch-elixir))
+- Streaming bulk operations
+- Connection pooling
+- Telemetry events
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `snap` to your list of dependencies in `mix.exs`:
+The package can be installed by adding `snap` to your list of dependencies in
+`mix.exs`:
 
 ```elixir
 def deps do
@@ -15,6 +27,42 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/snap](https://hexdocs.pm/snap).
+## Usage
+
+Implement your own cluster module, similar to an `Ecto.Repo`:
+
+```elixir
+defmodule MyApp.Cluster do
+  use Snap.Cluster, otp_app: :my_app
+end
+```
+
+Configure it:
+
+```elixir
+config :my_app, MyApp.Cluster,
+  url: "http://localhost:9200",
+  username: username,
+  password: password
+```
+
+Then wire it into your application supervisor:
+
+```elixir
+def start(_type, _args) do
+  children = [
+    {MyApp.Cluster, []}
+  ]
+
+  opts = [strategy: :one_for_one, name: MyApp.Supervisor]
+  Supervisor.start_link(children, opts)
+end
+```
+
+Now you can perform operations on your cluster:
+
+```elixir
+{:ok, %{"count" => count}} = MyApp.Cluster.get("/my-index/_count")
+```
+
+See the [API documentation](https://hexdocs.pm/snap) for more advanced features.
