@@ -29,6 +29,8 @@ def deps do
 end
 ```
 
+Snap supports Elixir 1.9 or later. It might work with earlier versions but is currently untested.
+
 ## Usage
 
 Implement your own cluster module, similar to an `Ecto.Repo`:
