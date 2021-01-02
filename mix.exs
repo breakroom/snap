@@ -1,6 +1,8 @@
 defmodule Snap.MixProject do
   use Mix.Project
 
+  @github_url "https://github.com/tomtaylor/snap"
+
   def project do
     [
       app: :snap,
@@ -10,7 +12,10 @@ defmodule Snap.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
       name: "Snap",
-      source_url: "https://github.com/tomtaylor/snap",
+      description: "A modern Elasticsearch client",
+      source_url: @github_url,
+      homepage_url: @github_url,
+      files: ~w(mix.exs lib LICENSE.md README.md CHANGELOG.md),
       docs: [
         main: "Snap",
         groups_for_modules: [
@@ -25,6 +30,13 @@ defmodule Snap.MixProject do
             Snap.Bulk.Action.Delete
           ]
         ]
+      ],
+      package: [
+        maintainers: ["Tom Taylor"],
+        licenses: ["MIT"],
+        links: %{
+          "GitHub" => @github_url
+        }
       ],
       dialyzer: dialyzer()
     ]
