@@ -100,8 +100,13 @@ defmodule Snap.Cluster do
   @type opts :: Keyword.t()
 
   @typedoc "The result from an HTTP operation"
-  @type result ::
-          {:ok, map()} | {:error, Snap.Exception.t() | Mint.Types.error() | Jason.DecodeError.t()}
+  @type result :: success() | error()
+
+  @typedoc "A successful results from an HTTP operation"
+  @type success :: {:ok, map()}
+
+  @typedoc "An error from an HTTP operation"
+  @type error :: {:error, Snap.Exception.t() | Mint.Types.error() | Jason.DecodeError.t()}
 
   @doc """
   Sends a GET request.

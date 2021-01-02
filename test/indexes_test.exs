@@ -47,4 +47,28 @@ defmodule Snap.IndexesTest do
     {:ok, %{"count" => count}} = Cluster.get("/#{@test_index}/_count")
     assert count == 10_000
   end
+
+  test "hotswap drops older indexes" do
+    {:ok, _} = Indexes.create(Cluster, "#{@test_index}-1", %{})
+    {:ok, _} = Indexes.create(Cluster, "#{@test_index}-2", %{})
+    {:ok, _} = Indexes.create(Cluster, "#{@test_index}-3", %{})
+
+    {:ok, indexes} = Indexes.list_starting_with(Cluster, @test_index)
+    assert Enum.count(indexes) == 3
+
+    :ok =
+      1..10
+      |> Stream.map(fn i ->
+        doc = %{"title" => "Document #{i}"}
+
+        %Create{_id: i, doc: doc}
+      end)
+      |> Indexes.hotswap(Cluster, @test_index, %{}, page_wait: 0, page_size: 1_000)
+
+    {:ok, indexes} = Indexes.list_starting_with(Cluster, @test_index)
+    assert Enum.count(indexes) == 2
+    refute Enum.member?(indexes, "#{@test_index}-1")
+    refute Enum.member?(indexes, "#{@test_index}-2")
+    assert Enum.member?(indexes, "#{@test_index}-3")
+  end
 end
