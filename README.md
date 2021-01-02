@@ -44,8 +44,8 @@ Configure it:
 ```elixir
 config :my_app, MyApp.Cluster,
   url: "http://localhost:9200",
-  username: username,
-  password: password
+  username: "my_username",
+  password: "my_password"
 ```
 
 Then wire it into your application supervisor:
