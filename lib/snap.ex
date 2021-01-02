@@ -56,6 +56,7 @@ defmodule Snap do
     opts = [strategy: :one_for_one, name: MyApp.Supervisor]
     Supervisor.start_link(children, opts)
   end
+  ```
 
   ## Config
 
@@ -66,7 +67,7 @@ defmodule Snap do
   * `password` - the password used to access the cluster
   * `auth` - the auth module used to configure the HTTP authentication headers
     (defaults to `Snap.Auth.Plain`)
-  * `pool_size` - the maximum size of the HTTP connection pool
+  * `pool_size` - the maximum size of the HTTP connection pool (defaults to 5)
   * `telemetry_prefix` - the prefix of the telemetry events (default to
     `[:my_app, :snap]`)
 
