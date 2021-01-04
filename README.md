@@ -26,7 +26,7 @@ The package can be installed by adding `snap` to your list of dependencies in
 ```elixir
 def deps do
   [
-    {:snap, "~> 0.1.1"}
+    {:snap, "~> 0.2.0"}
   ]
 end
 ```

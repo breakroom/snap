@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.0
+
+Introduce `Snap.BulkError` to wrap a list of errors produced from
+`Snap.Bulk`.
+
 ## 0.1.1
 
 Documentation formatting fix.
