@@ -28,6 +28,10 @@ defmodule Snap.MixProject do
             Snap.Bulk.Action.Index,
             Snap.Bulk.Action.Update,
             Snap.Bulk.Action.Delete
+          ],
+          Errors: [
+            Snap.Exception,
+            Snap.BulkError
           ]
         ]
       ],

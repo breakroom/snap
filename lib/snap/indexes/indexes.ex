@@ -27,9 +27,12 @@ defmodule Snap.Indexes do
   Takes an `Enumerable` of `Snap.Bulk` actions, and builds a new index from
   it. Refreshes it, updates the alias to it, and cleans up the old indexes,
   leaving the previous one behind.
+
+  May return `t:Snap.Cluster.error/0` or a `Snap.BulkError` containing a list
+  of failed bulk actions.
   """
   @spec hotswap(Enumerable.t(), module(), String.t(), map(), Keyword.t()) ::
-          :ok | Snap.Cluster.error()
+          :ok | Snap.Cluster.error() | {:error, Snap.BulkError.t()}
   def hotswap(stream, cluster, alias, mapping, opts \\ []) do
     index = generate_index_name(alias)
 

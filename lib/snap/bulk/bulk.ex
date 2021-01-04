@@ -35,8 +35,9 @@ defmodule Snap.Bulk do
   documents from an SQL database.
 
   If no errors occur on any page it returns `:ok`. If any errors occur, on
-  any page, it returns `{:error, [%Snap.Exception{}...]}`. It will continue
-  to the end, even if errors occur.
+  any page, it returns `{:error, %Snap.BulkError{}}`, containing a list of
+  the errors. It will continue to the end of the stream, even if errors
+  occur.
 
   Options:
 
@@ -45,7 +46,7 @@ defmodule Snap.Bulk do
     15000ms.
   """
   @spec perform(Enumerable.t(), module(), String.t(), Keyword.t()) ::
-          :ok | {:error, [Snap.Exception.t()]}
+          :ok | Snap.Cluster.error() | {:error, Snap.BulkError.t()}
   def perform(stream, cluster, index, opts) do
     page_size = Keyword.get(opts, :page_size, @default_page_size)
     page_wait = Keyword.get(opts, :page_wait, @default_page_wait)
@@ -88,7 +89,12 @@ defmodule Snap.Bulk do
   end
 
   defp handle_result([]), do: :ok
-  defp handle_result(errors), do: {:error, errors}
+
+  defp handle_result(errors) do
+    err = Snap.BulkError.exception(errors)
+
+    {:error, err}
+  end
 
   defp process_errors(items) do
     items

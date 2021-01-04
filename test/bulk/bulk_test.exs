@@ -37,7 +37,7 @@ defmodule Snap.BulkTest do
         %Action.Delete{_id: 4}
       ]
 
-      {:error, errors} =
+      {:error, %Snap.BulkError{errors: errors}} =
         actions
         |> Bulk.perform(Cluster, @test_index, page_size: 2, page_wait: 10)
 
