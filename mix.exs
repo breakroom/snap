@@ -2,47 +2,26 @@ defmodule Snap.MixProject do
   use Mix.Project
 
   @github_url "https://github.com/tomtaylor/snap"
+  @version "0.2.1"
 
   def project do
     [
       app: :snap,
-      version: "0.2.0",
+      name: "Snap",
+      version: @version,
       elixir: "~> 1.9",
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
-      name: "Snap",
+      dialyzer: dialyzer(),
+
+      # Hex
       description: "A modern Elasticsearch client",
+      package: package(),
+
+      # Docs
       source_url: @github_url,
-      homepage_url: @github_url,
-      files: ~w(mix.exs lib LICENSE.md README.md CHANGELOG.md),
-      docs: [
-        main: "Snap",
-        groups_for_modules: [
-          Authentication: [
-            Snap.Auth,
-            Snap.Auth.Plain
-          ],
-          "Bulk operations": [
-            Snap.Bulk.Action.Create,
-            Snap.Bulk.Action.Index,
-            Snap.Bulk.Action.Update,
-            Snap.Bulk.Action.Delete
-          ],
-          Errors: [
-            Snap.Exception,
-            Snap.BulkError
-          ]
-        ]
-      ],
-      package: [
-        maintainers: ["Tom Taylor"],
-        licenses: ["MIT"],
-        links: %{
-          "GitHub" => @github_url
-        }
-      ],
-      dialyzer: dialyzer()
+      docs: docs()
     ]
   end
 
@@ -72,6 +51,40 @@ defmodule Snap.MixProject do
       {:telemetry, "~> 0.4"},
       {:ex_doc, "~> 0.23", only: :dev, runtime: false},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false}
+    ]
+  end
+
+  defp package do
+    [
+      maintainers: ["Tom Taylor"],
+      licenses: ["MIT"],
+      links: %{
+        "GitHub" => @github_url
+      },
+      files: ~w(mix.exs lib LICENSE.md README.md CHANGELOG.md)
+    ]
+  end
+
+  defp docs do
+    [
+      main: "Snap",
+      source_ref: @version,
+      groups_for_modules: [
+        Authentication: [
+          Snap.Auth,
+          Snap.Auth.Plain
+        ],
+        "Bulk operations": [
+          Snap.Bulk.Action.Create,
+          Snap.Bulk.Action.Index,
+          Snap.Bulk.Action.Update,
+          Snap.Bulk.Action.Delete
+        ],
+        Errors: [
+          Snap.Exception,
+          Snap.BulkError
+        ]
+      ]
     ]
   end
 end
