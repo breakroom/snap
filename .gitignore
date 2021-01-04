@@ -30,3 +30,6 @@ snap-*.tar
 
 # Elixir Language Server
 /.elixir_ls
+
+# Contains Dialyzer PLTs
+/priv
