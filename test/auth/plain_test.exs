@@ -30,4 +30,18 @@ defmodule Snap.Auth.PlainTest do
     assert headers2 == [{"Authorization", "Basic dGVzdGluZzpwYXNzd29yZA=="}]
     assert body == body2
   end
+
+  test "with a username and password in the config's URL" do
+    config = [url: "http://testing:password@example.net:9200"]
+    method = "GET"
+    path = "/_cluster/health"
+    headers = []
+    body = nil
+
+    {:ok, {method2, path2, headers2, body2}} = Plain.sign(config, method, path, headers, body)
+    assert method == method2
+    assert path == path2
+    assert headers2 == [{"Authorization", "Basic dGVzdGluZzpwYXNzd29yZA=="}]
+    assert body == body2
+  end
 end
