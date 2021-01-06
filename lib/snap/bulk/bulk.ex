@@ -50,7 +50,12 @@ defmodule Snap.Bulk do
   API](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html)
   endpoint.
   """
-  @spec perform(Enumerable.t(), module(), String.t(), Keyword.t()) ::
+  @spec perform(
+          stream :: Enumerable.t(),
+          cluster :: module(),
+          index :: String.t(),
+          opts :: Keyword.t()
+        ) ::
           :ok | Snap.Cluster.error() | {:error, Snap.BulkError.t()}
   def perform(stream, cluster, index, opts) do
     page_size = Keyword.get(opts, :page_size, @default_page_size)
