@@ -44,37 +44,43 @@ defmodule Snap.Bulk do
   * `page_size` - defines the size of each page, defaulting to 5000 actions.
   * `page_wait` - defines wait period between pages in ms, defaulting to
     15000ms.
+
+  Any other options, such as `pipeline: "foo"` are passed through as query
+  parameters to the [Bulk
+  API](https://www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html)
+  endpoint.
   """
   @spec perform(Enumerable.t(), module(), String.t(), Keyword.t()) ::
           :ok | Snap.Cluster.error() | {:error, Snap.BulkError.t()}
   def perform(stream, cluster, index, opts) do
     page_size = Keyword.get(opts, :page_size, @default_page_size)
     page_wait = Keyword.get(opts, :page_wait, @default_page_wait)
+    request_params = Keyword.drop(opts, [:page_size, :page_wait])
 
     stream
     |> Stream.chunk_every(page_size)
     |> Stream.intersperse({:wait, page_wait})
-    |> Stream.flat_map(&process_chunk(&1, cluster, index))
+    |> Stream.flat_map(&process_chunk(&1, cluster, index, request_params))
     |> Enum.to_list()
     |> handle_result()
   end
 
-  defp process_chunk({:wait, 0}, _cluster, _index) do
+  defp process_chunk({:wait, 0}, _cluster, _index, _params) do
     []
   end
 
-  defp process_chunk({:wait, wait}, _cluster, _index) do
+  defp process_chunk({:wait, wait}, _cluster, _index, _params) do
     :ok = :timer.sleep(wait)
 
     []
   end
 
-  defp process_chunk(actions, cluster, index) do
+  defp process_chunk(actions, cluster, index, params) do
     body = Actions.encode(actions)
 
     headers = [{"content-type", "application/x-ndjson"}]
 
-    result = Snap.post(cluster, "/#{index}/_bulk", body, [], headers)
+    result = Snap.post(cluster, "/#{index}/_bulk", body, params, headers)
 
     case result do
       {:ok, %{"errors" => true, "items" => items}} ->
