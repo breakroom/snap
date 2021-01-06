@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.2
+
+- Pass extra opts, such as `pipeline: "foo"` in `Snap.Bulk.perform` to the
+  Bulk API endpoint.
+
 ## 0.2.1
 
 - Added support in `Snap.Auth.Plain` for defining the username and password in
