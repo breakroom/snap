@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.3
+
+- Added support for an optional `max_errors` parameter in
+  `Snap.Bulk.perform`, which aborts the operation if the number of errors
+  accumulated exceedes this count.
+
 ## 0.2.2
 
 - Pass extra opts, such as `pipeline: "foo"` in `Snap.Bulk.perform` to the
