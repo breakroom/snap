@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.4
+
+- Fixed behaviour of `max_errors` when it's set to `0`.
+
 ## 0.2.3
 
 - Added support for an optional `max_errors` parameter in
