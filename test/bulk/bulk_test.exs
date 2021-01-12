@@ -65,11 +65,47 @@ defmodule Snap.BulkTest do
         actions
         |> Bulk.perform(Cluster, @test_index, page_size: 2, page_wait: 10, max_errors: 2)
 
-      assert Enum.count(errors) == 2
+      assert Enum.count(errors) == 4
+    end
 
-      error = Enum.at(errors, 0)
+    test "running actions in 3 chunks with max_errors count that gets exceeded in the second chunk" do
+      {:ok, _} = Snap.Indexes.create(Cluster, @test_index, %{})
 
-      assert error.status == 404
+      doc = %{foo: "bar"}
+
+      actions = [
+        %Action.Update{_id: 1, doc: doc},
+        %Action.Update{_id: 2, doc: doc},
+        %Action.Update{_id: 3, doc: doc},
+        %Action.Update{_id: 4, doc: doc},
+        %Action.Update{_id: 5, doc: doc},
+        %Action.Update{_id: 6, doc: doc}
+      ]
+
+      {:error, %Snap.BulkError{errors: errors}} =
+        actions
+        |> Bulk.perform(Cluster, @test_index, page_size: 2, page_wait: 10, max_errors: 3)
+
+      assert Enum.count(errors) == 4
+    end
+
+    test "running actions in 2 chunks with a 0 max_errors count that never gets exceeded" do
+      {:ok, _} = Snap.Indexes.create(Cluster, @test_index, %{})
+
+      doc = %{foo: "bar"}
+
+      actions = [
+        %Action.Index{_id: 1, doc: doc},
+        %Action.Index{_id: 2, doc: doc},
+        %Action.Index{_id: 3, doc: doc},
+        %Action.Index{_id: 4, doc: doc},
+        %Action.Index{_id: 5, doc: doc},
+        %Action.Index{_id: 6, doc: doc}
+      ]
+
+      assert :ok ==
+               actions
+               |> Bulk.perform(Cluster, @test_index, page_size: 2, page_wait: 10, max_errors: 0)
     end
   end
 end

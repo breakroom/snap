@@ -84,7 +84,7 @@ defmodule Snap.Bulk do
   end
 
   defp process_chunk(_actions, _cluster, _index, _params, error_count, max_errors)
-       when is_integer(max_errors) and error_count >= max_errors do
+       when is_integer(max_errors) and error_count > max_errors do
     {:halt, error_count}
   end
 
