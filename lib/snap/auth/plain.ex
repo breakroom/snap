@@ -25,14 +25,16 @@ defmodule Snap.Auth.Plain do
   @behaviour Snap.Auth
 
   def sign(config, method, path, headers, body) do
-    with [username, password] <- get_credentials_from_config(config) do
-      auth_headers = [{"Authorization", encode_header(username, password)}]
+    case get_credentials_from_config(config) do
+      [username, password] ->
+        auth_headers = [{"Authorization", encode_header(username, password)}]
 
-      new_headers = headers ++ auth_headers
+        new_headers = headers ++ auth_headers
 
-      {:ok, {method, path, new_headers, body}}
-    else
-      _ -> {:ok, {method, path, headers, body}}
+        {:ok, {method, path, new_headers, body}}
+
+      _ ->
+        {:ok, {method, path, headers, body}}
     end
   end
 
