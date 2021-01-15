@@ -2,25 +2,25 @@ defmodule Snap.Hit do
   @moduledoc """
   Represents an individual hit dictionary from a [Search API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search.html) response.
   """
-  defstruct [:_index, :_type, :_id, :_score, :_source, :fields]
+  defstruct [:index, :type, :id, :score, :source, :fields]
 
   def new(response) do
     %__MODULE__{
-      _index: response["_index"],
-      _type: response["_type"],
-      _id: response["_id"],
-      _score: response["_score"],
-      _source: response["_source"],
+      index: response["_index"],
+      type: response["_type"],
+      id: response["_id"],
+      score: response["_score"],
+      source: response["_source"],
       fields: response["fields"]
     }
   end
 
   @type t :: %__MODULE__{
-          _index: String.t(),
-          _type: String.t(),
-          _id: String.t(),
-          _score: float() | nil,
-          _source: map() | nil,
+          index: String.t(),
+          type: String.t(),
+          id: String.t(),
+          score: float() | nil,
+          source: map() | nil,
           fields: map() | nil
         }
 end

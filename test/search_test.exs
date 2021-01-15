@@ -22,7 +22,7 @@ defmodule Snap.SearchTest do
     assert Enum.count(search_response) == 5
 
     first_hit = Enum.at(search_response, 0)
-    assert first_hit._id == "1"
-    assert first_hit._source["title"] == "Document 1"
+    assert first_hit.id == "1"
+    assert first_hit.source["title"] == "Document 1"
   end
 end

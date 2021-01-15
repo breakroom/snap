@@ -12,7 +12,7 @@ defmodule Snap.SearchResponseTest do
     response = SearchResponse.new(json)
     assert response.took == 5
     assert response.timed_out == false
-    assert response._shards == %{"total" => 5, "successful" => 5, "skipped" => 0, "failed" => 0}
+    assert response.shards == %{"total" => 5, "successful" => 5, "skipped" => 0, "failed" => 0}
     assert Enum.count(response) == 10
 
     assert response.hits.total == %{"value" => 10_000, "relation" => "gte"}
@@ -20,12 +20,12 @@ defmodule Snap.SearchResponseTest do
     assert Enum.count(response.hits.hits) == 10
 
     hit = Enum.at(response.hits.hits, 0)
-    assert hit._index == "dev-vacancies-v1-1610549150278184"
-    assert hit._type == "_doc"
-    assert hit._id == "adz-2553823"
-    assert hit._score == 1.0
+    assert hit.index == "dev-vacancies-v1-1610549150278184"
+    assert hit.type == "_doc"
+    assert hit.id == "adz-2553823"
+    assert hit.score == 1.0
 
-    assert hit._source == %{
+    assert hit.source == %{
              "adzuna_url" =>
                "https://www.adzuna.co.uk/jobs/details/1922923955?se=oMlhYylR6xGMhMp5avH9Cg&utm_medium=api&utm_source=0b5c6a90&v=1F37F0DE2CAA738178B918040AA403B42178B4A7",
              "contract_time" => "full_time",

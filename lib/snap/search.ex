@@ -27,7 +27,7 @@ defmodule Snap.Search do
       {:ok, response} = Snap.Search(Cluster, "index", query)
 
       IO.inspect(response.took)
-      Enum.each(fn hit -> IO.inspect(hit._score) end)
+      Enum.each(response, fn hit -> IO.inspect(hit.score) end)
   """
   def search(cluster, index_or_alias, query, params \\ [], headers \\ [], opts \\ []) do
     case cluster.post("/#{index_or_alias}/_search", query, params, headers, opts) do
