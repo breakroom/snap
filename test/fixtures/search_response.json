@@ -1,0 +1,181 @@
+{
+  "took": 5,
+  "timed_out": false,
+  "_shards": { "total": 5, "successful": 5, "skipped": 0, "failed": 0 },
+  "hits": {
+    "total": { "value": 10000, "relation": "gte" },
+    "max_score": 1.0,
+    "hits": [
+      {
+        "_index": "dev-vacancies-v1-1610549150278184",
+        "_type": "_doc",
+        "_id": "adz-2553823",
+        "_score": 1.0,
+        "_source": {
+          "adzuna_url": "https://www.adzuna.co.uk/jobs/details/1922923955?se=oMlhYylR6xGMhMp5avH9Cg&utm_medium=api&utm_source=0b5c6a90&v=1F37F0DE2CAA738178B918040AA403B42178B4A7",
+          "contract_time": "full_time",
+          "contract_type": "permanent",
+          "description": "Science teacher required in Chelmsford September start MPS/UPS Are you a newly qualified Science teacher looking to kick-start your career? Are you an experienced Science teacher looking for the next step in your career? TLTP are currently working with a Secondary school based in Chelmsford that is seeking to appoint an enthusiastic Teacher of Science to join them in September. The school are graded 'Good' by Ofsted and currently have 1130 students in school. For the right candidate there would…",
+          "employer_name": "TLTP",
+          "id": "adz-2553823",
+          "job_title": "Science teacher",
+          "location": { "lat": 51.735802, "lon": 0.469708 },
+          "timestamp": "1610052006"
+        }
+      },
+      {
+        "_index": "dev-vacancies-v1-1610549150278184",
+        "_type": "_doc",
+        "_id": "adz-2553827",
+        "_score": 1.0,
+        "_source": {
+          "adzuna_url": "https://www.adzuna.co.uk/jobs/details/1922923945?se=oMlhYylR6xGMhMp5avH9Cg&utm_medium=api&utm_source=0b5c6a90&v=4254A3D673CD7F3C6F5A33BA5D7D125A2C43AFC2",
+          "contract_time": "full_time",
+          "contract_type": "permanent",
+          "description": "CONSTRUCTION SOLICITOR – 5/7 PQE – LONDON - £EXCELLENT – JOB REF:2819 This is an exceptional opening with a long established niche City practice for a contentious Construction Solicitor to join their award winning team. The role will see you working with clients including developers, major corporations, funders, contractors, sub-contractors, construction consultants, local authorities, registered providers of social housing and PFI consortia. This is an opportunity for an individual with a pass…",
+          "employer_name": "ENL",
+          "id": "adz-2553827",
+          "job_title": "Construction Solicitor",
+          "location": { "lat": 51.503378, "lon": -0.139134 },
+          "timestamp": "1610052006"
+        }
+      },
+      {
+        "_index": "dev-vacancies-v1-1610549150278184",
+        "_type": "_doc",
+        "_id": "adz-2553832",
+        "_score": 1.0,
+        "_source": {
+          "adzuna_url": "https://www.adzuna.co.uk/jobs/details/1922923901?se=oMlhYylR6xGMhMp5avH9Cg&utm_medium=api&utm_source=0b5c6a90&v=D424D43DD94AC2828A3CC1DBF2AB0D530A7C156E",
+          "contract_time": "full_time",
+          "contract_type": "contract",
+          "description": "Fostering Social Worker – Gloucestershire Pay rate - £35 per hour Contract role, maternity cover Gloucestershire Council are currently recruiting a qualified social worker to work within a Fostering team. The ideal candidate will be able to fit into this busy but welcoming team, undertake annual reviews, hold a caseload, help with identifying placements for children. You will need to have post qualification experience in statutory Children's Social Care service, and be registered with Social Wo…",
+          "employer_name": "Pertemps",
+          "id": "adz-2553832",
+          "job_title": "Fostering Social Worker – Gloucestershire",
+          "location": { "lat": 51.866699, "lon": -2.24867 },
+          "timestamp": "1610052006"
+        }
+      },
+      {
+        "_index": "dev-vacancies-v1-1610549150278184",
+        "_type": "_doc",
+        "_id": "adz-2553853",
+        "_score": 1.0,
+        "_source": {
+          "adzuna_url": "https://www.adzuna.co.uk/jobs/details/1922923935?se=oMlhYylR6xGMhMp5avH9Cg&utm_medium=api&utm_source=0b5c6a90&v=4E3A2FFEA9EB8154B899FC966B633129C1924469",
+          "contract_time": "full_time",
+          "contract_type": "permanent",
+          "description": "Proclaim Developer, SQL, XML, BI, Web Services, Systems, Developer, SSRS, Data, Leeds, Permanent Award winning North Leeds law firm is looking for a Proclaim Developer with experience to join their Information Technology team. The firm is rapidly growing therefore this is a fantastic opportunity for a highly driven and motivated candidate to help develop and maintain the Proclaim database and App. This role creates an opportunity for the right person to grow and make the role their own. The suc…",
+          "employer_name": "Klein Hamilton",
+          "id": "adz-2553853",
+          "job_title": "Proclaim Developer",
+          "location": { "lat": 51.2467, "lon": 0.606947 },
+          "timestamp": "1610052006"
+        }
+      },
+      {
+        "_index": "dev-vacancies-v1-1610549150278184",
+        "_type": "_doc",
+        "_id": "adz-2553858",
+        "_score": 1.0,
+        "_source": {
+          "adzuna_url": "https://www.adzuna.co.uk/jobs/details/1922923899?se=oMlhYylR6xGMhMp5avH9Cg&utm_medium=api&utm_source=0b5c6a90&v=A894C1A93B1E47403C3467524CA47DF05A73687C",
+          "contract_time": "full_time",
+          "contract_type": "permanent",
+          "description": "Seeking a new challenge? Look no further, we are recruiting for a First Line Manager to come and join our team in a fast paced environment. We are looking for an organized and motivated individual to come and work with a dedicated work force and ready to make changes. Your main responsibilities will include: Team Management in Ecommerce Direct the daily activity to ensure a safe, secure, clean and fair work environment for team members Facilitate effective communication and relationships both i…",
+          "employer_name": "Pertemps",
+          "id": "adz-2553858",
+          "job_title": "Warehouse Coordinator - Day Shift",
+          "location": { "lat": 52.373199, "lon": -1.26174 },
+          "timestamp": "1610052005"
+        }
+      },
+      {
+        "_index": "dev-vacancies-v1-1610549150278184",
+        "_type": "_doc",
+        "_id": "adz-2553861",
+        "_score": 1.0,
+        "_source": {
+          "adzuna_url": "https://www.adzuna.co.uk/jobs/details/1922923862?se=ghb4ZilR6xG6AwFOhrkgTw&utm_medium=api&utm_source=0b5c6a90&v=E6251D25721BB990BAE6F5811732FE634A2E9500",
+          "contract_time": "full_time",
+          "contract_type": "permanent",
+          "description": "VANRATH Business Support are delighted to be exclusively assisting their Belfast-based client, a builders merchants, with the recruitment of a Branch Manager on a permanent basis. The successful candidate will have experience in working for a Builders Merchants or similar industry previously Key Responsibilities Implement and deliver an excellent customer experience, maintaining strong effective relationships with both local customers and suppliers. Monitor KPIs for the branch and look for new …",
+          "employer_name": "NIJobFinder",
+          "id": "adz-2553861",
+          "job_title": "Branch Manager (plus car allowance)",
+          "location": { "lat": 54.597055, "lon": -5.924648 },
+          "timestamp": "1610052000"
+        }
+      },
+      {
+        "_index": "dev-vacancies-v1-1610549150278184",
+        "_type": "_doc",
+        "_id": "adz-2553862",
+        "_score": 1.0,
+        "_source": {
+          "adzuna_url": "https://www.adzuna.co.uk/jobs/details/1922923866?se=ghb4ZilR6xG6AwFOhrkgTw&utm_medium=api&utm_source=0b5c6a90&v=95621C88F965F7294026928684D1505C3608F5E8",
+          "contract_time": "full_time",
+          "contract_type": "permanent",
+          "description": "Team Manager (7662) Location : Strabane Family Centre Scheme Contract type : Permanent Hours : 30 Salary : £26,966 - £37,414 Closing Date : 20 January 2021 Interview Date : TBC About Barnardo's At Barnardo's we believe in children – no matter who they are, what they have done or what they have been through. Please read about our basis and values following the link below. You will be asked questions relating to them as part of the recruitment process for this role. Barnardo's is committed to hav…",
+          "employer_name": "NIJobFinder",
+          "id": "adz-2553862",
+          "job_title": "Team Manager",
+          "location": { "lat": 54.595014, "lon": -5.852024 },
+          "timestamp": "1610052000"
+        }
+      },
+      {
+        "_index": "dev-vacancies-v1-1610549150278184",
+        "_type": "_doc",
+        "_id": "adz-2553877",
+        "_score": 1.0,
+        "_source": {
+          "adzuna_url": "https://www.adzuna.co.uk/jobs/details/1922923281?se=ghb4ZilR6xG6AwFOhrkgTw&utm_medium=api&utm_source=0b5c6a90&v=1B79AB405B435628F49419FC608DC2A218D18723",
+          "contract_time": "full_time",
+          "contract_type": "permanent",
+          "description": "Trainee Customs Administrator Loughgall, County Armagh Salary Negotiable (depending on experience) Full-Time & Perm Employer & Job Role Due continued growth, Derry Bros Shipping are now recruiting for Trainee Customs Administrators based at their site in Loughgall, County Armagh. This role would suit a candidate with drive an ambition to progress further. Answer any incoming phone queries relating to our custom clearance service. Input customs declarations for both Import and Export shipments u…",
+          "employer_name": "NIJobFinder",
+          "id": "adz-2553877",
+          "job_title": "Trainee Customs Administrator",
+          "location": { "lat": 54.426449, "lon": -6.422271 },
+          "timestamp": "1610051983"
+        }
+      },
+      {
+        "_index": "dev-vacancies-v1-1610549150278184",
+        "_type": "_doc",
+        "_id": "adz-2553878",
+        "_score": 1.0,
+        "_source": {
+          "adzuna_url": "https://www.adzuna.co.uk/jobs/details/1922923237?se=ghb4ZilR6xG6AwFOhrkgTw&utm_medium=api&utm_source=0b5c6a90&v=EF60A33113FF7F50C3CF2A083F3B07B84A8A9A50",
+          "contract_time": "full_time",
+          "contract_type": "permanent",
+          "description": "MCS Group is currently recruiting a Digital Marketing Executive for a leading wholesale business with offices throughout the UK, Ireland and internationally. This is an excellent opportunity for a digitally focused candidate who can meet day-to-day challenges in a busy environment, work creatively, independently and enjoy making a difference in the role/company. Working with and reporting directly to the Group Digital Marketing & Ecommerce Manager you will be immersed in key existing brands and…",
+          "employer_name": "NIJobFinder",
+          "id": "adz-2553878",
+          "job_title": "Digital Marketing Executive",
+          "location": { "lat": 54.594085, "lon": -5.928575 },
+          "timestamp": "1610051982"
+        }
+      },
+      {
+        "_index": "dev-vacancies-v1-1610549150278184",
+        "_type": "_doc",
+        "_id": "adz-2553880",
+        "_score": 1.0,
+        "_source": {
+          "adzuna_url": "https://www.adzuna.co.uk/jobs/details/1922923089?se=ghb4ZilR6xG6AwFOhrkgTw&utm_medium=api&utm_source=0b5c6a90&v=8D7AEF0A06CF2C428A66612E526B2DF83D3C7A8A",
+          "contract_time": "full_time",
+          "contract_type": "permanent",
+          "description": "We are recruiting on behalf of our client for a: Digital Marketing Manager – New Position (Publishing, Events & Exhibitions) Based in Belfast Full Time (Permanent) £25,000 to £30,000 (Salary Negotiable for successful candidate) Immediate Interviews & Start. 2021 brings new opportunities as our clients Media evolves into Digital First. With the complete transformation of all titles our client has successfully pivoted the brands to digital platforms, backed by weekly communications via branded ne…",
+          "employer_name": "NIJobFinder",
+          "id": "adz-2553880",
+          "job_title": "Digital Marketing Manager",
+          "location": { "lat": 54.631733, "lon": -5.895283 },
+          "timestamp": "1610051979"
+        }
+      }
+    ]
+  }
+}

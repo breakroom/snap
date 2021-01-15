@@ -80,6 +80,11 @@ defmodule Snap.MixProject do
           Snap.Bulk.Action.Update,
           Snap.Bulk.Action.Delete
         ],
+        "Response structs": [
+          Snap.SearchResponse,
+          Snap.Hits,
+          Snap.Hit
+        ],
         Errors: [
           Snap.Exception,
           Snap.BulkError
