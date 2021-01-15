@@ -106,7 +106,7 @@ defmodule Snap.Cluster do
   @type success :: {:ok, map()}
 
   @typedoc "An error from an HTTP operation"
-  @type error :: {:error, Snap.Exception.t() | Mint.Types.error() | Jason.DecodeError.t()}
+  @type error :: {:error, Snap.ResponseError.t() | Mint.Types.error() | Jason.DecodeError.t()}
 
   @doc """
   Sends a GET request.
@@ -115,7 +115,7 @@ defmodule Snap.Cluster do
 
   * `{:ok, response}` - where response is a map representing the parsed JSON response.
   * `{:error, error}` - where the error can be a struct of either:
-    * `Snap.Exception`
+    * `Snap.ResponseError`
     * `Mint.TransportError`
     * `Mint.HTTPError`
     * `Jason.DecodeError`
@@ -129,7 +129,7 @@ defmodule Snap.Cluster do
 
   * `{:ok, response}` - where response is a map representing the parsed JSON response.
   * `{:error, error}` - where the error can be a struct of either:
-    * `Snap.Exception`
+    * `Snap.ResponseError`
     * `Mint.TransportError`
     * `Mint.HTTPError`
     * `Jason.DecodeError`
@@ -143,7 +143,7 @@ defmodule Snap.Cluster do
 
   * `{:ok, response}` - where response is a map representing the parsed JSON response.
   * `{:error, error}` - where the error can be a struct of either:
-    * `Snap.Exception`
+    * `Snap.ResponseError`
     * `Mint.TransportError`
     * `Mint.HTTPError`
     * `Jason.DecodeError`
@@ -157,7 +157,7 @@ defmodule Snap.Cluster do
 
   * `{:ok, response}` - where response is a map representing the parsed JSON response.
   * `{:error, error}` - where the error can be a struct of either:
-    * `Snap.Exception`
+    * `Snap.ResponseError`
     * `Mint.TransportError`
     * `Mint.HTTPError`
     * `Jason.DecodeError`

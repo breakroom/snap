@@ -54,7 +54,7 @@ defmodule Snap.Request do
 
       {:ok, %Finch.Response{body: data}} ->
         with {:ok, json} <- Jason.decode(data) do
-          exception = Snap.Exception.exception_from_response(json)
+          exception = Snap.ResponseError.exception_from_response(json)
           {:error, exception}
         end
 

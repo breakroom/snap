@@ -127,19 +127,19 @@ defmodule Snap.Bulk do
   end
 
   defp process_item(%{"create" => %{"error" => error} = item}) when is_map(error) do
-    Snap.Exception.exception_from_response(item)
+    Snap.ResponseError.exception_from_response(item)
   end
 
   defp process_item(%{"index" => %{"error" => error} = item}) when is_map(error) do
-    Snap.Exception.exception_from_response(item)
+    Snap.ResponseError.exception_from_response(item)
   end
 
   defp process_item(%{"update" => %{"error" => error} = item}) when is_map(error) do
-    Snap.Exception.exception_from_response(item)
+    Snap.ResponseError.exception_from_response(item)
   end
 
   defp process_item(%{"delete" => %{"error" => error} = item}) when is_map(error) do
-    Snap.Exception.exception_from_response(item)
+    Snap.ResponseError.exception_from_response(item)
   end
 
   defp process_item(_), do: nil

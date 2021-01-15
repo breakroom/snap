@@ -85,8 +85,8 @@ defmodule Snap.MixProject do
           Snap.Hits,
           Snap.Hit
         ],
-        Errors: [
-          Snap.Exception,
+        Exceptions: [
+          Snap.ResponseError,
           Snap.BulkError
         ]
       ]

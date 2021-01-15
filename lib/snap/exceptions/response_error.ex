@@ -1,9 +1,7 @@
-defmodule Snap.Exception do
+defmodule Snap.ResponseError do
   @moduledoc """
   Represents an Elasticsearch exception raised while executing a query.
   """
-
-  alias __MODULE__
 
   @keys [
     :status,
@@ -28,7 +26,7 @@ defmodule Snap.Exception do
 
   def exception_from_response(response) do
     attrs = build(response)
-    struct(Exception, attrs)
+    struct(__MODULE__, attrs)
   end
 
   def message(exception) do
