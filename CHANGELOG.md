@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.0
+
+- Drop the underscore from the response struct keys, as it's just annoying to
+  work with.
+
+## 0.3.0
+
+- Added `Snap.Search` to wrap making searches and parsing the response into
+  structs.
+
 ## 0.2.4
 
 - Fixed behaviour of `max_errors` when it's set to `0`.
