@@ -50,7 +50,8 @@ defmodule Snap.MixProject do
       {:jason, "~> 1.0"},
       {:telemetry, "~> 0.4"},
       {:ex_doc, "~> 0.23", only: :dev, runtime: false},
-      {:dialyxir, "~> 1.0", only: :dev, runtime: false}
+      {:dialyxir, "~> 1.0", only: :dev, runtime: false},
+      {:credo, "~> 1.5", only: [:dev, :test], runtime: false}
     ]
   end
 
