@@ -5,7 +5,7 @@
 - Drop the underscore from the response struct keys, as it's just annoying to
   work with.
 
-## 0.3.0
+## 0.3.0
 
 - Added `Snap.Search` to wrap making searches and parsing the response into
   structs.
