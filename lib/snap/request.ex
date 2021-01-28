@@ -39,7 +39,9 @@ defmodule Snap.Request do
         total_time: total_time
       }
 
-      metadata = telemetry_metadata(method, path, headers, body, result)
+      uri = URI.parse(url)
+
+      metadata = telemetry_metadata(method, uri, headers, body, result)
 
       :telemetry.execute(event, measurements, metadata)
 
@@ -72,8 +74,8 @@ defmodule Snap.Request do
     end)
   end
 
-  defp telemetry_metadata(method, path, _headers, body, result) do
-    %{method: method, path: path, body: body, result: result}
+  defp telemetry_metadata(method, uri, _headers, body, result) do
+    %{method: method, host: uri.host, port: uri.port, path: uri.path, body: body, result: result}
   end
 
   defp encode_body(body) when is_map(body) do
