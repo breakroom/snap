@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.1
+
+- Added the `host` and `port` to the Telemetry metadata.
+
 ## 0.4.0
 
 - Drop the underscore from the response struct keys, as it's just annoying to
