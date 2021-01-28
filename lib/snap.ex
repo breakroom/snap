@@ -87,6 +87,8 @@ defmodule Snap do
 
   * `method` - the HTTP method used
   * `path` - the path requested
+  * `port` - the port requested
+  * `host` - the host requested
   * `headers` - a list of the headers sent
   * `body` - the body sent
   * `result` - the result returned to the user

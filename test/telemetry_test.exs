@@ -6,7 +6,15 @@ defmodule Snap.TelemetryTest do
   test "telemetry is fired with a request" do
     log = fn event_name, measurements, metadata ->
       assert event_name == [:snap, :snap, :request]
-      assert %{result: {:ok, _}, method: "GET", path: "/_cluster/health", body: nil} = metadata
+
+      assert %{
+               result: {:ok, _},
+               method: "GET",
+               path: "/_cluster/health",
+               host: "localhost",
+               port: 9200,
+               body: nil
+             } = metadata
 
       assert measurements.total_time ==
                measurements.response_time + measurements.decode_time
