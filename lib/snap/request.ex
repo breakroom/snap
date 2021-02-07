@@ -4,7 +4,7 @@ defmodule Snap.Request do
 
   def request(cluster, method, path, body \\ nil, params \\ [], headers \\ [], opts \\ []) do
     config = cluster.config()
-    auth = Keyword.fetch!(config, :auth)
+    auth = Keyword.get(config, :auth, Snap.Auth.Plain)
 
     url =
       config
