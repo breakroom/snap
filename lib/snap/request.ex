@@ -17,18 +17,18 @@ defmodule Snap.Request do
 
     conn_pool_name = Snap.Cluster.Supervisor.connection_pool_name(cluster)
 
-    start_time = System.os_time()
+    start_time = System.monotonic_time()
 
     with {:ok, {method, url, headers, body}} <- auth.sign(config, method, url, headers, body) do
       response =
         Finch.build(method, url, headers, body)
         |> Finch.request(conn_pool_name, opts)
 
-      response_time = System.os_time() - start_time
+      response_time = System.monotonic_time() - start_time
 
       result = parse_response(response)
 
-      decode_time = System.os_time() - response_time - start_time
+      decode_time = System.monotonic_time() - response_time - start_time
       total_time = response_time + decode_time
 
       event = telemetry_prefix(cluster) ++ [:request]
