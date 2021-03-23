@@ -1,4 +1,6 @@
 defmodule Snap.Request do
+  require Logger
+
   @moduledoc false
   @default_headers [{"content-type", "application/json"}, {"accept", "application/json"}]
 
@@ -30,6 +32,19 @@ defmodule Snap.Request do
 
       decode_time = System.monotonic_time() - response_time - start_time
       total_time = response_time + decode_time
+
+      Logger.debug(fn ->
+        str =
+          "Elasticsearch #{method} request path=#{path} response=#{
+            format_time_to_ms(response_time)
+          }ms decode=#{format_time_to_ms(decode_time)}ms total=#{format_time_to_ms(total_time)}ms"
+
+        if body do
+          str <> "\n" <> body
+        else
+          str
+        end
+      end)
 
       event = telemetry_prefix(cluster) ++ [:request]
 
@@ -115,5 +130,9 @@ defmodule Snap.Request do
         List.keystore(acc, key, 0, tuple)
       end
     end)
+  end
+
+  defp format_time_to_ms(t) do
+    System.convert_time_unit(t, :native, :millisecond)
   end
 end
