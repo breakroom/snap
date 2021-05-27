@@ -24,6 +24,8 @@ defmodule Snap.SearchResponseTest do
     assert hit.type == "_doc"
     assert hit.id == "adz-2553823"
     assert hit.score == 1.0
+    assert hit.matched_queries == ["query_a"]
+    assert hit.highlight == %{"message" => [" with the <em>number</em>", " <em>1</em>"]}
 
     assert hit.source == %{
              "adzuna_url" =>

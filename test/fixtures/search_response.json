@@ -21,6 +21,13 @@
           "job_title": "Science teacher",
           "location": { "lat": 51.735802, "lon": 0.469708 },
           "timestamp": "1610052006"
+        },
+        "matched_queries": ["query_a"],
+        "highlight": {
+          "message": [
+            " with the <em>number</em>",
+            " <em>1</em>"
+          ]
         }
       },
       {
