@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.5
+
+- Allow extra options on `Snap.Bulk.perform/4` which are passed into the underlying request
+- Added `matched_queries` and `highlight` fields on the `Snap.Hit` struct.
+
 ## 0.4.1
 
 - Added the `host` and `port` to the Telemetry metadata.
