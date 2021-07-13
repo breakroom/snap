@@ -46,6 +46,7 @@ defmodule Snap.Bulk do
     15000ms.
   * `max_errors` - aborts when the number of errors returned exceedes this
     count (defaults to `nil`, which will run to the end)
+  * `request_opts` - defines the options to be used with `Snap.Request`
 
   Any other options, such as `pipeline: "foo"` are passed through as query
   parameters to the [Bulk
@@ -60,40 +61,59 @@ defmodule Snap.Bulk do
         ) ::
           :ok | Snap.Cluster.error() | {:error, Snap.BulkError.t()}
   def perform(stream, cluster, index, opts) do
-    page_size = Keyword.get(opts, :page_size, @default_page_size)
-    page_wait = Keyword.get(opts, :page_wait, @default_page_wait)
-    max_errors = Keyword.get(opts, :max_errors, nil)
-    request_params = Keyword.drop(opts, [:page_size, :page_wait, :max_errors])
+    {page_size, opts} = Keyword.pop(opts, :page_size, @default_page_size)
+    {page_wait, opts} = Keyword.pop(opts, :page_wait, @default_page_wait)
+    {max_errors, opts} = Keyword.pop(opts, :max_errors, nil)
+    {request_opts, request_params} = Keyword.pop(opts, :request_opts, [])
 
     stream
     |> Stream.chunk_every(page_size)
     |> Stream.intersperse({:wait, page_wait})
-    |> Stream.transform(0, &process_chunk(&1, cluster, index, request_params, &2, max_errors))
+    |> Stream.transform(
+      0,
+      &process_chunk(&1, cluster, index, request_params, request_opts, &2, max_errors)
+    )
     |> Enum.to_list()
     |> handle_result()
   end
 
-  defp process_chunk({:wait, 0}, _cluster, _index, _params, error_count, _max_errors) do
+  defp process_chunk(
+         {:wait, 0},
+         _cluster,
+         _index,
+         _params,
+         _request_opts,
+         error_count,
+         _max_errors
+       ) do
     {[], error_count}
   end
 
-  defp process_chunk({:wait, wait}, _cluster, _index, _params, error_count, _max_errors) do
+  defp process_chunk(
+         {:wait, wait},
+         _cluster,
+         _index,
+         _params,
+         _request_opts,
+         error_count,
+         _max_errors
+       ) do
     :ok = :timer.sleep(wait)
 
     {[], error_count}
   end
 
-  defp process_chunk(_actions, _cluster, _index, _params, error_count, max_errors)
+  defp process_chunk(_actions, _cluster, _index, _params, _request_opts, error_count, max_errors)
        when is_integer(max_errors) and error_count > max_errors do
     {:halt, error_count}
   end
 
-  defp process_chunk(actions, cluster, index, params, error_count, _max_errors) do
+  defp process_chunk(actions, cluster, index, params, request_opts, error_count, _max_errors) do
     body = Actions.encode(actions)
 
     headers = [{"content-type", "application/x-ndjson"}]
 
-    result = Snap.post(cluster, "/#{index}/_bulk", body, params, headers)
+    result = Snap.post(cluster, "/#{index}/_bulk", body, params, headers, request_opts)
 
     add_errors =
       case result do
