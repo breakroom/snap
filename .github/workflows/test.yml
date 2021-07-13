@@ -9,6 +9,7 @@ jobs:
         include:
           - elixir: 1.12.x
             otp: 24.x
+            check_formatted: true
           - elixir: 1.12.x
             otp: 23.x
           - elixir: 1.12.x
@@ -62,6 +63,7 @@ jobs:
 
       - name: Check Formatting
         run: mix format --check-formatted
+        if: matrix.check_formatted
 
       - name: Run tests
         run: mix test --include integration
