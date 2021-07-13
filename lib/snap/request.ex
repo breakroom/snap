@@ -34,9 +34,7 @@ defmodule Snap.Request do
       total_time = response_time + decode_time
 
       Logger.debug(fn ->
-        "Elasticsearch #{method} request path=#{path} response=#{format_time_to_ms(response_time)}ms decode=#{
-          format_time_to_ms(decode_time)
-        }ms total=#{format_time_to_ms(total_time)}ms"
+        "Elasticsearch #{method} request path=#{path} response=#{format_time_to_ms(response_time)}ms decode=#{format_time_to_ms(decode_time)}ms total=#{format_time_to_ms(total_time)}ms"
       end)
 
       event = telemetry_prefix(cluster) ++ [:request]
