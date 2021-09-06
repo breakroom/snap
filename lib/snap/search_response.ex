@@ -4,7 +4,7 @@ defmodule Snap.SearchResponse do
 
   Implements `Enumerable`, so you can iterate directly over the struct.
   """
-  defstruct [:took, :timed_out, :shards, :hits, :scroll_id, :pit_id]
+  defstruct [:took, :timed_out, :shards, :hits, :aggregations, :scroll_id, :pit_id]
 
   def new(response) do
     %__MODULE__{
@@ -12,6 +12,7 @@ defmodule Snap.SearchResponse do
       timed_out: response["timed_out"],
       shards: response["_shards"],
       hits: Snap.Hits.new(response["hits"]),
+      aggregations: build_aggregations(response["aggregations"]),
       scroll_id: response["_scroll_id"],
       pit_id: response["pit_id"]
     }
@@ -22,9 +23,18 @@ defmodule Snap.SearchResponse do
           timed_out: boolean(),
           shards: map(),
           hits: Snap.Hits.t(),
+          aggregations: %{String.t() => Snap.Aggregation.t()} | nil,
           scroll_id: String.t() | nil,
           pit_id: map() | nil
         }
+
+  def build_aggregations(nil) do
+    nil
+  end
+
+  def build_aggregations(aggregations) when is_map(aggregations) do
+    Map.new(aggregations, fn {key, value} -> {key, Snap.Aggregation.new(value)} end)
+  end
 
   defimpl Enumerable do
     def reduce(_, {:halt, acc}, _fun), do: {:halted, acc}

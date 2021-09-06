@@ -3,7 +3,7 @@ defmodule Snap.SearchResponseTest do
 
   alias Snap.SearchResponse
 
-  test "new/1" do
+  test "new/1 without aggregations" do
     json =
       Path.join([__DIR__, "fixtures", "search_response.json"])
       |> File.read!()
@@ -14,6 +14,7 @@ defmodule Snap.SearchResponseTest do
     assert response.timed_out == false
     assert response.shards == %{"total" => 5, "successful" => 5, "skipped" => 0, "failed" => 0}
     assert Enum.count(response) == 10
+    assert is_nil(response.aggregations)
 
     assert response.hits.total == %{"value" => 10_000, "relation" => "gte"}
     assert response.hits.max_score == 1.0
@@ -39,6 +40,22 @@ defmodule Snap.SearchResponseTest do
              "job_title" => "Science teacher",
              "location" => %{"lat" => 51.735802, "lon" => 0.469708},
              "timestamp" => "1610052006"
+           }
+  end
+
+  test "new/1 with aggregations" do
+    json =
+      Path.join([__DIR__, "fixtures", "search_response_agg.json"])
+      |> File.read!()
+      |> Jason.decode!()
+
+    response = SearchResponse.new(json)
+    assert Enum.count(response.aggregations) == 1
+
+    assert response.aggregations["season_values"] == %Snap.Aggregation{
+             buckets: [%{"doc_count" => 69406, "key" => "summer"}],
+             doc_count_error_upper_bound: 0,
+             sum_other_doc_count: 0
            }
   end
 end
