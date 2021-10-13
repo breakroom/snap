@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.0
+
+- Update `telemetry` dependency to 1.0
+
 ## 0.4.5
 
 - Allow extra options on `Snap.Bulk.perform/4` which are passed into the underlying request
