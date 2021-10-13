@@ -48,7 +48,7 @@ defmodule Snap.MixProject do
       {:finch, "~> 0.8"},
       {:castore, "~> 0.1"},
       {:jason, "~> 1.0"},
-      {:telemetry, "~> 0.4"},
+      {:telemetry, "~> 1.0"},
       {:ex_doc, "~> 0.23", only: :dev, runtime: false},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false}
