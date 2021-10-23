@@ -15,6 +15,7 @@ defmodule Snap.MixProject do
       deps: deps(),
       dialyzer: dialyzer(),
       aliases: aliases(),
+      preferred_cli_env: ["test.all": :test],
 
       # Hex
       description: "A modern Elasticsearch client",
@@ -59,6 +60,7 @@ defmodule Snap.MixProject do
   defp aliases do
     [
       dev: "run --no-halt dev.exs",
+      "test.all": ["test --include integration"]
     ]
   end
 
