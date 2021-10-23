@@ -14,6 +14,7 @@ defmodule Snap.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
       dialyzer: dialyzer(),
+      aliases: aliases(),
 
       # Hex
       description: "A modern Elasticsearch client",
@@ -52,6 +53,12 @@ defmodule Snap.MixProject do
       {:ex_doc, "~> 0.23", only: :dev, runtime: false},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false}
+    ]
+  end
+
+  defp aliases do
+    [
+      dev: "run --no-halt dev.exs",
     ]
   end
 
