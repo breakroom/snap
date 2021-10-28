@@ -3,6 +3,7 @@ defmodule Snap.Cluster.Supervisor do
 
   use Supervisor
   @default_pool_size 5
+  @default_conn_opts []
 
   def start_link(cluster, otp_app, config) do
     Supervisor.start_link(__MODULE__, {cluster, otp_app, config}, name: cluster)
@@ -32,11 +33,12 @@ defmodule Snap.Cluster.Supervisor do
   defp finch_config(cluster, config) do
     url = Keyword.fetch!(config, :url)
     size = Keyword.get(config, :pool_size, @default_pool_size)
+    conn_opts = Keyword.get(config, :conn_opts, @default_conn_opts)
 
     [
       name: connection_pool_name(cluster),
       pools: %{
-        url => [size: size, count: 1]
+        url => [size: size, count: 1, conn_opts: conn_opts]
       }
     ]
   end
