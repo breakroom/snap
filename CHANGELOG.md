@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.1
+
+- Accept `conn_opts` config options to configure the underlying HTTP transport
+  (thanks @danielxvu)
+
 ## 0.5.0
 
 - Update `telemetry` dependency to 1.0
