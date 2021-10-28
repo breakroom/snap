@@ -68,6 +68,8 @@ defmodule Snap do
   * `auth` - the auth module used to configure the HTTP authentication headers
     (defaults to `Snap.Auth.Plain`)
   * `pool_size` - the maximum size of the HTTP connection pool (defaults to 5)
+  * `conn_opts` - a Keyword list of connection options passed to the underlying
+     HTTP connection
   * `telemetry_prefix` - the prefix of the telemetry events (default to
     `[:my_app, :snap]`)
 
