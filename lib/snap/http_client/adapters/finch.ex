@@ -1,11 +1,32 @@
 defmodule Snap.HTTPClient.Adapters.Finch do
   @moduledoc """
   Built in adapter using `Finch`.
+
+  You can also configure this adapter by explicitly setting the `http_client_adapter`
+  in the `Snap.Cluster` configuration with a tuple `{Snap.HTTPClient.Adapters.Finch, config}`.
+  For example:
+
+  ```
+  config :my_app, MyApp.Cluster,
+    http_client_adapter: {Snap.HTTPClient.Adapters.Finch, pool_size: 20}
+  ```
+
+  You can check the `t:config/0` for docs about the available configurations.
   """
   @behaviour Snap.HTTPClient
 
   alias Snap.HTTPClient.Error
   alias Snap.HTTPClient.Response
+
+  @typedoc """
+  Available options for configuring the Finch adapter. For more information about the options,
+  you can check [Finch's official docs](https://hexdocs.pm/finch/Finch.html#start_link/1-pool-configuration-options).
+
+    * `pool_size`: Set the pool size. Defaults to 5.
+  """
+  @type config :: [
+          pool_size: pos_integer()
+        ]
 
   @default_pool_size 5
 
@@ -39,7 +60,7 @@ defmodule Snap.HTTPClient.Adapters.Finch do
     response = %Response{
       headers: finch_response.headers,
       status: finch_response.status,
-      body: finch_response.body,
+      body: finch_response.body
     }
 
     {:ok, response}

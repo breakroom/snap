@@ -42,15 +42,22 @@ defmodule Snap.HTTPClient do
             ) :: {:ok, Response.t()} | {:error, Error.t()}
 
   def child_spec(config) do
-    adapter(config).child_spec(config)
+    {adapter, adapter_config} = adapter(config)
+
+    adapter.child_spec(config ++ adapter_config)
   end
 
   def request(cluster, method, url, headers, body, opts \\ []) do
-    adapter(cluster).request(cluster, method, url, headers, body, opts)
+    {adapter, _adapter_config} = adapter(cluster)
+
+    adapter.request(cluster, method, url, headers, body, opts)
   end
 
   defp adapter(cluster_config) when is_list(cluster_config) do
-    Keyword.get(cluster_config, :http_client_adapter, Snap.HTTPClient.Adapters.Finch)
+    case Keyword.get(cluster_config, :http_client_adapter, Snap.HTTPClient.Adapters.Finch) do
+      {adapter, config} -> {adapter, config}
+      adapter -> {adapter, []}
+    end
   end
 
   defp adapter(cluster) do
