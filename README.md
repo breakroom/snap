@@ -9,8 +9,6 @@ low level operations.
 
 See the full [API docs](https://hexdocs.pm/snap).
 
-**Disclaimer**: Snap is new and may not be production ready yet.
-
 ## Features
 
 - Versioned index management with zero-downtime hotswapping (compatible with [`elasticsearch`](https://github.com/danielberkompas/elasticsearch-elixir))
@@ -26,12 +24,12 @@ The package can be installed by adding `snap` to your list of dependencies in
 ```elixir
 def deps do
   [
-    {:snap, "~> 0.4"}
+    {:snap, "~> 0.5"}
   ]
 end
 ```
 
-Snap supports Elixir 1.9 or later. It might work with earlier versions but is currently untested.
+Snap supports Elixir 1.9 or later.
 
 ## Usage
 
