@@ -49,19 +49,19 @@ defmodule Snap.Cluster do
       end
 
       def get(path, params \\ [], headers \\ [], opts \\ []) do
-        Request.request(__MODULE__, "GET", path, nil, params, headers, opts)
+        Request.request(__MODULE__, :get, path, nil, params, headers, opts)
       end
 
       def post(path, body \\ nil, params \\ [], headers \\ [], opts \\ []) do
-        Request.request(__MODULE__, "POST", path, body, params, headers, opts)
+        Request.request(__MODULE__, :post, path, body, params, headers, opts)
       end
 
       def put(path, body \\ nil, params \\ [], headers \\ [], opts \\ []) do
-        Request.request(__MODULE__, "PUT", path, body, params, headers, opts)
+        Request.request(__MODULE__, :put, path, body, params, headers, opts)
       end
 
       def delete(path, params \\ [], headers \\ [], opts \\ []) do
-        Request.request(__MODULE__, "DELETE", path, nil, params, headers, opts)
+        Request.request(__MODULE__, :delete, path, nil, params, headers, opts)
       end
 
       def child_spec(opts) do

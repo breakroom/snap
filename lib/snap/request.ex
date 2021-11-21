@@ -37,7 +37,7 @@ defmodule Snap.Request do
 
       Logger.debug(fn ->
         """
-        Elasticsearch #{method} request \
+        Elasticsearch #{http_method_to_string(method)} request \
         path=#{path} \
         response=#{format_time_to_ms(response_time)}ms \
         decode=#{format_time_to_ms(decode_time)}ms \
@@ -65,7 +65,8 @@ defmodule Snap.Request do
 
   defp parse_response(response) do
     case response do
-      {:ok, %HTTPClient.Response{body: data, status: status}} when status >= 200 and status < 300 ->
+      {:ok, %HTTPClient.Response{body: data, status: status}}
+      when status >= 200 and status < 300 ->
         Jason.decode(data)
 
       {:ok, %HTTPClient.Response{body: data} = response} ->
@@ -95,7 +96,16 @@ defmodule Snap.Request do
   end
 
   defp telemetry_metadata(method, uri, _headers, body, result) do
-    %{method: method, host: uri.host, port: uri.port, path: uri.path, body: body, result: result}
+    method_str = http_method_to_string(method)
+
+    %{
+      method: method_str,
+      host: uri.host,
+      port: uri.port,
+      path: uri.path,
+      body: body,
+      result: result
+    }
   end
 
   defp encode_body(body) when is_map(body), do: Jason.encode!(body)
@@ -132,6 +142,12 @@ defmodule Snap.Request do
         List.keystore(acc, key, 0, tuple)
       end
     end)
+  end
+
+  defp http_method_to_string(method) when is_atom(method) do
+    method
+    |> Atom.to_string()
+    |> String.upcase()
   end
 
   defp format_time_to_ms(t) do

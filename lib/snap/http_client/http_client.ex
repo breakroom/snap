@@ -23,7 +23,7 @@ defmodule Snap.HTTPClient do
   alias Snap.HTTPClient.Response
 
   @type t :: module()
-  @type method :: :get | :post | :put | :delete | String.t()
+  @type method :: :get | :post | :put | :delete
   @type url :: String.t()
   @type headers :: [{key :: String.t(), value :: String.t()}]
   @type body :: iodata()

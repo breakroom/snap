@@ -103,21 +103,21 @@ defmodule Snap do
 
   @doc false
   def get(cluster, path, params \\ [], headers \\ [], opts \\ []) do
-    Request.request(cluster, "GET", path, nil, params, headers, opts)
+    Request.request(cluster, :get, path, nil, params, headers, opts)
   end
 
   @doc false
   def post(cluster, path, body \\ nil, params \\ [], headers \\ [], opts \\ []) do
-    Request.request(cluster, "POST", path, body, params, headers, opts)
+    Request.request(cluster, :post, path, body, params, headers, opts)
   end
 
   @doc false
   def put(cluster, path, body \\ nil, params \\ [], headers \\ [], opts \\ []) do
-    Request.request(cluster, "PUT", path, body, params, headers, opts)
+    Request.request(cluster, :put, path, body, params, headers, opts)
   end
 
   @doc false
   def delete(cluster, path, params \\ [], headers \\ [], opts \\ []) do
-    Request.request(cluster, "DELETE", path, nil, params, headers, opts)
+    Request.request(cluster, :delete, path, nil, params, headers, opts)
   end
 end
