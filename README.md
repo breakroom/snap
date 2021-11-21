@@ -24,7 +24,8 @@ The package can be installed by adding `snap` to your list of dependencies in
 ```elixir
 def deps do
   [
-    {:snap, "~> 0.5"}
+    {:snap, "~> 0.5"},
+    {:finch, "~> 0.8"}, # By default, Snap uses Finch to make HTTP requests
   ]
 end
 ```
