@@ -16,6 +16,9 @@ defmodule Snap do
 
   Additionally, there are other supporting modules:
 
+  * `Snap.HTTPClient` - defines how to send HTTP requests.
+    Comes with a built in adapter for `Finch` (`Snap.HTTPClient.Adapters.Finch`)
+
   * `Snap.Auth` - defines how an HTTP request is modified to include
     authentication headers. `Snap.Auth.Plain` implements HTTP Basic Auth.
 
@@ -67,10 +70,10 @@ defmodule Snap do
   * `password` - the password used to access the cluster
   * `auth` - the auth module used to configure the HTTP authentication headers
     (defaults to `Snap.Auth.Plain`)
-  * `pool_size` - the maximum size of the HTTP connection pool (defaults to 5)
-  * `conn_opts` - a Keyword list of connection options passed to the underlying
-     HTTP connection
-  * `telemetry_prefix` - the prefix of the telemetry events (default to
+  * `http_client_adapter` - the adapter that will be used to send HTTP requests.
+    Check `Snap.HTTPClient` for more information.
+    (defaults to `Snap.HTTPClient.Adapters.Finch`)
+  * `telemetry_prefix` - the prefix of the telemetry events (defaults to
     `[:my_app, :snap]`)
 
   ## Telemetry

@@ -20,8 +20,7 @@ defmodule Snap.Cluster do
   config :my_app, MyApp.Cluster,
     url: "http://localhost:9200",
     username: "username",
-    password: "password",
-    pool_size: 10
+    password: "password"
   ```
   """
   defmacro __using__(opts) do
@@ -94,7 +93,7 @@ defmodule Snap.Cluster do
   @type body :: String.t() | nil | binary() | map()
 
   @typedoc "Any additional HTTP headers sent with the request"
-  @type headers :: Mint.Types.headers()
+  @type headers :: Snap.HTTPClient.headers()
 
   @typedoc "Options passed through to the request"
   @type opts :: Keyword.t()
@@ -106,7 +105,19 @@ defmodule Snap.Cluster do
   @type success :: {:ok, map()}
 
   @typedoc "An error from an HTTP operation"
-  @type error :: {:error, Snap.ResponseError.t() | Mint.Types.error() | Jason.DecodeError.t()}
+  @type error ::
+          {:error, Snap.ResponseError.t() | Snap.HTTPClient.Error.t() | Jason.DecodeError.t()}
+
+  @typedoc "Options available for configuring the Cluster"
+  @type config_opts :: [
+          url: String.t(),
+          username: String.t(),
+          password: String.t(),
+          auth: Snap.Auth.t(),
+          telemetry_prefix: list(atom()),
+          http_client_adapter:
+            Snap.HTTPClient.t() | {Snap.HTTPClient.t(), adapter_config :: Keyword.t()}
+        ]
 
   @doc """
   Sends a GET request.
@@ -116,8 +127,7 @@ defmodule Snap.Cluster do
   * `{:ok, response}` - where response is a map representing the parsed JSON response.
   * `{:error, error}` - where the error can be a struct of either:
     * `Snap.ResponseError`
-    * `Mint.TransportError`
-    * `Mint.HTTPError`
+    * `Snap.HTTPClient.Error`
     * `Jason.DecodeError`
   """
   @callback get(path, params, headers, opts) :: result()
@@ -130,8 +140,7 @@ defmodule Snap.Cluster do
   * `{:ok, response}` - where response is a map representing the parsed JSON response.
   * `{:error, error}` - where the error can be a struct of either:
     * `Snap.ResponseError`
-    * `Mint.TransportError`
-    * `Mint.HTTPError`
+    * `Snap.HTTPClient.Error`
     * `Jason.DecodeError`
   """
   @callback post(path, body, params, headers, opts) :: result()
@@ -144,8 +153,7 @@ defmodule Snap.Cluster do
   * `{:ok, response}` - where response is a map representing the parsed JSON response.
   * `{:error, error}` - where the error can be a struct of either:
     * `Snap.ResponseError`
-    * `Mint.TransportError`
-    * `Mint.HTTPError`
+    * `Snap.HTTPClient.Error`
     * `Jason.DecodeError`
   """
   @callback put(path, body, params, headers, opts) :: result()
@@ -158,8 +166,7 @@ defmodule Snap.Cluster do
   * `{:ok, response}` - where response is a map representing the parsed JSON response.
   * `{:error, error}` - where the error can be a struct of either:
     * `Snap.ResponseError`
-    * `Mint.TransportError`
-    * `Mint.HTTPError`
+    * `Snap.HTTPClient.Error`
     * `Jason.DecodeError`
   """
   @callback delete(path, params, headers, opts) :: result()

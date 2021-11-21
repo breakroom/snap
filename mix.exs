@@ -84,6 +84,10 @@ defmodule Snap.MixProject do
           Snap.Auth,
           Snap.Auth.Plain
         ],
+        "HTTP Client": [
+          Snap.HTTPClient,
+          Snap.HTTPClient.Adapters.Finch
+        ],
         "Bulk operations": [
           Snap.Bulk.Action.Create,
           Snap.Bulk.Action.Index,
@@ -97,7 +101,8 @@ defmodule Snap.MixProject do
         ],
         Exceptions: [
           Snap.ResponseError,
-          Snap.BulkError
+          Snap.BulkError,
+          Snap.HTTPClient.Error
         ]
       ]
     ]
