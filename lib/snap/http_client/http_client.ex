@@ -10,6 +10,13 @@ defmodule Snap.HTTPClient do
   config :my_app, MyApp.Cluster,
     http_client_adapter: MyHTTPClientAdapter
   ```
+
+  The adapter can be configured passing a tuple:
+
+  ```
+  config :my_app, MyApp.Cluster,
+    http_client_adapter: {MyHTTPClientAdapter, some_config_for_adapter: "config_value"}
+  ```
   """
 
   alias Snap.HTTPClient.Error
