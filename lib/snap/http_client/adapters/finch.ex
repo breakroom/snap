@@ -22,24 +22,28 @@ defmodule Snap.HTTPClient.Adapters.Finch do
   Available options for configuring the Finch adapter. For more information about the options,
   you can check [Finch's official docs](https://hexdocs.pm/finch/Finch.html#start_link/1-pool-configuration-options).
 
-    * `pool_size`: Set the pool size. Defaults to 5.
+    * `pool_size`: Set the pool size. Defaults to `5`.
+    * `conn_opts`: Connection options passed to `Mint.HTTP.connect/4`. Defaults to `[]`.
   """
   @type config :: [
-          pool_size: pos_integer()
+          pool_size: pos_integer(),
+          conn_opts: keyword()
         ]
 
   @default_pool_size 5
+  @default_conn_opts []
 
   @impl true
   def child_spec(config) do
     cluster = Keyword.fetch!(config, :cluster)
     url = Keyword.fetch!(config, :url)
     size = Keyword.get(config, :pool_size, @default_pool_size)
+    conn_opts = Keyword.get(config, :conn_opts, @default_conn_opts)
 
     finch_config = [
       name: connection_pool_name(cluster),
       pools: %{
-        url => [size: size, count: 1]
+        url => [size: size, count: 1, conn_opts: conn_opts]
       }
     ]
 
