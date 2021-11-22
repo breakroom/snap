@@ -70,4 +70,27 @@ Now you can perform operations on your cluster:
 {:ok, %{"count" => count}} = MyApp.Cluster.get("/my-index/_count")
 ```
 
+## Testing
+
+If you want to test your app that uses this library, but don't want to have integration tests 
+with a Elasticsearch instance running in you local dev environment, 
+you can mock the responses using a custom HTTP client adapter.
+
+Supposing you are using [mox](https://github.com/dashbitco/mox), you can do something like this:
+
+```elixir
+# in test_helper.exs
+Mox.defmock(HTTPClientMock, for: Snap.HTTPClient)
+Mox.stub(HTTPClientMock, :child_spec, fn _config -> :skip end)
+
+# in config/test.exs
+config :my_app, MyApp.Cluster, http_client_adapter: HTTPClientMock
+
+# in a test file
+Mox.expect(HTTPClientMock, :request, fn _cluster, _method, _url, _headers, _body, _opts
+  body = "{}" # valid json
+  {:ok, %Snap.HTTPClient.Response{status: 200, headers: [], body: body}}
+end)
+```
+
 See the [API documentation](https://hexdocs.pm/snap) for more advanced features.
