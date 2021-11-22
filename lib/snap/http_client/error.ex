@@ -29,6 +29,10 @@ defmodule Snap.HTTPClient.Error do
     %__MODULE__{reason: reason, origin: origin}
   end
 
+  def unknown(origin) do
+    new(:unknown, origin)
+  end
+
   @impl true
   def message(%__MODULE__{origin: origin}) when is_exception(origin) do
     Exception.message(origin)

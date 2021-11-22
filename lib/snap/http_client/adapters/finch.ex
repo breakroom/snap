@@ -75,7 +75,7 @@ defmodule Snap.HTTPClient.Adapters.Finch do
   end
 
   defp handle_response({:error, origin}) do
-    {:error, Error.new(:unknown, origin)}
+    {:error, Error.unknown(origin)}
   end
 
   defp connection_pool_name(cluster) do
