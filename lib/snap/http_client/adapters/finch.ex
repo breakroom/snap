@@ -15,6 +15,8 @@ defmodule Snap.HTTPClient.Adapters.Finch do
   """
   @behaviour Snap.HTTPClient
 
+  require Logger
+
   alias Snap.HTTPClient.Error
   alias Snap.HTTPClient.Response
 
@@ -35,6 +37,22 @@ defmodule Snap.HTTPClient.Adapters.Finch do
 
   @impl true
   def child_spec(config) do
+    if not Code.ensure_loaded?(Finch) do
+      Logger.error("""
+      Can't start Snap.HTTPClient.Adapters.Finch because :finch is not available.
+
+      Please make sure to add :finch as a dependency:
+          {:finch, "~> 0.8"}
+
+      Or set your own Snap.HTTPClient:
+          config :my_app, MyApp.Cluster, http_client_adapter: MyHTTPClient
+      """)
+
+      raise "missing finch dependency"
+    end
+
+    Application.ensure_all_started(:finch)
+
     cluster = Keyword.fetch!(config, :cluster)
     url = Keyword.fetch!(config, :url)
     size = Keyword.get(config, :pool_size, @default_pool_size)
@@ -60,7 +78,7 @@ defmodule Snap.HTTPClient.Adapters.Finch do
     |> handle_response()
   end
 
-  defp handle_response({:ok, %Finch.Response{} = finch_response}) do
+  defp handle_response({:ok, finch_response}) do
     response = %Response{
       headers: finch_response.headers,
       status: finch_response.status,
