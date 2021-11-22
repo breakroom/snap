@@ -1,8 +1,9 @@
 defmodule SnapTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias Snap.Test.Cluster
 
+  @tag :integration
   test "getting server status" do
     {:ok, %{"status" => status}} = Snap.get(Cluster, "/_cluster/health")
     assert not is_nil(status)

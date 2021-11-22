@@ -1,8 +1,9 @@
 defmodule Snap.TelemetryTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias Snap.Test.Cluster
 
+  @tag :integration
   test "telemetry is fired with a request" do
     log = fn event_name, measurements, metadata ->
       assert event_name == [:snap, :snap, :request]

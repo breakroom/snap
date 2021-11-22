@@ -1,5 +1,5 @@
 defmodule Snap.SearchResponseTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias Snap.SearchResponse
 

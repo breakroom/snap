@@ -1,5 +1,5 @@
 defmodule Snap.Auth.PlainTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias Snap.Auth.Plain
 
