@@ -12,6 +12,7 @@ defmodule Snap.Hit do
     explanation
     matched_queries
     highlight
+    inner_hits
   ]a
 
   def new(response) do
@@ -24,7 +25,8 @@ defmodule Snap.Hit do
       fields: response["fields"],
       explanation: response["_explanation"],
       matched_queries: response["matched_queries"],
-      highlight: response["highlight"]
+      highlight: response["highlight"],
+      inner_hits: response["inner_hits"]
     }
   end
 
@@ -37,6 +39,7 @@ defmodule Snap.Hit do
           fields: map() | nil,
           explanation: map() | nil,
           matched_queries: list(String.t()) | nil,
-          highlight: map() | nil
+          highlight: map() | nil,
+          inner_hits: map() | nil
         }
 end
