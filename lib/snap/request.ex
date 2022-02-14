@@ -60,10 +60,16 @@ defmodule Snap.Request do
       {:ok, %Finch.Response{body: data, status: status}} when status >= 200 and status < 300 ->
         Jason.decode(data)
 
-      {:ok, %Finch.Response{body: data}} ->
-        with {:ok, json} <- Jason.decode(data) do
-          exception = Snap.ResponseError.exception_from_response(json)
-          {:error, exception}
+      {:ok, %Finch.Response{body: data} = response} ->
+        # If there's no valid JSON treat the error as an HTTPError.
+        case Jason.decode(data) do
+          {:ok, json} ->
+            exception = Snap.ResponseError.exception_from_json(json)
+            {:error, exception}
+
+          {:error, _} ->
+            exception = Snap.HTTPError.exception_from_response(response)
+            {:error, exception}
         end
 
       err ->
