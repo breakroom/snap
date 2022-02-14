@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.2
+
+- Return `Snap.HTTPError` when ElasticSearch returns an error HTTP status
+  without any accompanying JSON
+- Expose `inner_hits` field on `Snap.Hit` struct
+
 ## 0.5.1
 
 - Accept `conn_opts` config options to configure the underlying HTTP transport
