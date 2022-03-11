@@ -15,6 +15,7 @@ defmodule Snap.Aggregation do
   def new(response) do
     %__MODULE__{
       buckets: response["buckets"],
+      interval: response["interval"],
       doc_count_error_upper_bound: response["doc_count_error_upper_bound"],
       sum_other_doc_count: response["sum_other_doc_count"],
       value: response["value"],
@@ -24,6 +25,7 @@ defmodule Snap.Aggregation do
 
   @type t :: %__MODULE__{
           buckets: list(map()),
+          interval: integer(),
           doc_count_error_upper_bound: integer(),
           sum_other_doc_count: integer(),
           value: integer(),
