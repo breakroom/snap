@@ -6,6 +6,7 @@ defmodule Snap.Aggregation do
   """
   defstruct ~w[
     buckets
+    interval
     doc_count_error_upper_bound
     sum_other_doc_count
     value

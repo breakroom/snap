@@ -15,6 +15,12 @@
       ],
       "doc_count_error_upper_bound": 0,
       "sum_other_doc_count": 0
+    },
+    "people": {
+      "value": 8
+    },
+    "things": {
+      "doc_count": 9
     }
   },
   "hits": {
