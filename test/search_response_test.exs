@@ -50,7 +50,7 @@ defmodule Snap.SearchResponseTest do
       |> Jason.decode!()
 
     response = SearchResponse.new(json)
-    assert Enum.count(response.aggregations) == 3
+    assert Enum.count(response.aggregations) == 4
 
     assert response.aggregations["season_values"] == %Snap.Aggregation{
              buckets: [%{"doc_count" => 69406, "key" => "summer"}],
@@ -64,6 +64,17 @@ defmodule Snap.SearchResponseTest do
 
     assert response.aggregations["things"] == %Snap.Aggregation{
              doc_count: 9
+           }
+
+    assert response.aggregations["histogram"] == %Snap.Aggregation{
+             buckets: [
+               %{
+                 "doc_count" => 10,
+                 "key_as_string" => "2022-03-12T21:00:00.000Z",
+                 "key" => 1_647_118_800_000
+               }
+             ],
+             interval: "30m"
            }
   end
 end
