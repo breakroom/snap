@@ -15,6 +15,22 @@
       ],
       "doc_count_error_upper_bound": 0,
       "sum_other_doc_count": 0
+    },
+    "people": {
+      "value": 8
+    },
+    "things": {
+      "doc_count": 9
+    },
+    "histogram": {
+      "buckets": [
+        {
+          "doc_count": 10,
+          "key": 1647118800000,
+          "key_as_string": "2022-03-12T21:00:00.000Z"
+        }
+      ],
+      "interval": "30m"
     }
   },
   "hits": {
