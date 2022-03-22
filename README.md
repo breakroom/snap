@@ -24,7 +24,7 @@ The package can be installed by adding `snap` to your list of dependencies in
 ```elixir
 def deps do
   [
-    {:snap, "~> 0.5"},
+    {:snap, "~> 0.6"},
     {:finch, "~> 0.8"}, # By default, Snap uses Finch to make HTTP requests
   ]
 end
@@ -72,8 +72,8 @@ Now you can perform operations on your cluster:
 
 ## Testing
 
-If you want to test your app that uses this library, but don't want to have integration tests 
-with a Elasticsearch instance running in you local dev environment, 
+If you want to test your app that uses this library, but don't want to have integration tests
+with a Elasticsearch instance running in you local dev environment,
 you can mock the responses using a custom HTTP client adapter.
 
 Supposing you are using [mox](https://github.com/dashbitco/mox), you can do something like this:

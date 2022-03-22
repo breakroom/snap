@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.0
+
+- Added support for modular HTTP client adapters, allowing mock HTTP clients in a test environment (thanks @jotaviobiondo)
+- Added extra fields to `Snap.Aggregation` (thanks @megalithic)
+
 ## 0.5.2
 
 - Return `Snap.HTTPError` when ElasticSearch returns an error HTTP status
