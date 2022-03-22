@@ -20,7 +20,7 @@ defmodule Snap.Aggregation do
       doc_count_error_upper_bound: response["doc_count_error_upper_bound"],
       interval: response["interval"],
       sum_other_doc_count: response["sum_other_doc_count"],
-      value: response["value"],
+      value: response["value"]
     }
   end
 
@@ -30,6 +30,6 @@ defmodule Snap.Aggregation do
           doc_count_error_upper_bound: integer(),
           interval: integer(),
           sum_other_doc_count: integer(),
-          value: integer(),
+          value: integer()
         }
 end

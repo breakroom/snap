@@ -14,7 +14,7 @@ defmodule Snap.HTTPClient.Error do
 
   @keys [
     :reason,
-    :origin,
+    :origin
   ]
 
   @enforce_keys @keys
