@@ -3,17 +3,23 @@ defmodule Snap.Auth do
   Defines how HTTP request is transformed to add authentication.
   """
 
-  @type method :: String.t()
-  @type url :: String.t()
-  @type headers :: Mint.Types.headers()
-  @type body :: iodata()
-  @type opts :: Keyword.t()
-  @type config :: Keyword.t()
+  alias Snap.Cluster
+  alias Snap.HTTPClient
 
-  @type response :: {:ok, {method, url, headers, body}} | {:error, term()}
+  @type t :: module()
+
+  @type response ::
+          {:ok, {HTTPClient.method(), HTTPClient.url(), HTTPClient.headers(), HTTPClient.body()}}
+          | {:error, term()}
 
   @doc """
   Modifies an HTTP request to include authentication details
   """
-  @callback sign(config, method, url, headers, body) :: response()
+  @callback sign(
+              Cluster.config_opts(),
+              HTTPClient.method(),
+              HTTPClient.url(),
+              HTTPClient.headers(),
+              HTTPClient.body()
+            ) :: response()
 end

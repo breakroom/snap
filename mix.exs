@@ -14,6 +14,8 @@ defmodule Snap.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
       dialyzer: dialyzer(),
+      aliases: aliases(),
+      preferred_cli_env: ["test.all": :test],
 
       # Hex
       description: "A modern Elasticsearch client",
@@ -21,7 +23,14 @@ defmodule Snap.MixProject do
 
       # Docs
       source_url: @github_url,
-      docs: docs()
+      docs: docs(),
+
+      # Suppress warnings
+      xref: [
+        exclude: [
+          Finch
+        ]
+      ]
     ]
   end
 
@@ -45,13 +54,20 @@ defmodule Snap.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:finch, "~> 0.8"},
+      {:finch, "~> 0.8", optional: true},
       {:castore, "~> 0.1"},
       {:jason, "~> 1.0"},
       {:telemetry, "~> 1.0"},
       {:ex_doc, "~> 0.23", only: :dev, runtime: false},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false},
       {:credo, "~> 1.5", only: [:dev, :test], runtime: false}
+    ]
+  end
+
+  defp aliases do
+    [
+      dev: "run --no-halt dev.exs",
+      "test.all": ["test --include integration"]
     ]
   end
 
@@ -75,6 +91,10 @@ defmodule Snap.MixProject do
           Snap.Auth,
           Snap.Auth.Plain
         ],
+        "HTTP Client": [
+          Snap.HTTPClient,
+          Snap.HTTPClient.Adapters.Finch
+        ],
         "Bulk operations": [
           Snap.Bulk.Action.Create,
           Snap.Bulk.Action.Index,
@@ -88,7 +108,8 @@ defmodule Snap.MixProject do
         ],
         Exceptions: [
           Snap.ResponseError,
-          Snap.BulkError
+          Snap.BulkError,
+          Snap.HTTPClient.Error
         ]
       ]
     ]

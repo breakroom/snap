@@ -1,8 +1,14 @@
 defmodule Snap.Request do
+  @moduledoc false
+
   require Logger
 
-  @moduledoc false
-  @default_headers [{"content-type", "application/json"}, {"accept", "application/json"}]
+  alias Snap.HTTPClient
+
+  @default_headers [
+    {"content-type", "application/json"},
+    {"accept", "application/json"}
+  ]
 
   def request(cluster, method, path, body \\ nil, params \\ [], headers \\ [], opts \\ []) do
     config = cluster.config()
@@ -17,14 +23,10 @@ defmodule Snap.Request do
     body = encode_body(body)
     headers = set_default_headers(headers)
 
-    conn_pool_name = Snap.Cluster.Supervisor.connection_pool_name(cluster)
-
     start_time = System.monotonic_time()
 
     with {:ok, {method, url, headers, body}} <- auth.sign(config, method, url, headers, body) do
-      response =
-        Finch.build(method, url, headers, body)
-        |> Finch.request(conn_pool_name, opts)
+      response = HTTPClient.request(cluster, method, url, headers, body, opts)
 
       response_time = System.monotonic_time() - start_time
 
@@ -34,7 +36,13 @@ defmodule Snap.Request do
       total_time = response_time + decode_time
 
       Logger.debug(fn ->
-        "Elasticsearch #{method} request path=#{path} response=#{format_time_to_ms(response_time)}ms decode=#{format_time_to_ms(decode_time)}ms total=#{format_time_to_ms(total_time)}ms"
+        """
+        Elasticsearch #{http_method_to_string(method)} request \
+        path=#{path} \
+        response=#{format_time_to_ms(response_time)}ms \
+        decode=#{format_time_to_ms(decode_time)}ms \
+        total=#{format_time_to_ms(total_time)}ms\
+        """
       end)
 
       event = telemetry_prefix(cluster) ++ [:request]
@@ -57,10 +65,11 @@ defmodule Snap.Request do
 
   defp parse_response(response) do
     case response do
-      {:ok, %Finch.Response{body: data, status: status}} when status >= 200 and status < 300 ->
+      {:ok, %HTTPClient.Response{body: data, status: status}}
+      when status >= 200 and status < 300 ->
         Jason.decode(data)
 
-      {:ok, %Finch.Response{body: data} = response} ->
+      {:ok, %HTTPClient.Response{body: data} = response} ->
         # If there's no valid JSON treat the error as an HTTPError.
         case Jason.decode(data) do
           {:ok, json} ->
@@ -72,7 +81,7 @@ defmodule Snap.Request do
             {:error, exception}
         end
 
-      err ->
+      {:error, %HTTPClient.Error{}} = err ->
         err
     end
   end
@@ -87,13 +96,19 @@ defmodule Snap.Request do
   end
 
   defp telemetry_metadata(method, uri, _headers, body, result) do
-    %{method: method, host: uri.host, port: uri.port, path: uri.path, body: body, result: result}
+    method_str = http_method_to_string(method)
+
+    %{
+      method: method_str,
+      host: uri.host,
+      port: uri.port,
+      path: uri.path,
+      body: body,
+      result: result
+    }
   end
 
-  defp encode_body(body) when is_map(body) do
-    Jason.encode!(body)
-  end
-
+  defp encode_body(body) when is_map(body), do: Jason.encode!(body)
   defp encode_body(body), do: body
 
   def append_query_params(url, query_params \\ []) do
@@ -127,6 +142,12 @@ defmodule Snap.Request do
         List.keystore(acc, key, 0, tuple)
       end
     end)
+  end
+
+  defp http_method_to_string(method) when is_atom(method) do
+    method
+    |> Atom.to_string()
+    |> String.upcase()
   end
 
   defp format_time_to_ms(t) do

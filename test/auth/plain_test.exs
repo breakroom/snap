@@ -1,11 +1,11 @@
 defmodule Snap.Auth.PlainTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
 
   alias Snap.Auth.Plain
 
   test "without a username and password in the config" do
     config = []
-    method = "GET"
+    method = :get
     path = "/_cluster/health"
     headers = []
     body = nil
@@ -19,7 +19,7 @@ defmodule Snap.Auth.PlainTest do
 
   test "with a username and password in the config" do
     config = [username: "testing", password: "password"]
-    method = "GET"
+    method = :get
     path = "/_cluster/health"
     headers = []
     body = nil
@@ -33,7 +33,7 @@ defmodule Snap.Auth.PlainTest do
 
   test "with a username and password in the config's URL" do
     config = [url: "http://testing:password@example.net:9200"]
-    method = "GET"
+    method = :get
     path = "/_cluster/health"
     headers = []
     body = nil
