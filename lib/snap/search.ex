@@ -24,7 +24,7 @@ defmodule Snap.Search do
   ## Examples
 
       query = %{query: %{match_all: %{}}}
-      {:ok, response} = Snap.Search(Cluster, "index", query)
+      {:ok, response} = Snap.Search.search(Cluster, "index", query)
 
       IO.inspect(response.took)
       Enum.each(response, fn hit -> IO.inspect(hit.score) end)
