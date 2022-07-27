@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.0
+
+- Changed `inner_hits` to be `Snap.Hits` struct to make it consistent with the `hits` at the top level
+- Added support for `suggest` (thanks @maennchen)
+- Relaxed telemetry dependency to allow the use of 0.4 as well as 1.0 (thanks @dershodan)
+
 ## 0.6.0
 
 - Added support for modular HTTP client adapters, allowing mock HTTP clients in a test environment (thanks @jotaviobiondo)
