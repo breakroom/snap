@@ -3,11 +3,8 @@ defmodule Snap.SearchResponseTest do
 
   alias Snap.SearchResponse
 
-  test "new/1 without aggregations" do
-    json =
-      Path.join([__DIR__, "fixtures", "search_response.json"])
-      |> File.read!()
-      |> Jason.decode!()
+  test "new/1 without extra fields" do
+    json = fixture_json("search_response")
 
     response = SearchResponse.new(json)
     assert response.took == 5
@@ -44,10 +41,7 @@ defmodule Snap.SearchResponseTest do
   end
 
   test "new/1 with aggregations" do
-    json =
-      Path.join([__DIR__, "fixtures", "search_response_agg.json"])
-      |> File.read!()
-      |> Jason.decode!()
+    json = fixture_json("search_response_agg")
 
     response = SearchResponse.new(json)
     assert Enum.count(response.aggregations) == 4
@@ -76,5 +70,22 @@ defmodule Snap.SearchResponseTest do
              ],
              interval: "30m"
            }
+  end
+
+  test "new/1 with inner_hits" do
+    json = fixture_json("search_response_inner_hits")
+
+    response = SearchResponse.new(json)
+    first_hit = Enum.at(response.hits, 0)
+
+    comments = first_hit.inner_hits["comments"]
+
+    assert Enum.count(comments) == 1
+  end
+
+  defp fixture_json(name) do
+    Path.join([__DIR__, "fixtures", "#{name}.json"])
+    |> File.read!()
+    |> Jason.decode!()
   end
 end

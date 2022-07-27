@@ -26,7 +26,7 @@ defmodule Snap.Hit do
       explanation: response["_explanation"],
       matched_queries: response["matched_queries"],
       highlight: response["highlight"],
-      inner_hits: response["inner_hits"]
+      inner_hits: build_inner_hits(response["inner_hits"])
     }
   end
 
@@ -40,6 +40,16 @@ defmodule Snap.Hit do
           explanation: map() | nil,
           matched_queries: list(String.t()) | nil,
           highlight: map() | nil,
-          inner_hits: map() | nil
+          inner_hits: %{String.t() => Snap.Hits.t()} | nil
         }
+
+  defp build_inner_hits(nil), do: nil
+
+  defp build_inner_hits(inner_hits) when is_map(inner_hits) do
+    inner_hits
+    |> Enum.map(fn {key, value} ->
+      {key, Snap.Hits.new(value["hits"])}
+    end)
+    |> Enum.into(%{})
+  end
 end

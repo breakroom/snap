@@ -1,0 +1,63 @@
+{
+  "took": 5,
+  "timed_out": false,
+  "_shards": {
+    "failed": 0,
+    "skipped": 0,
+    "successful": 1,
+    "total": 1
+  },
+  "hits": {
+    "total": {
+      "value": 1,
+      "relation": "eq"
+    },
+    "max_score": 1.0,
+    "hits": [
+      {
+        "_index": "test",
+        "_type": "_doc",
+        "_id": "1",
+        "_score": 1.0,
+        "_source": {
+          "adzuna_url": "https://www.adzuna.co.uk/jobs/details/1922923945?se=oMlhYylR6xGMhMp5avH9Cg&utm_medium=api&utm_source=0b5c6a90&v=4254A3D673CD7F3C6F5A33BA5D7D125A2C43AFC2",
+          "contract_time": "full_time",
+          "contract_type": "permanent",
+          "description": "CONSTRUCTION SOLICITOR – 5/7 PQE – LONDON - £EXCELLENT – JOB REF:2819 This is an exceptional opening with a long established niche City practice for a contentious Construction Solicitor to join their award winning team. The role will see you working with clients including developers, major corporations, funders, contractors, sub-contractors, construction consultants, local authorities, registered providers of social housing and PFI consortia. This is an opportunity for an individual with a pass…",
+          "employer_name": "ENL",
+          "id": "adz-2553827",
+          "job_title": "Construction Solicitor",
+          "location": { "lat": 51.503378, "lon": -0.139134 },
+          "timestamp": "1610052006"
+        },
+        "inner_hits": {
+          "comments": {
+            "hits": {
+              "total": {
+                "value": 1,
+                "relation": "eq"
+              },
+              "max_score": 1.0,
+              "hits": [
+                {
+                  "_index": "test",
+                  "_type": "_doc",
+                  "_id": "1",
+                  "_nested": {
+                    "field": "comments",
+                    "offset": 1
+                  },
+                  "_score": 1.0,
+                  "_source": {
+                    "author": "nik9000",
+                    "number": 2
+                  }
+                }
+              ]
+            }
+          }
+        }
+      }
+    ]
+  }
+}

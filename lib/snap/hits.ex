@@ -7,6 +7,8 @@ defmodule Snap.Hits do
 
   defstruct [:total, :max_score, :hits]
 
+  def new(nil), do: nil
+
   def new(response) do
     %__MODULE__{
       total: response["total"],
