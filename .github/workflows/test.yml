@@ -73,12 +73,8 @@ jobs:
         with:
           path: priv/plts
           key: ${{ runner.os }}-${{ steps.setup-elixir.outputs.otp-version }}-${{ steps.setup-elixir.outputs.elixir-version }}-plts-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
-
-      - name: Create PLTs
-        if: steps.plt-cache.outputs.cache-hit != 'true'
-        run: |
-          mkdir -p priv/plts
-          mix dialyzer --plt
+          restore-keys: |
+            ${{ runner.os }}-${{ steps.setup-elixir.outputs.otp-version }}-${{ steps.setup-elixir.outputs.elixir-version }}-plts-
 
       - name: Run dialyzer
-        run: mix dialyzer --no-check --halt-exit-status
+        run: mix dialyzer
