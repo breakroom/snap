@@ -42,7 +42,7 @@ defmodule Snap.HTTPClient.Adapters.Finch do
       Can't start Snap.HTTPClient.Adapters.Finch because :finch is not available.
 
       Please make sure to add :finch as a dependency:
-          {:finch, "~> 0.8"}
+          {:finch, "~> 0.13"}
 
       Or set your own Snap.HTTPClient:
           config :my_app, MyApp.Cluster, http_client_adapter: MyHTTPClient
