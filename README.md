@@ -15,6 +15,7 @@ See the full [API docs](https://hexdocs.pm/snap).
 - Streaming bulk operations
 - Connection pooling
 - Telemetry events
+- High level interface over the [Multi Search API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-multi-search.html)
 
 ## Installation
 

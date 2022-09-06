@@ -6,8 +6,18 @@ defmodule Snap.IntegrationCase do
 
   @prefix "snap-test"
 
+  setup_all do
+    clear_indexes()
+  end
+
   # Clean out any indexes remaining after each test run
   setup do
+    on_exit(fn ->
+      clear_indexes()
+    end)
+  end
+
+  defp clear_indexes() do
     {:ok, indexes} = Snap.Indexes.list(Cluster)
 
     indexes
