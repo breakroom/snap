@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.0
+
+- Add a high lever interface for the [Multi Search API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-multi-search.html)
+
 ## 0.7.0
 
 - Changed `inner_hits` to be `Snap.Hits` struct to make it consistent with the `hits` at the top level
