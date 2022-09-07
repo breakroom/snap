@@ -2,7 +2,7 @@ defmodule Snap.MixProject do
   use Mix.Project
 
   @github_url "https://github.com/breakroom/snap"
-  @version "0.7.0"
+  @version "0.8.0"
 
   def project do
     [
@@ -101,6 +101,10 @@ defmodule Snap.MixProject do
           Snap.Bulk.Action.Index,
           Snap.Bulk.Action.Update,
           Snap.Bulk.Action.Delete
+        ],
+        "Multi search API": [
+          Snap.Multi,
+          Snap.Multi.Response
         ],
         "Response structs": [
           Snap.SearchResponse,

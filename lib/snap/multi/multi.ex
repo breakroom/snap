@@ -14,6 +14,11 @@ defmodule Snap.Multi do
   This returns a `Snap.Multi.Response`, with a `searches` field containing a
   list of responses.
 
+      {:ok, %Snap.Multi.Response{searches: [
+        {"query-1", %Snap.SearchResponse{...}},
+        {"query-2", %Snap.SearchResponse{...}}
+      ]}}
+
   Each query can be named, using any value you like, by passing an `id: "foo"`
   into `Multi.add`. The list in `Snap.Multi.Response` contains tuple pairs where
   the first value is the ID and the second is the result of the query.
