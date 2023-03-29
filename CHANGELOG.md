@@ -2,6 +2,11 @@
 
 ## 0.8.0
 
+- Upgrade `finch`, which allows use of `castore` 1.0
+- Set minimum Elixir version to 1.12
+
+## 0.8.0
+
 - Add a high lever interface for the [Multi Search API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-multi-search.html)
 
 ## 0.7.0
