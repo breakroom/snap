@@ -31,7 +31,7 @@ def deps do
 end
 ```
 
-Snap supports Elixir 1.11 or later.
+Snap supports Elixir 1.12 or later.
 
 ## Usage
 
