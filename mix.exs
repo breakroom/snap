@@ -56,7 +56,7 @@ defmodule Snap.MixProject do
   defp deps do
     [
       {:finch, "~> 0.8", optional: true},
-      {:castore, "~> 0.1"},
+      {:castore, "~> 1.0"},
       {:jason, "~> 1.0"},
       {:telemetry, "~> 1.0 or ~> 0.4"},
       {:ex_doc, "~> 0.23", only: :dev, runtime: false},
