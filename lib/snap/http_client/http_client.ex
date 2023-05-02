@@ -26,7 +26,7 @@ defmodule Snap.HTTPClient do
   @type method :: :get | :post | :put | :delete
   @type url :: String.t()
   @type headers :: [{key :: String.t(), value :: String.t()}]
-  @type body :: iodata()
+  @type body :: iodata() | nil
   @type child_spec :: Supervisor.child_spec() | {module(), Keyword.t()} | module()
 
   @doc """
