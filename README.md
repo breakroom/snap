@@ -89,7 +89,7 @@ config :my_app, MyApp.Cluster,
   skip_initialize_http_client: true
 
 # in a test file
-Mox.expect(HTTPClientMock, :request, fn _cluster, _method, _url, _headers, _body, _opts
+Mox.expect(HTTPClientMock, :request, fn _cluster, _method, _url, _headers, _body, _opts ->
   body = "{}" # valid json
   {:ok, %Snap.HTTPClient.Response{status: 200, headers: [], body: body}}
 end)
