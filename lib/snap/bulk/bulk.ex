@@ -60,7 +60,7 @@ defmodule Snap.Bulk do
           opts :: Keyword.t()
         ) ::
           :ok | Snap.Cluster.error() | {:error, Snap.BulkError.t()}
-  def perform(stream, cluster, index, opts) do
+  def perform(stream, cluster, index, opts \\ []) do
     {page_size, opts} = Keyword.pop(opts, :page_size, @default_page_size)
     {page_wait, opts} = Keyword.pop(opts, :page_wait, @default_page_wait)
     {max_errors, opts} = Keyword.pop(opts, :max_errors, nil)
