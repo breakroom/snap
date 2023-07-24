@@ -82,14 +82,13 @@ Supposing you are using [mox](https://github.com/dashbitco/mox), you can do some
 ```elixir
 # in test_helper.exs
 Mox.defmock(HTTPClientMock, for: Snap.HTTPClient)
+Mox.stub(HTTPClientMock, :child_spec, fn _config -> :skip end)
 
 # in config/test.exs
-config :my_app, MyApp.Cluster,
-  http_client_adapter: HTTPClientMock,
-  skip_initialize_http_client: true
+config :my_app, MyApp.Cluster, http_client_adapter: HTTPClientMock
 
 # in a test file
-Mox.expect(HTTPClientMock, :request, fn _cluster, _method, _url, _headers, _body, _opts ->
+Mox.expect(HTTPClientMock, :request, fn _cluster, _method, _url, _headers, _body, _opts
   body = "{}" # valid json
   {:ok, %Snap.HTTPClient.Response{status: 200, headers: [], body: body}}
 end)
