@@ -33,9 +33,13 @@ defmodule Snap.Cluster.Supervisor do
   defp maybe_initialize_http_client(cluster, config) do
     config = Keyword.put(config, :cluster, cluster)
 
-    case HTTPClient.child_spec(config) do
-      :skip -> []
-      http_client_child_spec -> [http_client_child_spec]
+    if config[:skip_initialize_http_client] do
+      []
+    else
+      case HTTPClient.child_spec(config) do
+        :skip -> []
+        http_client_child_spec -> [http_client_child_spec]
+      end
     end
   end
 end
