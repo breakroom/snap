@@ -51,22 +51,6 @@ defmodule Snap.Bulk.Actions do
   end
 
   defp encode_action_command(action) do
-    key =
-      case action do
-        %Create{} -> "create"
-        %Update{} -> "update"
-        %Delete{} -> "delete"
-        %Index{} -> "index"
-      end
-
-    body =
-      action
-      |> Map.from_struct()
-      |> Map.delete(:doc)
-      |> Enum.reject(fn {_, v} -> is_nil(v) end)
-      |> Map.new()
-
-    %{key => body}
-    |> Jason.encode!()
+    Jason.encode!(action)
   end
 end
