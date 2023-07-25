@@ -17,6 +17,6 @@ defmodule Snap.Bulk.ActionsTest do
     encoded = Actions.encode(actions) |> IO.chardata_to_string()
 
     assert encoded ==
-             "{\"index\":{\"_index\":\"foo\"}}\n{\"foo\":\"bar\"}\n{\"create\":{\"_index\":\"foo\",\"require_alias\":true}}\n{\"foo\":\"bar\"}\n{\"update\":{\"_id\":2,\"_index\":\"foo\"}}\n{\"doc\":{\"foo\":\"bar\"}}\n{\"delete\":{\"_id\":1,\"_index\":\"foo\"}}\n"
+             "{\"index\":{\"_index\":\"foo\"}}\n{\"foo\":\"bar\"}\n{\"create\":{\"_index\":\"foo\",\"require_alias\":true}}\n{\"foo\":\"bar\"}\n{\"update\":{\"_index\":\"foo\",\"_id\":2}}\n{\"doc\":{\"foo\":\"bar\"}}\n{\"delete\":{\"_index\":\"foo\",\"_id\":1}}\n"
   end
 end
