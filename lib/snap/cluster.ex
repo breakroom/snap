@@ -64,6 +64,10 @@ defmodule Snap.Cluster do
         Request.request(__MODULE__, :delete, path, nil, params, headers, opts)
       end
 
+      def patch(path, body \\ nil, params \\ [], headers \\ [], opts \\ []) do
+        Request.request(__MODULE__, :patch, path, body, params, headers, opts)
+      end
+
       def child_spec(opts) do
         %{
           id: __MODULE__,
