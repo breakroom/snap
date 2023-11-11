@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.8.0
+## 0.8.1
 
 - Upgrade `finch`, which allows use of `castore` 1.0
 - Set minimum Elixir version to 1.12
