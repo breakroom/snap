@@ -1,5 +1,7 @@
 defmodule Snap.Test do
   @moduledoc """
+  Helpers around testing with `Snap`.
+
   Unlike SQL databases, ElasticSearch/OpenSearch does not provide transaction
   isolation, which is how `Ecto.Adapters.SQL.Sandbox` isolates test
   processes, allowing multiple tests to run asynchronously.
@@ -19,11 +21,11 @@ defmodule Snap.Test do
     if context[:snap] do
       namespace = Snap.Test.generate_namespace_for_pid(self())
       Snap.Cluster.Namespace.set_process_namespace(Cluster, namespace)
-      Snap.Test.clear_indexes(Cluster)
+      Snap.Test.drop_indexes(Cluster)
 
       on_exit(fn ->
         Snap.Cluster.Namespace.set_process_namespace(Cluster, namespace)
-        Snap.Test.clear_indexes(Cluster)
+        Snap.Test.drop_indexes(Cluster)
       end)
     end
   end
