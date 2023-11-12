@@ -99,7 +99,7 @@ defmodule Snap.Cluster.Namespace do
   def add_namespace_to_index(index, cluster) do
     [config_namespace(cluster), get_process_namespace(cluster, self()), index]
     |> Enum.reject(&is_nil/1)
-    |> Enum.join("_")
+    |> Enum.join("-")
   end
 
   @doc """
@@ -109,7 +109,7 @@ defmodule Snap.Cluster.Namespace do
   def index_namespace(cluster) do
     [config_namespace(cluster), get_process_namespace(cluster, self())]
     |> Enum.reject(&is_nil/1)
-    |> Enum.join("_")
+    |> Enum.join("-")
   end
 
   @doc false

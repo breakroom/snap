@@ -104,9 +104,9 @@ defmodule Snap.Indexes do
         indexes
         |> Enum.map(& &1["index"])
         # Only return indexes inside this namespace
-        |> Enum.filter(&String.starts_with?(&1, "#{namespace}_"))
+        |> Enum.filter(&String.starts_with?(&1, "#{namespace}-"))
         # Present them without the namespace prefix
-        |> Enum.map(&String.trim_leading(&1, "#{namespace}_"))
+        |> Enum.map(&String.trim_leading(&1, "#{namespace}-"))
         |> Enum.sort()
 
       {:ok, indexes}
@@ -129,9 +129,9 @@ defmodule Snap.Indexes do
         indexes
         |> Enum.map(& &1["index"])
         # Only return indexes inside this namespace
-        |> Enum.filter(&String.starts_with?(&1, "#{namespace}_"))
+        |> Enum.filter(&String.starts_with?(&1, "#{namespace}-"))
         # Present them without the namespace prefix
-        |> Enum.map(&String.trim_leading(&1, "#{namespace}_"))
+        |> Enum.map(&String.trim_leading(&1, "#{namespace}-"))
         |> Enum.filter(&Regex.match?(regex, &1))
         |> Enum.sort_by(&sort_index_by_timestamp/1)
 
