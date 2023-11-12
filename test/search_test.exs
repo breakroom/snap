@@ -1,9 +1,12 @@
 defmodule Snap.SearchTest do
-  use Snap.IntegrationCase
+  @moduledoc false
+  use Snap.IntegrationCase, async: true
 
   alias Snap.Bulk.Action
   alias Snap.Search
   alias Snap.Test.Cluster
+
+  @test_index "search"
 
   test "simple search response" do
     {:ok, _} = Snap.Indexes.create(Cluster, @test_index, %{})
@@ -14,7 +17,7 @@ defmodule Snap.SearchTest do
 
       %Action.Index{_id: i, doc: doc}
     end)
-    |> Snap.Bulk.perform(Cluster, @test_index, refresh: :wait_for)
+    |> Snap.Bulk.perform(Cluster, @test_index, refresh: true)
 
     query = %{"query" => %{"match_all" => %{}}, "sort" => ["_doc"]}
 
@@ -35,7 +38,7 @@ defmodule Snap.SearchTest do
 
       %Action.Index{_id: i, doc: doc}
     end)
-    |> Snap.Bulk.perform(Cluster, @test_index, refresh: :wait_for)
+    |> Snap.Bulk.perform(Cluster, @test_index, refresh: true)
 
     query = %{
       "query" => %{"match_all" => %{}},
@@ -53,5 +56,25 @@ defmodule Snap.SearchTest do
     assert %Snap.SearchResponse{
              suggest: %{"title" => [%{text: "doument", options: [%{text: "document"}]}]}
            } = search_response
+  end
+
+  test "count/2 without a query" do
+    {:ok, _} = Snap.Indexes.create(Cluster, @test_index, %{})
+    {:ok, _} = Snap.Document.add(Cluster, @test_index, %{foo: "bar"})
+    {:ok, _} = Snap.Document.add(Cluster, @test_index, %{foo: "baz"})
+
+    assert :ok = Snap.Indexes.refresh(Cluster, @test_index)
+
+    assert {:ok, 2} = Snap.Search.count(Cluster, @test_index)
+  end
+
+  test "count/2 with a query" do
+    {:ok, _} = Snap.Indexes.create(Cluster, @test_index, %{})
+    {:ok, _} = Snap.Document.add(Cluster, @test_index, %{foo: "bar"})
+    {:ok, _} = Snap.Document.add(Cluster, @test_index, %{foo: "baz"})
+
+    assert :ok = Snap.Indexes.refresh(Cluster, @test_index)
+
+    assert {:ok, 1} = Snap.Search.count(Cluster, @test_index, %{query: %{term: %{foo: "bar"}}})
   end
 end

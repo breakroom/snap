@@ -1,4 +1,5 @@
 defmodule Snap.Bulk.ActionsTest do
+  @moduledoc false
   use ExUnit.Case, async: true
 
   alias Snap.Bulk.Action

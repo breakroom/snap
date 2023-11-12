@@ -2,15 +2,17 @@ defmodule Snap.Indexes do
   @moduledoc """
   Helper functions around index management.
   """
-  alias Snap.Bulk
   alias Snap
+  alias Snap.Bulk
+  alias Snap.Cluster.Namespace
 
   @doc """
   Creates an index.
   """
   @spec create(module(), String.t(), map(), Keyword.t()) :: Snap.Cluster.result()
   def create(cluster, index, mapping, opts \\ []) do
-    Snap.put(cluster, "/#{index}", mapping, [], [], opts)
+    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    Snap.put(cluster, "/#{namespaced_index}", mapping, [], [], opts)
   end
 
   @doc """
@@ -18,7 +20,8 @@ defmodule Snap.Indexes do
   """
   @spec delete(module(), String.t(), Keyword.t()) :: Snap.Cluster.result()
   def delete(cluster, index, opts \\ []) do
-    Snap.delete(cluster, "/#{index}", [], [], opts)
+    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    Snap.delete(cluster, "/#{namespaced_index}", [], [], opts)
   end
 
   @doc """
@@ -51,7 +54,9 @@ defmodule Snap.Indexes do
   @spec refresh(cluster :: module(), index :: String.t(), opts :: Keyword.t()) ::
           :ok | Snap.Cluster.error()
   def refresh(cluster, index, opts \\ []) do
-    with {:ok, _} <- Snap.post(cluster, "/#{index}/_refresh", nil, [], [], opts) do
+    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+
+    with {:ok, _} <- Snap.post(cluster, "/#{namespaced_index}/_refresh", nil, [], [], opts) do
       :ok
     end
   end
@@ -64,13 +69,23 @@ defmodule Snap.Indexes do
     with {:ok, indexes} <- list_starting_with(cluster, alias, opts) do
       indexes = Enum.reject(indexes, &(&1 == index))
 
+      namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+      namespaced_alias = Namespace.add_namespace_to_index(alias, cluster)
+
       remove_actions =
         Enum.map(indexes, fn i ->
-          %{"remove" => %{"index" => i, "alias" => alias}}
+          %{
+            "remove" => %{
+              "index" => Namespace.add_namespace_to_index(i, cluster),
+              "alias" => namespaced_alias
+            }
+          }
         end)
 
       actions = %{
-        "actions" => remove_actions ++ [%{"add" => %{"index" => index, "alias" => alias}}]
+        "actions" =>
+          remove_actions ++
+            [%{"add" => %{"index" => namespaced_index, "alias" => namespaced_alias}}]
       }
 
       with {:ok, _response} <- Snap.post(cluster, "/_aliases", actions), do: :ok
@@ -82,10 +97,16 @@ defmodule Snap.Indexes do
   """
   @spec list(module(), Keyword.t()) :: {:ok, list(String.t())} | Snap.Cluster.error()
   def list(cluster, opts \\ []) do
+    namespace = Namespace.index_namespace(cluster)
+
     with {:ok, indexes} <- Snap.get(cluster, "/_cat/indices", [format: "json"], [], opts) do
       indexes =
         indexes
         |> Enum.map(& &1["index"])
+        # Only return indexes inside this namespace
+        |> Enum.filter(&String.starts_with?(&1, "#{namespace}_"))
+        # Present them without the namespace prefix
+        |> Enum.map(&String.trim_leading(&1, "#{namespace}_"))
         |> Enum.sort()
 
       {:ok, indexes}
@@ -98,6 +119,8 @@ defmodule Snap.Indexes do
   @spec list_starting_with(module(), String.t(), Keyword.t()) ::
           {:ok, list(String.t())} | Snap.Cluster.error()
   def list_starting_with(cluster, prefix, opts \\ []) do
+    namespace = Namespace.index_namespace(cluster)
+
     with {:ok, indexes} <- Snap.get(cluster, "/_cat/indices", [format: "json"], [], opts) do
       prefix = prefix |> to_string() |> Regex.escape()
       {:ok, regex} = Regex.compile("^#{prefix}-[0-9]+$")
@@ -105,6 +128,10 @@ defmodule Snap.Indexes do
       indexes =
         indexes
         |> Enum.map(& &1["index"])
+        # Only return indexes inside this namespace
+        |> Enum.filter(&String.starts_with?(&1, "#{namespace}_"))
+        # Present them without the namespace prefix
+        |> Enum.map(&String.trim_leading(&1, "#{namespace}_"))
         |> Enum.filter(&Regex.match?(regex, &1))
         |> Enum.sort_by(&sort_index_by_timestamp/1)
 

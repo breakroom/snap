@@ -5,14 +5,22 @@ defmodule Snap do
   * `Snap.Cluster` - clusters are wrappers around the Elasticsearch HTTP API.
     We can use this to perform low-level HTTP requests.
 
-  * `Snap.Bulk` - a convenience wrapper around bulk operations, using `Stream`
-    to stream actions (such as `Snap.Bulk.Action.Create`) to be performed
-    against the `Snap.Cluster`.
-
   * `Snap.Indexes` - a convenience wrapper around the Elasticsearch indexes
     APIs, allowing the creation, deleting and aliasing of indexes, along with
     hotswap functionality to bulk load documents into an aliased index,
     switching to it atomically.
+
+  * `Snap.Document` - a convenience wrapper around the Document APIs, allowing
+    the creating, updating and deleting individual documents.
+
+  * `Snap.Search` - for performing searches
+
+  * `Snap.Multi` - for performing multiple searches in a single query
+
+  * `Snap.Bulk` - a convenience wrapper around bulk operations, using `Stream`
+    to stream actions (such as `Snap.Bulk.Action.Create`) to be performed
+    against the `Snap.Cluster`.
+
 
   Additionally, there are other supporting modules:
 
@@ -75,6 +83,8 @@ defmodule Snap do
     (defaults to `Snap.HTTPClient.Adapters.Finch`)
   * `telemetry_prefix` - the prefix of the telemetry events (defaults to
     `[:my_app, :snap]`)
+  * `index_namespace` - see `Snap.Cluster.Namespace` for details (defaults to
+    `nil`)
 
   ## Telemetry
 
@@ -97,6 +107,10 @@ defmodule Snap do
   * `headers` - a list of the headers sent
   * `body` - the body sent
   * `result` - the result returned to the user
+
+  ## Testing
+
+  See `Snap.Test` for details.
   """
 
   alias Snap.Request

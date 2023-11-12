@@ -3,6 +3,7 @@ defmodule Snap.Search do
   Performs searches against an ElasticSearch cluster.
   """
   alias Snap.SearchResponse
+  alias Snap.Cluster.Namespace
 
   @spec search(
           cluster :: module(),
@@ -30,8 +31,22 @@ defmodule Snap.Search do
       Enum.each(response, fn hit -> IO.inspect(hit.score) end)
   """
   def search(cluster, index_or_alias, query, params \\ [], headers \\ [], opts \\ []) do
-    case cluster.post("/#{index_or_alias}/_search", query, params, headers, opts) do
+    namespaced_index = Namespace.add_namespace_to_index(index_or_alias, cluster)
+
+    case cluster.post("/#{namespaced_index}/_search", query, params, headers, opts) do
       {:ok, response} -> {:ok, SearchResponse.new(response)}
+      err -> err
+    end
+  end
+
+  @doc """
+  Runs a count of the documents in an index, using an optional query.
+  """
+  def count(cluster, index_or_alias, query \\ %{}, params \\ [], headers \\ [], opts \\ []) do
+    namespaced_index = Namespace.add_namespace_to_index(index_or_alias, cluster)
+
+    case cluster.post("/#{namespaced_index}/_count", query, params, headers, opts) do
+      {:ok, %{"count" => count}} -> {:ok, count}
       err -> err
     end
   end

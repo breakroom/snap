@@ -1,10 +1,13 @@
 defmodule Snap.BulkTest do
-  use Snap.IntegrationCase
+  @moduledoc false
+  use Snap.IntegrationCase, async: true
 
   alias Snap
   alias Snap.Bulk
   alias Snap.Bulk.Action
   alias Snap.Test.Cluster
+
+  @test_index "bulk"
 
   describe "perform/4" do
     test "running actions in 2 chunks with no errors" do

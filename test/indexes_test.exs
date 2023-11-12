@@ -1,10 +1,15 @@
 defmodule Snap.IndexesTest do
-  use Snap.IntegrationCase
+  @moduledoc false
+  use Snap.IntegrationCase, async: true
 
   alias Snap
   alias Snap.Bulk.Action.Create
+  alias Snap.Document
   alias Snap.Indexes
+  alias Snap.Search
   alias Snap.Test.Cluster
+
+  @test_index "indexes"
 
   test "creating an index" do
     assert {:ok, _} = Indexes.create(Cluster, @test_index, %{})
@@ -17,19 +22,19 @@ defmodule Snap.IndexesTest do
 
   test "create an index, load a document and refresh it" do
     assert {:ok, _} = Indexes.create(Cluster, @test_index, %{})
-    assert {:ok, _} = Cluster.put("/#{@test_index}/_doc/1", %{foo: "bar"})
+    assert {:ok, _} = Document.index(Cluster, @test_index, %{foo: "bar"}, 1)
     assert :ok = Indexes.refresh(Cluster, @test_index)
-    assert {:ok, _} = Cluster.get("/#{@test_index}/_doc/1")
+    assert {:ok, _} = Document.get(Cluster, @test_index, 1)
   end
 
   test "create an index, load a document, alias it and fetch back" do
-    index = "#{@test_index}-123"
-    alias = @test_index
+    index = @test_index
+    alias = "alias"
 
     assert {:ok, _} = Indexes.create(Cluster, index, %{})
-    assert {:ok, _} = Cluster.put("/#{index}/_doc/1", %{foo: "bar"})
+    assert {:ok, _} = Document.index(Cluster, index, %{foo: "bar"}, 1)
     assert :ok = Indexes.alias(Cluster, index, alias)
-    assert {:ok, _} = Cluster.get("/#{alias}/_doc/1")
+    assert {:ok, _} = Document.get(Cluster, alias, 1)
   end
 
   test "hotswap loading 10,000 documents" do
@@ -44,7 +49,8 @@ defmodule Snap.IndexesTest do
 
     assert result == :ok
 
-    {:ok, %{"count" => count}} = Cluster.get("/#{@test_index}/_count")
+    {:ok, count} = Search.count(Cluster, @test_index, %{query: %{match_all: %{}}})
+
     assert count == 10_000
   end
 
