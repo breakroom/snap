@@ -1,9 +1,9 @@
 defmodule Snap do
   @moduledoc """
-  Snap is split into 3 main components:
+  Snap is split into a few key modules:
 
   * `Snap.Cluster` - clusters are wrappers around the Elasticsearch HTTP API.
-    We can use this to perform low-level HTTP requests.
+    We use these to perform low-level HTTP requests.
 
   * `Snap.Indexes` - a convenience wrapper around the Elasticsearch indexes
     APIs, allowing the creation, deleting and aliasing of indexes, along with
@@ -21,7 +21,6 @@ defmodule Snap do
     to stream actions (such as `Snap.Bulk.Action.Create`) to be performed
     against the `Snap.Cluster`.
 
-
   Additionally, there are other supporting modules:
 
   * `Snap.HTTPClient` - defines how to send HTTP requests.
@@ -29,6 +28,9 @@ defmodule Snap do
 
   * `Snap.Auth` - defines how an HTTP request is modified to include
     authentication headers. `Snap.Auth.Plain` implements HTTP Basic Auth.
+
+  * `Snap.Cluster.Namespace` - for isolating cluster and processes to work on
+    separate indexes
 
   ## Set up
 
