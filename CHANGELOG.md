@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.0
+
+- Added `Snap.Document` for interacting with individual documents
+- Added `count/3` to `Snap.Search` for performing counts with or without a query
+- Added support for index namespacing to isolate different Snap application, environments and even process from seeing each other's indexes - see `Snap.Cluster.Namespace` and `Snap.Test` for details
+
 ## 0.8.1
 
 - Upgrade `finch`, which allows use of `castore` 1.0
@@ -7,7 +13,7 @@
 
 ## 0.8.0
 
-- Add a high lever interface for the [Multi Search API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-multi-search.html)
+- Add a high level interface for the [Multi Search API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-multi-search.html)
 
 ## 0.7.0
 
