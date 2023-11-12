@@ -109,7 +109,11 @@ defmodule Snap.MixProject do
         "Response structs": [
           Snap.SearchResponse,
           Snap.Hits,
-          Snap.Hit
+          Snap.Hit,
+          Snap.Suggests,
+          Snap.Suggest,
+          Snap.Suggest.Option,
+          Snap.Suggest.Options
         ],
         Exceptions: [
           Snap.ResponseError,
