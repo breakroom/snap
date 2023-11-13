@@ -86,6 +86,7 @@ defmodule Snap.MixProject do
   defp docs do
     [
       main: "Snap",
+      extras: ["README.md", "CHANGELOG.md"],
       source_ref: @version,
       groups_for_modules: [
         Authentication: [
