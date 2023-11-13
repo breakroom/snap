@@ -7,6 +7,7 @@ defmodule Snap.Bulk do
   @default_page_wait 15_000
 
   alias Snap.Bulk.Actions
+  alias Snap.Cluster.Namespace
 
   @doc """
   Performs a bulk operation.
@@ -65,13 +66,14 @@ defmodule Snap.Bulk do
     {page_wait, opts} = Keyword.pop(opts, :page_wait, @default_page_wait)
     {max_errors, opts} = Keyword.pop(opts, :max_errors, nil)
     {request_opts, request_params} = Keyword.pop(opts, :request_opts, [])
+    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
 
     stream
     |> Stream.chunk_every(page_size)
     |> Stream.intersperse({:wait, page_wait})
     |> Stream.transform(
       0,
-      &process_chunk(&1, cluster, index, request_params, request_opts, &2, max_errors)
+      &process_chunk(&1, cluster, namespaced_index, request_params, request_opts, &2, max_errors)
     )
     |> Enum.to_list()
     |> handle_result()

@@ -1,4 +1,5 @@
 defmodule Snap.Auth.PlainTest do
+  @moduledoc false
   use ExUnit.Case, async: true
 
   alias Snap.Auth.Plain

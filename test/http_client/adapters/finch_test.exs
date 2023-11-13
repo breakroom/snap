@@ -1,4 +1,5 @@
 defmodule Snap.HTTPClient.Adapters.FinchTest do
+  @moduledoc false
   use ExUnit.Case, async: true
 
   alias Snap.HTTPClient.Adapters.Finch, as: FinchAdapter

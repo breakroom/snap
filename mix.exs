@@ -94,6 +94,7 @@ defmodule Snap.MixProject do
         ],
         "HTTP Client": [
           Snap.HTTPClient,
+          Snap.HTTPClient.Response,
           Snap.HTTPClient.Adapters.Finch
         ],
         "Bulk operations": [
@@ -107,18 +108,20 @@ defmodule Snap.MixProject do
           Snap.Multi.Response
         ],
         "Response structs": [
-          Snap.SearchResponse,
-          Snap.Hits,
+          Snap.Aggregation,
           Snap.Hit,
-          Snap.Suggests,
+          Snap.Hits,
+          Snap.SearchResponse,
           Snap.Suggest,
           Snap.Suggest.Option,
-          Snap.Suggest.Options
+          Snap.Suggest.Options,
+          Snap.Suggests
         ],
         Exceptions: [
           Snap.ResponseError,
           Snap.BulkError,
-          Snap.HTTPClient.Error
+          Snap.HTTPClient.Error,
+          Snap.HTTPError
         ]
       ]
     ]

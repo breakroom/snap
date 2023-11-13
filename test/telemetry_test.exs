@@ -1,4 +1,5 @@
 defmodule Snap.TelemetryTest do
+  @moduledoc false
   use ExUnit.Case, async: true
 
   alias Snap.Test.Cluster

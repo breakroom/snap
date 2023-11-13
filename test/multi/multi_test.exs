@@ -1,11 +1,14 @@
 defmodule Snap.MultiTest do
-  use Snap.IntegrationCase
+  @moduledoc false
+  use Snap.IntegrationCase, async: true
 
   alias Snap.Bulk.Action
   alias Snap.Multi
   alias Snap.Test.Cluster
 
-  setup_all do
+  @test_index "multi"
+
+  setup do
     {:ok, _} = Snap.Indexes.create(Cluster, @test_index, %{})
 
     1..5
@@ -14,7 +17,7 @@ defmodule Snap.MultiTest do
 
       %Action.Index{_id: i, doc: doc}
     end)
-    |> Snap.Bulk.perform(Cluster, @test_index, refresh: :wait_for)
+    |> Snap.Bulk.perform(Cluster, @test_index, refresh: true)
   end
 
   test "simple multi search" do

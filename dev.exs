@@ -7,7 +7,7 @@ Logger.configure(level: :debug)
 
 Task.start(fn ->
   children = [
-    {Snap.Dev.Cluster, [url: "http://localhost:9200"]},
+    {Snap.Dev.Cluster, [url: "http://localhost:9200", index_namespace: "snap-dev"]},
   ]
 
   {:ok, _} = Supervisor.start_link(children, strategy: :one_for_one)

@@ -33,6 +33,7 @@ defmodule Snap.Multi do
 
   @type t :: %__MODULE__{searches: list()}
 
+  alias Snap.Cluster.Namespace
   alias Snap.Multi.Response
   alias Snap.Multi.Search
 
@@ -67,8 +68,9 @@ defmodule Snap.Multi do
     ids = build_ids(multi.searches)
     body = encode(multi)
     headers = headers ++ [{"content-type", "application/x-ndjson"}]
+    namespaced_index = Namespace.add_namespace_to_index(index_or_alias, cluster)
 
-    case cluster.post("/#{index_or_alias}/_msearch", body, params, headers, opts) do
+    case cluster.post("/#{namespaced_index}/_msearch", body, params, headers, opts) do
       {:ok, response} -> {:ok, Response.new(response, ids)}
       err -> err
     end

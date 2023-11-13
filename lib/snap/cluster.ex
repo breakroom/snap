@@ -20,8 +20,11 @@ defmodule Snap.Cluster do
   config :my_app, MyApp.Cluster,
     url: "http://localhost:9200",
     username: "username",
-    password: "password"
+    password: "password",
+    index_namespace: "app-dev"
   ```
+
+  For details about how index namespacing works, see `Snap.Cluster.Namespace`.
   """
   defmacro __using__(opts) do
     quote do
@@ -118,6 +121,7 @@ defmodule Snap.Cluster do
           username: String.t(),
           password: String.t(),
           auth: Snap.Auth.t(),
+          index_namespace: String.t() | nil,
           telemetry_prefix: list(atom()),
           http_client_adapter:
             Snap.HTTPClient.t() | {Snap.HTTPClient.t(), adapter_config :: Keyword.t()}
