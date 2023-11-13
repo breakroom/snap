@@ -7,12 +7,6 @@ defmodule Snap.IntegrationCase do
 
   alias Snap.Test.Cluster
 
-  setup_all do
-    # Just clean out anything left over from broken tests in the past in the
-    # `snap-test` cluster namespace.
-    Test.drop_indexes(Cluster)
-  end
-
   # Clean out any indexes remaining after each test run
   setup do
     namespace = Test.generate_namespace_for_pid(self())
