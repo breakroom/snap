@@ -70,7 +70,7 @@ defmodule Snap.Test do
   your tests start multiple processes and they all need to have the same view of
   your cluster.
   """
-  def propogate_namespace(cluster, from_pid, to_pid) when is_pid(from_pid) and is_pid(to_pid) do
+  def propagate_namespace(cluster, from_pid, to_pid) when is_pid(from_pid) and is_pid(to_pid) do
     case Namespace.get_process_namespace(cluster, from_pid) do
       nil -> raise("No namespace set for process #{inspect(from_pid)}")
       namespace -> Namespace.set_process_namespace(cluster, to_pid, namespace)

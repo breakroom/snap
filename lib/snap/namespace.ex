@@ -33,7 +33,7 @@ defmodule Snap.Cluster.Namespace do
   ## Config namespace
 
   You can namespace the entire `Snap.Cluster` in the config. This is used to
-  achive isolation at a per application and environment level.
+  achieve isolation at a per application and environment level.
 
   For example, to isolate your development and test environments, set
   `index_namespace: "dev"` in your dev config, and `index_namespace: "test"` in
@@ -44,7 +44,7 @@ defmodule Snap.Cluster.Namespace do
 
   ## Process namespace
 
-  The process namespace is used to achive isolation between parallel running
+  The process namespace is used to achieve isolation between parallel running
   tests. It's not likely you'll want to use this in other situations.
 
   For more information, see `Snap.Test`.
