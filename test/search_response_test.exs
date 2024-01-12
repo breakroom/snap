@@ -48,7 +48,7 @@ defmodule Snap.SearchResponseTest do
     assert Enum.count(response.aggregations) == 4
 
     assert response.aggregations["season_values"] == %Snap.Aggregation{
-             buckets: [%{"doc_count" => 69406, "key" => "summer"}],
+             buckets: [%{"doc_count" => 69_406, "key" => "summer"}],
              doc_count_error_upper_bound: 0,
              sum_other_doc_count: 0
            }

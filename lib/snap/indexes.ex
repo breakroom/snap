@@ -42,9 +42,8 @@ defmodule Snap.Indexes do
     with {:ok, _} <- create(cluster, index, mapping),
          :ok <- Bulk.perform(stream, cluster, index, opts),
          :ok <- refresh(cluster, index),
-         :ok <- alias(cluster, index, alias),
-         :ok <- cleanup(cluster, alias, 2, opts) do
-      :ok
+         :ok <- alias(cluster, index, alias) do
+      cleanup(cluster, alias, 2, opts)
     end
   end
 

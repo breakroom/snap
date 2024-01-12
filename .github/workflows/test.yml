@@ -18,7 +18,7 @@ jobs:
             otp: 24.x
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Configure sysctl limits
         run: |
@@ -32,14 +32,14 @@ jobs:
         with:
           stack-version: 7.6.0
 
-      - uses: erlef/setup-elixir@v1
+      - uses: erlef/setup-beam@v1
         id: setup-elixir
         with:
           otp-version: ${{ matrix.otp }}
           elixir-version: ${{ matrix.elixir }}
 
       - name: Retrieve Mix Dependencies Cache
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         id: mix-cache
         with:
           path: deps
@@ -56,11 +56,15 @@ jobs:
         run: mix format --check-formatted
         if: matrix.check_formatted
 
+      - name: Run credo
+        run: mix credo
+        if: matrix.check_formatted
+
       - name: Run tests
         run: mix test --include integration
 
       - name: Retrieve PLT Cache
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         id: plt-cache
         with:
           path: priv/plts
