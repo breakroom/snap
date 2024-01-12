@@ -25,7 +25,7 @@ defmodule Snap.DocumentTest do
   end
 
   describe "add/3" do
-    test "it creates succesfully" do
+    test "it creates successfully" do
       assert {:ok, %{"result" => "created"}} =
                Document.add(Snap.Test.Cluster, @test_index, %{foo: "bar"})
     end
