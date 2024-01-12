@@ -47,13 +47,26 @@ defmodule Snap.Bulk.Action.Update do
   Represents an update step in a `Snap.Bulk` operation
   """
   @enforce_keys [:doc]
-  defstruct [:_index, :_id, :require_alias, :doc]
+  defstruct [
+    :_id,
+    :_index,
+    :_source,
+    :doc,
+    :doc_as_upsert,
+    :require_alias,
+    :script,
+    :upsert
+  ]
 
   @type t :: %__MODULE__{
-          _index: String.t() | nil,
           _id: String.t() | nil,
+          _index: String.t() | nil,
+          _source: boolean() | nil,
+          doc: map(),
+          doc_as_upsert: boolean() | nil,
           require_alias: boolean() | nil,
-          doc: map()
+          script: map() | nil,
+          upsert: map() | nil
         }
 end
 
