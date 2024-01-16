@@ -79,10 +79,14 @@ defmodule Snap.HTTPClient.Adapters.Finch do
   end
 
   defp handle_response({:ok, finch_response}) do
+    compression_algorithms = get_content_encoding_header(finch_response.headers)
+
+    response = update_in(finch_response.body, &decompress_data(&1, compression_algorithms))
+
     response = %Response{
       headers: finch_response.headers,
       status: finch_response.status,
-      body: finch_response.body
+      body: response.body
     }
 
     {:ok, response}
@@ -98,5 +102,36 @@ defmodule Snap.HTTPClient.Adapters.Finch do
 
   defp connection_pool_name(cluster) do
     Module.concat(cluster, Pool)
+  end
+
+  defp decompress_data(data, algorithms) do
+    Enum.reduce(algorithms, data, &decompress_with_algorithm/2)
+  end
+
+  defp decompress_with_algorithm(gzip, data) when gzip in ["gzip", "x-gzip"],
+    do: :zlib.gunzip(data)
+
+  defp decompress_with_algorithm("deflate", data),
+    do: :zlib.unzip(data)
+
+  defp decompress_with_algorithm("identity", data),
+    do: data
+
+  defp decompress_with_algorithm(algorithm, _data),
+    do: raise("unsupported decompression algorithm: #{inspect(algorithm)}")
+
+  # Returns a list of found compressions or [] if none found.
+  defp get_content_encoding_header(headers) do
+    Enum.find_value(headers, [], fn {name, value} ->
+      if String.downcase(name) == "content-encoding" do
+        value
+        |> String.downcase()
+        |> String.split(",", trim: true)
+        |> Stream.map(&String.trim/1)
+        |> Enum.reverse()
+      else
+        nil
+      end
+    end)
   end
 end
