@@ -53,6 +53,8 @@ defmodule Snap.Cluster.Namespace do
 
   alias Snap.Cluster.Supervisor
 
+  @separator "-"
+
   @doc false
   def start_link(name) do
     GenServer.start_link(__MODULE__, [], name: name)
@@ -99,7 +101,7 @@ defmodule Snap.Cluster.Namespace do
   def add_namespace_to_index(index, cluster) do
     [config_namespace(cluster), get_process_namespace(cluster, self()), index]
     |> Enum.reject(&is_nil/1)
-    |> Enum.join("-")
+    |> merge_elements()
   end
 
   @doc """
@@ -109,7 +111,28 @@ defmodule Snap.Cluster.Namespace do
   def index_namespace(cluster) do
     [config_namespace(cluster), get_process_namespace(cluster, self())]
     |> Enum.reject(&is_nil/1)
-    |> Enum.join("-")
+    |> merge_elements()
+  end
+
+  @doc """
+  Returns a boolean indicating whether the namespaced index is inside the currently
+  defined namespace.
+  """
+  def index_in_namespace?(namespaced_index, cluster) do
+    case index_namespace(cluster) do
+      nil -> true
+      namespace -> String.starts_with?(namespaced_index, "#{namespace}#{@separator}")
+    end
+  end
+
+  @doc """
+  Remove the namespace prefix from a namespaced index, returning the remainder.
+  """
+  def strip_namespace(namespaced_index, cluster) do
+    case index_namespace(cluster) do
+      nil -> namespaced_index
+      namespace -> String.replace_leading(namespaced_index, "#{namespace}#{@separator}", "")
+    end
   end
 
   @doc false
@@ -147,4 +170,7 @@ defmodule Snap.Cluster.Namespace do
     config = cluster.config()
     Keyword.get(config, :index_namespace)
   end
+
+  defp merge_elements([]), do: nil
+  defp merge_elements(list), do: Enum.join(list, @separator)
 end

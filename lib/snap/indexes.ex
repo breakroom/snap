@@ -96,16 +96,14 @@ defmodule Snap.Indexes do
   """
   @spec list(module(), Keyword.t()) :: {:ok, list(String.t())} | Snap.Cluster.error()
   def list(cluster, opts \\ []) do
-    namespace = Namespace.index_namespace(cluster)
-
     with {:ok, indexes} <- Snap.get(cluster, "/_cat/indices", [format: "json"], [], opts) do
       indexes =
         indexes
         |> Enum.map(& &1["index"])
         # Only return indexes inside this namespace
-        |> Enum.filter(&String.starts_with?(&1, "#{namespace}-"))
+        |> Enum.filter(&Namespace.index_in_namespace?(&1, cluster))
         # Present them without the namespace prefix
-        |> Enum.map(&String.trim_leading(&1, "#{namespace}-"))
+        |> Enum.map(&Namespace.strip_namespace(&1, cluster))
         |> Enum.sort()
 
       {:ok, indexes}
@@ -118,8 +116,6 @@ defmodule Snap.Indexes do
   @spec list_starting_with(module(), String.t(), Keyword.t()) ::
           {:ok, list(String.t())} | Snap.Cluster.error()
   def list_starting_with(cluster, prefix, opts \\ []) do
-    namespace = Namespace.index_namespace(cluster)
-
     with {:ok, indexes} <- Snap.get(cluster, "/_cat/indices", [format: "json"], [], opts) do
       prefix = prefix |> to_string() |> Regex.escape()
       {:ok, regex} = Regex.compile("^#{prefix}-[0-9]+$")
@@ -128,9 +124,9 @@ defmodule Snap.Indexes do
         indexes
         |> Enum.map(& &1["index"])
         # Only return indexes inside this namespace
-        |> Enum.filter(&String.starts_with?(&1, "#{namespace}-"))
+        |> Enum.filter(&Namespace.index_in_namespace?(&1, cluster))
         # Present them without the namespace prefix
-        |> Enum.map(&String.trim_leading(&1, "#{namespace}-"))
+        |> Enum.map(&Namespace.strip_namespace(&1, cluster))
         |> Enum.filter(&Regex.match?(regex, &1))
         |> Enum.sort_by(&sort_index_by_timestamp/1)
 
