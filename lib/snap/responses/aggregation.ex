@@ -11,7 +11,10 @@ defmodule Snap.Aggregation do
     interval
     sum_other_doc_count
     value
-  ]a
+  ]a ++
+              [
+                type: :buckets
+              ]
 
   def new(response) do
     %__MODULE__{
@@ -30,6 +33,7 @@ defmodule Snap.Aggregation do
           doc_count_error_upper_bound: integer(),
           interval: integer(),
           sum_other_doc_count: integer(),
-          value: integer()
+          value: integer(),
+          type: atom()
         }
 end

@@ -35,7 +35,17 @@ defmodule Snap.SearchResponse do
   end
 
   def build_aggregations(aggregations) when is_map(aggregations) do
-    Map.new(aggregations, fn {key, value} -> {key, Snap.Aggregation.new(value)} end)
+    Map.new(aggregations, fn
+      {key, %{"buckets" => _} = value} ->
+        {key, Snap.Aggregation.new(value)}
+
+      {key, %{"count" => _, "min" => _, "max" => _, "avg" => _, "sum" => _} = value} ->
+        {key, Snap.MetricsAggregation.new(value)}
+
+      # TODO: handle other MetricsAggregations
+      {key, value} ->
+        {key, Snap.MetricsAggregation.new(value)}
+    end)
   end
 
   defimpl Enumerable do
