@@ -27,6 +27,10 @@ defmodule Snap.SearchTest do
     first_hit = Enum.at(search_response, 0)
     assert first_hit.id == "1"
     assert first_hit.source["title"] == "Document 1"
+
+    table_reader = Table.to_rows(search_response)
+    # the number of documents we created
+    assert table_reader |> Enum.count() == 5
   end
 
   test "search with suggestion response" do
