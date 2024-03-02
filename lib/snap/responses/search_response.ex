@@ -77,14 +77,17 @@ if Code.ensure_loaded?(Table.Reader) do
       if response.hits.hits |> Enum.empty?() do
         []
       else
-        (response.hits.hits |> Enum.fetch(0))[:source] |> Map.keys()
+        hits = response.hits.hits
+        hits |> List.first() |> Map.fetch!(:source) |> Map.keys()
       end
     end
 
     defp get_rows(response) do
-      response.hits.hits
+      hits = response.hits.hits
+
+      hits
       |> Enum.map(fn hit ->
-        hit.source
+        hit.source |> Map.values()
       end)
     end
   end
