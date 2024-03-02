@@ -62,14 +62,12 @@ defmodule Snap.SearchResponse do
 
     def slice(_response), do: {:error, __MODULE__}
   end
+end
 
-  defimpl Table.Reader do
+if Code.ensure_loaded?(Table.Reader) do
+  defimpl Table.Reader, for: Snap.SearchResponse do
     def init(result) do
-      # {:rows, %{{:athena, :column_infos} => result.metadata, columns: result.columns},
-      #  result.rows}
-      IO.puts("hi")
       columns = get_columns(result)
-      IO.inspect(columns)
       rows = get_rows(result)
       {:rows, %{columns: columns}, rows}
     end
