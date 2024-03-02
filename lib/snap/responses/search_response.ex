@@ -62,34 +62,34 @@ defmodule Snap.SearchResponse do
 
     def slice(_response), do: {:error, __MODULE__}
   end
-end
 
-defimpl Table.Reader, for: Snap.SearchResponse do
-  def init(result) do
-    # {:rows, %{{:athena, :column_infos} => result.metadata, columns: result.columns},
-    #  result.rows}
-    IO.puts("hi")
-    columns = get_columns(result)
-    IO.inspect(columns)
-    rows = get_rows(result)
-    {:rows, %{columns: columns}, rows}
-  end
-
-  defp get_columns(response) do
-    if response.hits.hits |> Enum.empty?() do
-      []
-    else
-      hits = response.hits.hits
-      hits |> List.first() |> Map.fetch!(:source) |> Map.keys()
+  defimpl Table.Reader do
+    def init(result) do
+      # {:rows, %{{:athena, :column_infos} => result.metadata, columns: result.columns},
+      #  result.rows}
+      IO.puts("hi")
+      columns = get_columns(result)
+      IO.inspect(columns)
+      rows = get_rows(result)
+      {:rows, %{columns: columns}, rows}
     end
-  end
 
-  defp get_rows(response) do
-    hits = response.hits.hits
+    defp get_columns(response) do
+      if response.hits.hits |> Enum.empty?() do
+        []
+      else
+        hits = response.hits.hits
+        hits |> List.first() |> Map.fetch!(:source) |> Map.keys()
+      end
+    end
 
-    hits
-    |> Enum.map(fn hit ->
-      hit.source |> Map.values()
-    end)
+    defp get_rows(response) do
+      hits = response.hits.hits
+
+      hits
+      |> Enum.map(fn hit ->
+        hit.source |> Map.values()
+      end)
+    end
   end
 end
