@@ -40,6 +40,33 @@ defmodule Snap.Search do
   end
 
   @doc """
+  Gets the next page of results in a scroll which was initiated by passing
+  the scroll param into a search request, and parses the result into a
+  `Snap.SearchResponse`.
+
+  `Snap.SearchResponse` implements `Enumerable`, so you can count and iterate
+  directly on the struct.
+
+  """
+  def scroll_req(cluster, scroll_id, ttl \\ "1m", params \\ [], headers \\ [], opts \\ []) do
+    body = %{
+      scroll: ttl,
+      scroll_id: scroll_id
+    }
+
+    case cluster.post("/_search/scroll", body, params, headers, opts) do
+      {:ok, response} -> {:ok, SearchResponse.new(response)}
+      err -> err
+    end
+  end
+
+  @doc """
+  return all the results for a query via a set of scrolls, lazily as a stream
+  """
+  def scroll(cluster, index_or_alias, query, params \\ [], headers \\ [], opts \\ []) do
+  end
+
+  @doc """
   Runs a count of the documents in an index, using an optional query.
   """
   def count(cluster, index_or_alias, query \\ %{}, params \\ [], headers \\ [], opts \\ []) do
