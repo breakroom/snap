@@ -61,7 +61,17 @@ defmodule Snap.Search do
   end
 
   @doc """
-  return all the results for a query via a set of scrolls, lazily as a stream
+  Return all the results for a query via a set of scrolls, lazily as a stream.
+
+  It is highly recommended that you set size to something large 10k is the max
+  And that you sort by _doc for efficiency reasons
+  https://www.elastic.co/guide/en/elasticsearch/reference/current/paginate-search-results.html#scroll-search-results
+
+    ## Examples
+
+      query = %{query: %{match_all: %{}}, size: 10_000, sort: ["_doc"]}
+      stream = Snap.Search.scroll(Cluster, "index", query)
+
   """
   def scroll(cluster, index_or_alias, query, params \\ [], headers \\ [], opts \\ []) do
     params = [scroll: "1m"] |> Keyword.merge(params)
