@@ -64,6 +64,38 @@ defmodule Snap.Search do
   return all the results for a query via a set of scrolls, lazily as a stream
   """
   def scroll(cluster, index_or_alias, query, params \\ [], headers \\ [], opts \\ []) do
+    params = [scroll: "1m"] |> Keyword.merge(params)
+
+    Stream.resource(
+      fn ->
+        nil
+      end,
+      fn scroll_id ->
+        results =
+          if is_nil(scroll_id) do
+            {:ok, results} =
+              Snap.Search.search(cluster, index_or_alias, query, params, headers, opts)
+
+            results
+          else
+            {:ok, results} = Snap.Search.scroll_req(cluster, scroll_id)
+            results
+          end
+
+        hits = results.hits.hits
+
+        if Enum.empty?(hits) do
+          {:halt, nil}
+        else
+          new_scroll_id = results.scroll_id
+          # pass the scroll id so we can now scroll
+          {results, new_scroll_id}
+        end
+      end,
+      fn _ ->
+        nil
+      end
+    )
   end
 
   @doc """
