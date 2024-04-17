@@ -26,14 +26,19 @@ defmodule Snap.HTTPClient.Adapters.Finch do
 
     * `pool_size`: Set the pool size. Defaults to `5`.
     * `conn_opts`: Connection options passed to `Mint.HTTP.connect/4`. Defaults to `[]`.
+    * `accept_encoding`: The default 'Accept-Encoding' header to send as a
+      string. Defaults to `gzip`, so the server will return gzip compressed
+      responses if configured correctly.
   """
   @type config :: [
           pool_size: pos_integer(),
-          conn_opts: keyword()
+          conn_opts: keyword(),
+          accept_encoding: String.t() | false
         ]
 
   @default_pool_size 5
   @default_conn_opts []
+  @default_accept_encoding "gzip"
 
   @impl true
   def child_spec(config) do
@@ -71,6 +76,7 @@ defmodule Snap.HTTPClient.Adapters.Finch do
   @impl true
   def request(cluster, method, url, headers, body, opts \\ []) do
     conn_pool_name = connection_pool_name(cluster)
+    headers = build_headers(cluster, headers)
 
     method
     |> Finch.build(url, headers, body)
@@ -78,15 +84,25 @@ defmodule Snap.HTTPClient.Adapters.Finch do
     |> handle_response()
   end
 
-  defp handle_response({:ok, finch_response}) do
-    compression_algorithms = get_content_encoding_header(finch_response.headers)
+  defp build_headers(cluster, headers) do
+    accept_encoding = accept_encoding_config(cluster)
 
-    response = update_in(finch_response.body, &decompress_data(&1, compression_algorithms))
+    if accept_encoding do
+      headers ++ [{"accept-encoding", accept_encoding}]
+    else
+      headers
+    end
+  end
+
+  defp handle_response({:ok, %Finch.Response{headers: headers, body: body, status: status}}) do
+    compression_algorithms = get_content_encoding_header(headers)
+
+    decompressed_body = decompress_data(body, compression_algorithms)
 
     response = %Response{
-      headers: finch_response.headers,
-      status: finch_response.status,
-      body: response.body
+      headers: headers,
+      status: status,
+      body: decompressed_body
     }
 
     {:ok, response}
@@ -133,5 +149,17 @@ defmodule Snap.HTTPClient.Adapters.Finch do
         nil
       end
     end)
+  end
+
+  defp accept_encoding_config(cluster) do
+    config = cluster.config()
+
+    adapter_config =
+      case Keyword.get(config, :http_client_adapter) do
+        {_adapter, config} -> config
+        _ -> []
+      end
+
+    Keyword.get(adapter_config, :accept_encoding, @default_accept_encoding)
   end
 end
