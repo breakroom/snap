@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.10.0
+
+- Enabled gzip compression in default HTTP adapter using `Accept-Heading` header, which speeds up large response objects
+
 ## 0.9.0
 
 - Added `Snap.Document` for interacting with individual documents
