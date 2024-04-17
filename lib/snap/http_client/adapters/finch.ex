@@ -26,14 +26,19 @@ defmodule Snap.HTTPClient.Adapters.Finch do
 
     * `pool_size`: Set the pool size. Defaults to `5`.
     * `conn_opts`: Connection options passed to `Mint.HTTP.connect/4`. Defaults to `[]`.
+    * `accept_encoding`: The default 'Accept-Encoding' header to send as a
+      string. Defaults to `gzip`, so the server will return gzip compressed
+      responses if configured correctly. Set to `false` to disable.
   """
   @type config :: [
           pool_size: pos_integer(),
-          conn_opts: keyword()
+          conn_opts: keyword(),
+          accept_encoding: String.t() | false
         ]
 
   @default_pool_size 5
   @default_conn_opts []
+  @default_accept_encoding "gzip"
 
   @impl true
   def child_spec(config) do
@@ -71,6 +76,7 @@ defmodule Snap.HTTPClient.Adapters.Finch do
   @impl true
   def request(cluster, method, url, headers, body, opts \\ []) do
     conn_pool_name = connection_pool_name(cluster)
+    headers = build_headers(cluster, headers)
 
     method
     |> Finch.build(url, headers, body)
@@ -78,11 +84,25 @@ defmodule Snap.HTTPClient.Adapters.Finch do
     |> handle_response()
   end
 
-  defp handle_response({:ok, finch_response}) do
+  defp build_headers(cluster, headers) do
+    accept_encoding = accept_encoding_config(cluster)
+
+    if accept_encoding do
+      headers ++ [{"accept-encoding", accept_encoding}]
+    else
+      headers
+    end
+  end
+
+  defp handle_response({:ok, %Finch.Response{headers: headers, body: body, status: status}}) do
+    compression_algorithms = get_content_encoding_header(headers)
+
+    decompressed_body = decompress_data(body, compression_algorithms)
+
     response = %Response{
-      headers: finch_response.headers,
-      status: finch_response.status,
-      body: finch_response.body
+      headers: headers,
+      status: status,
+      body: decompressed_body
     }
 
     {:ok, response}
@@ -98,5 +118,48 @@ defmodule Snap.HTTPClient.Adapters.Finch do
 
   defp connection_pool_name(cluster) do
     Module.concat(cluster, Pool)
+  end
+
+  defp decompress_data(data, algorithms) do
+    Enum.reduce(algorithms, data, &decompress_with_algorithm/2)
+  end
+
+  defp decompress_with_algorithm(gzip, data) when gzip in ["gzip", "x-gzip"],
+    do: :zlib.gunzip(data)
+
+  defp decompress_with_algorithm("deflate", data),
+    do: :zlib.unzip(data)
+
+  defp decompress_with_algorithm("identity", data),
+    do: data
+
+  defp decompress_with_algorithm(algorithm, _data),
+    do: raise("unsupported decompression algorithm: #{inspect(algorithm)}")
+
+  # Returns a list of found compressions or [] if none found.
+  defp get_content_encoding_header(headers) do
+    Enum.find_value(headers, [], fn {name, value} ->
+      if String.downcase(name) == "content-encoding" do
+        value
+        |> String.downcase()
+        |> String.split(",", trim: true)
+        |> Stream.map(&String.trim/1)
+        |> Enum.reverse()
+      else
+        nil
+      end
+    end)
+  end
+
+  defp accept_encoding_config(cluster) do
+    config = cluster.config()
+
+    adapter_config =
+      case Keyword.get(config, :http_client_adapter) do
+        {_adapter, config} -> config
+        _ -> []
+      end
+
+    Keyword.get(adapter_config, :accept_encoding, @default_accept_encoding)
   end
 end
