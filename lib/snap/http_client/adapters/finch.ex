@@ -28,7 +28,7 @@ defmodule Snap.HTTPClient.Adapters.Finch do
     * `conn_opts`: Connection options passed to `Mint.HTTP.connect/4`. Defaults to `[]`.
     * `accept_encoding`: The default 'Accept-Encoding' header to send as a
       string. Defaults to `gzip`, so the server will return gzip compressed
-      responses if configured correctly.
+      responses if configured correctly. Set to `false` to disable.
   """
   @type config :: [
           pool_size: pos_integer(),
