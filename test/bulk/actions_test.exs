@@ -6,18 +6,30 @@ defmodule Snap.Bulk.ActionsTest do
   alias Snap.Bulk.Actions
 
   test "encoding actions" do
-    doc = %{foo: "bar"}
+    doc = %{"foo" => "bar"}
 
     actions = [
-      %Action.Index{_index: "foo", doc: doc},
-      %Action.Create{_index: "foo", doc: doc, require_alias: true},
-      %Action.Update{_index: "foo", doc: doc, _id: 2},
-      %Action.Delete{_index: "foo", _id: 1}
+      %Action.Index{index: "foo", doc: doc},
+      %Action.Create{index: "foo", doc: doc, require_alias: true},
+      %Action.Update{index: "foo", doc: doc, id: 2},
+      %Action.Delete{index: "foo", id: 1}
     ]
 
     encoded = Actions.encode(actions) |> IO.chardata_to_string()
 
-    assert encoded ==
-             "{\"index\":{\"_index\":\"foo\"}}\n{\"foo\":\"bar\"}\n{\"create\":{\"_index\":\"foo\",\"require_alias\":true}}\n{\"foo\":\"bar\"}\n{\"update\":{\"_index\":\"foo\",\"_id\":2}}\n{\"doc\":{\"foo\":\"bar\"}}\n{\"delete\":{\"_index\":\"foo\",\"_id\":1}}\n"
+    lines =
+      encoded
+      |> String.split("\n", trim: true)
+      |> Enum.map(&Jason.decode!/1)
+
+    assert lines == [
+             %{"index" => %{"_index" => "foo"}},
+             doc,
+             %{"create" => %{"_index" => "foo", "require_alias" => true}},
+             doc,
+             %{"update" => %{"_index" => "foo", "_id" => 2}},
+             %{"doc" => doc},
+             %{"delete" => %{"_index" => "foo", "_id" => 1}}
+           ]
   end
 end

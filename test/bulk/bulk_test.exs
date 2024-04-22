@@ -16,10 +16,10 @@ defmodule Snap.BulkTest do
       doc = %{foo: "bar"}
 
       actions = [
-        %Action.Index{doc: doc, _id: 1},
-        %Action.Index{doc: doc, _id: 2},
-        %Action.Delete{_id: 1},
-        %Action.Delete{_id: 2}
+        %Action.Index{doc: doc, id: 1},
+        %Action.Index{doc: doc, id: 2},
+        %Action.Delete{id: 1},
+        %Action.Delete{id: 2}
       ]
 
       result =
@@ -35,10 +35,10 @@ defmodule Snap.BulkTest do
       doc = %{foo: "bar"}
 
       actions = [
-        %Action.Index{doc: doc, _id: 1},
-        %Action.Update{doc: doc, _id: 2},
-        %Action.Update{doc: doc, _id: 3},
-        %Action.Update{doc: doc, _id: 4}
+        %Action.Index{doc: doc, id: 1},
+        %Action.Update{doc: doc, id: 2},
+        %Action.Update{doc: doc, id: 3},
+        %Action.Update{doc: doc, id: 4}
       ]
 
       {:error, %Snap.BulkError{errors: errors}} =
@@ -58,10 +58,10 @@ defmodule Snap.BulkTest do
       doc = %{foo: "bar"}
 
       actions = [
-        %Action.Update{_id: 1, doc: doc},
-        %Action.Update{_id: 2, doc: doc},
-        %Action.Update{_id: 3, doc: doc},
-        %Action.Update{_id: 4, doc: doc}
+        %Action.Update{id: 1, doc: doc},
+        %Action.Update{id: 2, doc: doc},
+        %Action.Update{id: 3, doc: doc},
+        %Action.Update{id: 4, doc: doc}
       ]
 
       {:error, %Snap.BulkError{errors: errors}} =
@@ -77,12 +77,12 @@ defmodule Snap.BulkTest do
       doc = %{foo: "bar"}
 
       actions = [
-        %Action.Update{_id: 1, doc: doc},
-        %Action.Update{_id: 2, doc: doc},
-        %Action.Update{_id: 3, doc: doc},
-        %Action.Update{_id: 4, doc: doc},
-        %Action.Update{_id: 5, doc: doc},
-        %Action.Update{_id: 6, doc: doc}
+        %Action.Update{id: 1, doc: doc},
+        %Action.Update{id: 2, doc: doc},
+        %Action.Update{id: 3, doc: doc},
+        %Action.Update{id: 4, doc: doc},
+        %Action.Update{id: 5, doc: doc},
+        %Action.Update{id: 6, doc: doc}
       ]
 
       {:error, %Snap.BulkError{errors: errors}} =
@@ -98,12 +98,12 @@ defmodule Snap.BulkTest do
       doc = %{foo: "bar"}
 
       actions = [
-        %Action.Index{_id: 1, doc: doc},
-        %Action.Index{_id: 2, doc: doc},
-        %Action.Index{_id: 3, doc: doc},
-        %Action.Index{_id: 4, doc: doc},
-        %Action.Index{_id: 5, doc: doc},
-        %Action.Index{_id: 6, doc: doc}
+        %Action.Index{id: 1, doc: doc},
+        %Action.Index{id: 2, doc: doc},
+        %Action.Index{id: 3, doc: doc},
+        %Action.Index{id: 4, doc: doc},
+        %Action.Index{id: 5, doc: doc},
+        %Action.Index{id: 6, doc: doc}
       ]
 
       assert :ok ==

@@ -45,6 +45,13 @@ defmodule Snap.Cluster do
       end
 
       @doc """
+      Returns the JSON library configured for the Cluster.
+      """
+      def json_library() do
+        Keyword.get(config(), :json_library, Jason)
+      end
+
+      @doc """
       Returns the otp_app that the Cluster was defined with.
       """
       def otp_app() do
@@ -124,7 +131,8 @@ defmodule Snap.Cluster do
           index_namespace: String.t() | nil,
           telemetry_prefix: list(atom()),
           http_client_adapter:
-            Snap.HTTPClient.t() | {Snap.HTTPClient.t(), adapter_config :: Keyword.t()}
+            Snap.HTTPClient.t() | {Snap.HTTPClient.t(), adapter_config :: Keyword.t()},
+          json_library: module()
         ]
 
   @doc """

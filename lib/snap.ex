@@ -87,6 +87,9 @@ defmodule Snap do
     `[:my_app, :snap]`)
   * `index_namespace` - see `Snap.Cluster.Namespace` for details (defaults to
     `nil`)
+  * `json_library` - the library used for encoding/decoding JSON (defaults to
+    `Jason`. You may wish to switch this to [`Jsonrs`](https://hex.pm/packages/jsonrs)
+     for better performance encoding and decoding large requests and responses)
 
   ## Telemetry
 

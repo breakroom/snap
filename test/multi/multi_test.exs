@@ -15,7 +15,7 @@ defmodule Snap.MultiTest do
     |> Enum.map(fn i ->
       doc = %{"title" => "Document #{i}"}
 
-      %Action.Index{_id: i, doc: doc}
+      %Action.Index{id: i, doc: doc}
     end)
     |> Snap.Bulk.perform(Cluster, @test_index, refresh: true)
   end

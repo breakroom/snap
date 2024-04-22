@@ -66,7 +66,8 @@ defmodule Snap.Multi do
           {:ok, Snap.Multi.Response.t()} | {:error, Snap.Cluster.error()}
   def run(%__MODULE__{} = multi, cluster, index_or_alias, params \\ [], headers \\ [], opts \\ []) do
     ids = build_ids(multi.searches)
-    body = encode(multi)
+    json_library = cluster.json_library()
+    body = encode(multi, json_library)
     headers = headers ++ [{"content-type", "application/x-ndjson"}]
     namespaced_index = Namespace.add_namespace_to_index(index_or_alias, cluster)
 
@@ -76,23 +77,23 @@ defmodule Snap.Multi do
     end
   end
 
-  defp encode(%__MODULE__{} = multi) do
+  defp encode(%__MODULE__{} = multi, json_library) do
     multi.searches
-    |> Enum.flat_map(&encode_search/1)
+    |> Enum.flat_map(&encode_search(&1, json_library))
   end
 
-  defp encode_search(%Search{headers: headers, body: body}) do
-    [encode_headers(headers), "\n", encode_body(body), "\n"]
+  defp encode_search(%Search{headers: headers, body: body}, json_library) do
+    [encode_headers(headers, json_library), "\n", encode_body(body, json_library), "\n"]
   end
 
-  defp encode_headers(headers) do
+  defp encode_headers(headers, json_library) do
     headers
     |> Enum.into(%{})
-    |> Jason.encode!(pretty: false)
+    |> json_library.encode!(pretty: false)
   end
 
-  defp encode_body(body) do
-    Jason.encode!(body, pretty: false)
+  defp encode_body(body, json_library) do
+    json_library.encode!(body, pretty: false)
   end
 
   defp build_ids(searches) do
