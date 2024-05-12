@@ -124,12 +124,19 @@ defimpl Jason.Encoder, for: Snap.Bulk.Action.Update do
         %Snap.Bulk.Action.Update{
           _index: index,
           _id: id,
+          doc_as_upsert: doc_as_upsert,
           require_alias: require_alias,
           routing: routing
         },
         opts
       ) do
-    values = [_index: index, _id: id, require_alias: require_alias, routing: routing]
+    values = [
+      _index: index,
+      _id: id,
+      doc_as_upsert: doc_as_upsert,
+      require_alias: require_alias,
+      routing: routing
+    ]
 
     values
     |> Enum.reject(&is_nil(elem(&1, 1)))
