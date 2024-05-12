@@ -1,12 +1,13 @@
 defmodule Snap.MixProject do
   use Mix.Project
 
-  @github_url "https://github.com/breakroom/snap"
+  @original_github_url "https://github.com/breakroom/snap"
+  @github_url "https://github.com/surgeventures/snap"
   @version "0.10.1"
 
   def project do
     [
-      app: :snap,
+      app: :snap_fresha,
       name: "Snap",
       version: @version,
       elixir: "~> 1.12",
@@ -18,7 +19,7 @@ defmodule Snap.MixProject do
       preferred_cli_env: ["test.all": :test],
 
       # Hex
-      description: "A modern Elasticsearch client",
+      description: "A modern Elasticsearch client, forked from [snap](#{@original_github_url})",
       package: package(),
 
       # Docs
@@ -74,9 +75,9 @@ defmodule Snap.MixProject do
 
   defp package do
     [
-      maintainers: ["Tom Taylor"],
       licenses: ["MIT"],
       links: %{
+        "Original project" => @original_github_url,
         "GitHub" => @github_url
       },
       files: ~w(mix.exs lib LICENSE.md README.md CHANGELOG.md)
