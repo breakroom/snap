@@ -124,7 +124,6 @@ defimpl Jason.Encoder, for: Snap.Bulk.Action.Update do
         %Snap.Bulk.Action.Update{
           _index: index,
           _id: id,
-          doc_as_upsert: doc_as_upsert,
           require_alias: require_alias,
           routing: routing
         },
@@ -133,7 +132,6 @@ defimpl Jason.Encoder, for: Snap.Bulk.Action.Update do
     values = [
       _index: index,
       _id: id,
-      doc_as_upsert: doc_as_upsert,
       require_alias: require_alias,
       routing: routing
     ]

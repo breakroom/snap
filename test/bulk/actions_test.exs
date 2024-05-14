@@ -18,6 +18,6 @@ defmodule Snap.Bulk.ActionsTest do
     encoded = Actions.encode(actions) |> IO.chardata_to_string()
 
     assert encoded ==
-             "{\"index\":{\"_index\":\"foo\",\"routing\":\"bar\"}}\n{\"foo\":\"bar\"}\n{\"create\":{\"_index\":\"foo\",\"require_alias\":true,\"routing\":\"bar\"}}\n{\"foo\":\"bar\"}\n{\"update\":{\"_index\":\"foo\",\"_id\":2,\"doc_as_upsert\":true,\"routing\":\"bar\"}}\n{\"doc\":{\"foo\":\"bar\"}}\n{\"delete\":{\"_index\":\"foo\",\"_id\":1,\"routing\":\"bar\"}}\n"
+             "{\"index\":{\"_index\":\"foo\",\"routing\":\"bar\"}}\n{\"foo\":\"bar\"}\n{\"create\":{\"_index\":\"foo\",\"require_alias\":true,\"routing\":\"bar\"}}\n{\"foo\":\"bar\"}\n{\"update\":{\"_index\":\"foo\",\"_id\":2,\"routing\":\"bar\"}}\n{\"doc\":{\"foo\":\"bar\"},\"doc_as_upsert\":true}\n{\"delete\":{\"_index\":\"foo\",\"_id\":1,\"routing\":\"bar\"}}\n"
   end
 end

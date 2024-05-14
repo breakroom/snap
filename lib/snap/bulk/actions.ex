@@ -42,7 +42,8 @@ defmodule Snap.Bulk.Actions do
     doc = action.doc
 
     doc_json =
-      %{doc: doc}
+      %{doc: doc, doc_as_upsert: action.doc_as_upsert}
+      |> Map.reject(fn {_key, value} -> is_nil(value) end)
       |> Jason.encode!()
 
     action_json = encode_action_command(action)
