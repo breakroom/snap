@@ -22,11 +22,11 @@ jobs:
       fail-fast: false
       matrix:
         os: ["ubuntu-latest"]
-        elixir: ["1.15", "1.16"]
-        otp: ["26", "25"]
+        elixir: ["1.16"]
+        otp: ["26"]
         include:
           - elixir: "1.16"
-            otp: "25"
+            otp: "26"
             check_formatted: true
     steps:
       - uses: actions/checkout@v4
