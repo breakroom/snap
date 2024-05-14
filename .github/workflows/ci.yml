@@ -1,0 +1,91 @@
+name: Build & Publish
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "*"
+
+# by default, permissions are read-only, read + write is required for git pushes
+permissions:
+  contents: write
+
+env:
+  MIX_ENV: test
+
+jobs:
+  test:
+    runs-on: "ubuntu-latest"
+
+    name: Test Elixir ${{ matrix.elixir }}, OTP ${{ matrix.otp }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ["ubuntu-latest"]
+        elixir: ["1.15", "1.16"]
+        otp: ["26", "25"]
+        include:
+          - elixir: "1.16"
+            otp: "25"
+            check_formatted: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Configure sysctl limits
+        run: |
+          sudo swapoff -a
+          sudo sysctl -w vm.swappiness=1
+          sudo sysctl -w fs.file-max=262144
+          sudo sysctl -w vm.max_map_count=262144
+
+      - name: Runs Elasticsearch
+        uses: elastic/elastic-github-actions/elasticsearch@master
+        with:
+          stack-version: 7.6.0
+
+      - uses: erlef/setup-beam@v1
+        id: setup-elixir
+        with:
+          otp-version: ${{matrix.otp}}
+          elixir-version: ${{matrix.elixir}}
+
+      - name: Restore Dependency Cache
+        uses: actions/cache@v3
+        id: cache-deps
+        with:
+          path: |
+            deps
+            _build
+          key: |
+            mix-${{ runner.os }}-${{matrix.elixir}}-${{matrix.otp}}-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            mix-${{ runner.os }}-${{matrix.elixir}}-${{matrix.otp}}-
+
+      - name: Install Mix Dependencies
+        if: steps.mix-cache.outputs.cache-hit != 'true'
+        run: |
+          mix local.rebar --force
+          mix local.hex --force
+          mix deps.get
+      - run: mix deps.compile --warnings-as-errors
+        if: steps.cache-deps.outputs.cache-hit != 'true'
+
+      - name: Check for unused deps
+        run: mix deps.unlock --check-unused
+        if: matrix.check_formatted
+
+      - run: mix format --check-formatted
+        if: matrix.check_formatted
+
+      - run: mix test --include integration
+
+      - name: Build & Publish
+        run: |
+          mix hex.build
+          mix hex.publish --yes
+        if: matrix.check_formatted
+        env:
+          MIX_ENV: dev
+          HEX_API_KEY: ${{ secrets.HEX_ORGANIZATION_WRITE_KEY }}
