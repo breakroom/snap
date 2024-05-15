@@ -32,7 +32,7 @@ defmodule Snap.Hit do
 
   @type t :: %__MODULE__{
           index: String.t(),
-          type: String.t(),
+          type: String.t() | nil,
           id: String.t(),
           score: float() | nil,
           source: map() | nil,
