@@ -33,3 +33,7 @@ snap-*.tar
 
 # Contains Dialyzer PLTs
 /priv
+
+# Intellij idea
+.idea/*
+*.iml
