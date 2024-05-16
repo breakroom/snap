@@ -43,7 +43,7 @@ defmodule Snap.IndexesTest do
       |> Stream.map(fn i ->
         doc = %{"title" => "Document #{i}"}
 
-        %Create{_id: i, doc: doc}
+        %Create{id: i, doc: doc}
       end)
       |> Indexes.hotswap(Cluster, @test_index, %{}, page_wait: 0, page_size: 1_000)
 
@@ -67,7 +67,7 @@ defmodule Snap.IndexesTest do
       |> Stream.map(fn i ->
         doc = %{"title" => "Document #{i}"}
 
-        %Create{_id: i, doc: doc}
+        %Create{id: i, doc: doc}
       end)
       |> Indexes.hotswap(Cluster, @test_index, %{}, page_wait: 0, page_size: 1_000)
 

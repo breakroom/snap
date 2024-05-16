@@ -21,9 +21,9 @@ defmodule Snap.Bulk do
 
   ```
   actions = [
-    %Snap.Bulk.Action.Create{_id: 1, doc: %{foo: "bar"}},
-    %Snap.Bulk.Action.Create{_id: 2, doc: %{foo: "bar"}},
-    %Snap.Bulk.Action.Create{_id: 3, doc: %{foo: "bar"}}
+    %Snap.Bulk.Action.Create{id: 1, doc: %{foo: "bar"}},
+    %Snap.Bulk.Action.Create{id: 2, doc: %{foo: "bar"}},
+    %Snap.Bulk.Action.Create{id: 3, doc: %{foo: "bar"}}
   ]
 
   actions
@@ -111,7 +111,8 @@ defmodule Snap.Bulk do
   end
 
   defp process_chunk(actions, cluster, index, params, request_opts, error_count, _max_errors) do
-    body = Actions.encode(actions)
+    json_library = cluster.json_library()
+    body = Actions.encode(actions, json_library)
 
     headers = [{"content-type", "application/x-ndjson"}]
 

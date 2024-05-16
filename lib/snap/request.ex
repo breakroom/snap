@@ -1,6 +1,10 @@
 defmodule Snap.Request do
-  @moduledoc false
+  @moduledoc """
+  Supports making arbitrary requests against `Snap.Cluster`.
 
+  In most cases you're better off using the functions in `Snap.Cluster`
+  directly, e.g. `c:Snap.Cluster.get/4`.
+  """
   require Logger
 
   alias Snap.HTTPClient
@@ -10,9 +14,13 @@ defmodule Snap.Request do
     {"accept", "application/json"}
   ]
 
+  @doc """
+  Makes an HTTP request against a `Snap.Cluster`
+  """
   def request(cluster, method, path, body \\ nil, params \\ [], headers \\ [], opts \\ []) do
     config = cluster.config()
     auth = Keyword.get(config, :auth, Snap.Auth.Plain)
+    json_library = cluster.json_library()
 
     url =
       config
@@ -20,7 +28,7 @@ defmodule Snap.Request do
       |> URI.merge(path)
       |> append_query_params(params)
 
-    body = encode_body(body)
+    body = encode_body(body, json_library)
     headers = set_default_headers(headers)
 
     start_time = System.monotonic_time()
@@ -30,7 +38,7 @@ defmodule Snap.Request do
 
       response_time = System.monotonic_time() - start_time
 
-      result = parse_response(response)
+      result = parse_response(response, json_library)
 
       decode_time = System.monotonic_time() - response_time - start_time
       total_time = response_time + decode_time
@@ -63,15 +71,15 @@ defmodule Snap.Request do
     end
   end
 
-  defp parse_response(response) do
+  defp parse_response(response, json_library) do
     case response do
       {:ok, %HTTPClient.Response{body: data, status: status}}
       when status >= 200 and status < 300 ->
-        Jason.decode(data)
+        json_library.decode(data)
 
       {:ok, %HTTPClient.Response{body: data} = response} ->
         # If there's no valid JSON treat the error as an HTTPError.
-        case Jason.decode(data) do
+        case json_library.decode(data) do
           {:ok, json} ->
             exception = Snap.ResponseError.exception_from_json(json)
             {:error, exception}
@@ -108,10 +116,10 @@ defmodule Snap.Request do
     }
   end
 
-  defp encode_body(body) when is_map(body), do: Jason.encode!(body)
-  defp encode_body(body), do: body
+  defp encode_body(body, json_library) when is_map(body), do: json_library.encode!(body)
+  defp encode_body(body, _json_library), do: body
 
-  def append_query_params(url, query_params \\ []) do
+  defp append_query_params(url, query_params) do
     uri = URI.parse(url)
 
     query_params_str = Map.get(uri, :query) || ""
@@ -133,7 +141,7 @@ defmodule Snap.Request do
     |> URI.to_string()
   end
 
-  def set_default_headers(headers) do
+  defp set_default_headers(headers) do
     @default_headers
     |> Enum.reduce(headers, fn {key, _value} = tuple, acc ->
       if List.keymember?(acc, key, 0) do
