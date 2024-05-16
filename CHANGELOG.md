@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.11.0
+
+- Breaking change: changed the field names in `Snap.Bulk.Action` to drop underscore prefix
+- Added support for pluggable JSON libraries. Continues to default to `Jason`, but you may see encoding/decoding performance improvements from switching to `Jsonrs`
+- Allowed `nil` for the `type` in `Snap.Hit` as ElasticSearch >= 8 does not return this
+
 ## 0.10.0
 
 - Enabled gzip compression in default HTTP adapter using `Accept-Heading` header, which speeds up large response objects
