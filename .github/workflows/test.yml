@@ -10,17 +10,38 @@ jobs:
           - elixir: 1.16.x
             otp: 26.x
             check_formatted: true
+            search: elasticsearch-7.6.0
+          - elixir: 1.16.x
+            otp: 26.x
+            search: elasticsearch-8.2.0
+          - elixir: 1.16.x
+            otp: 26.x
+            search: opensearch-2.6.0
+          - elixir: 1.16.x
+            otp: 26.x
+            search: opensearch-2.13.0
           - elixir: 1.15.x
             otp: 26.x
+            search: elasticsearch-7.6.0
           - elixir: 1.14.x
             otp: 25.x
+            search: elasticsearch-7.6.0
           - elixir: 1.13.x
             otp: 24.x
+            search: elasticsearch-7.6.0
           - elixir: 1.12.x
             otp: 24.x
+            search: elasticsearch-7.6.0
 
     steps:
       - uses: actions/checkout@v4
+
+      - id: search
+        run: |
+          version=$(echo ${{ matrix.search }} | cut -d- -f2)
+          service=$(echo ${{ matrix.search }} | cut -d- -f1)
+          echo "::set-output name=version::$version"
+          echo "::set-output name=service::$service"
 
       - name: Configure sysctl limits
         run: |
@@ -29,10 +50,18 @@ jobs:
           sudo sysctl -w fs.file-max=262144
           sudo sysctl -w vm.max_map_count=262144
 
-      - name: Runs Elasticsearch
+      - name: Run Elasticsearch
         uses: elastic/elastic-github-actions/elasticsearch@master
         with:
-          stack-version: 7.6.0
+          stack-version: ${{ steps.search.outputs.version }}
+          security-enabled: false
+        if: ${{ steps.search.outputs.service == 'elasticsearch' }}
+
+      - name: Run OpenSearch
+        uses: ankane/setup-opensearch@v1
+        with:
+          opensearch-version: ${{ steps.search.outputs.version }}
+        if: ${{ steps.search.outputs.service == 'opensearch' }}
 
       - uses: erlef/setup-beam@v1
         id: setup-elixir
