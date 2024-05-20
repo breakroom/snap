@@ -11,18 +11,24 @@ defmodule Snap.Bulk.Action.Create do
   @behaviour Snap.Bulk.Action
 
   @enforce_keys [:doc]
-  defstruct [:index, :id, :require_alias, :doc]
+  defstruct [:index, :id, :require_alias, :doc, :routing]
 
   @type t :: %__MODULE__{
           index: String.t() | nil,
           id: String.t() | nil,
           require_alias: boolean() | nil,
-          doc: map()
+          doc: map(),
+          routing: String.t() | nil
         }
 
   @doc false
-  def to_action_json(%__MODULE__{index: index, id: id, require_alias: require_alias}) do
-    values = %{_index: index, _id: id, require_alias: require_alias}
+  def to_action_json(%__MODULE__{
+        index: index,
+        id: id,
+        require_alias: require_alias,
+        routing: routing
+      }) do
+    values = %{_index: index, _id: id, require_alias: require_alias, routing: routing}
 
     values
     |> Enum.reject(&is_nil(elem(&1, 1)))
@@ -43,17 +49,23 @@ defmodule Snap.Bulk.Action.Delete do
   @behaviour Snap.Bulk.Action
 
   @enforce_keys [:id]
-  defstruct [:index, :id, :require_alias]
+  defstruct [:index, :id, :require_alias, :routing]
 
   @type t :: %__MODULE__{
           index: String.t() | nil,
           id: String.t(),
-          require_alias: boolean() | nil
+          require_alias: boolean() | nil,
+          routing: String.t() | nil
         }
 
   @doc false
-  def to_action_json(%__MODULE__{index: index, id: id, require_alias: require_alias}) do
-    values = %{_index: index, _id: id, require_alias: require_alias}
+  def to_action_json(%__MODULE__{
+        index: index,
+        id: id,
+        require_alias: require_alias,
+        routing: routing
+      }) do
+    values = %{_index: index, _id: id, require_alias: require_alias, routing: routing}
 
     values
     |> Enum.reject(&is_nil(elem(&1, 1)))
@@ -72,18 +84,24 @@ defmodule Snap.Bulk.Action.Index do
   @behaviour Snap.Bulk.Action
 
   @enforce_keys [:doc]
-  defstruct [:index, :id, :require_alias, :doc]
+  defstruct [:index, :id, :require_alias, :doc, :routing]
 
   @type t :: %__MODULE__{
           index: String.t() | nil,
           id: String.t() | nil,
           require_alias: boolean() | nil,
-          doc: map()
+          doc: map(),
+          routing: String.t() | nil
         }
 
   @doc false
-  def to_action_json(%__MODULE__{index: index, id: id, require_alias: require_alias}) do
-    values = %{_index: index, _id: id, require_alias: require_alias}
+  def to_action_json(%__MODULE__{
+        index: index,
+        id: id,
+        require_alias: require_alias,
+        routing: routing
+      }) do
+    values = %{_index: index, _id: id, require_alias: require_alias, routing: routing}
 
     values
     |> Enum.reject(&is_nil(elem(&1, 1)))
@@ -110,7 +128,8 @@ defmodule Snap.Bulk.Action.Update do
     :require_alias,
     :doc,
     :doc_as_upsert,
-    :script
+    :script,
+    :routing
   ]
 
   @type t :: %__MODULE__{
@@ -119,12 +138,18 @@ defmodule Snap.Bulk.Action.Update do
           require_alias: boolean() | nil,
           doc: map(),
           doc_as_upsert: boolean() | nil,
-          script: map() | nil
+          script: map() | nil,
+          routing: String.t() | nil
         }
 
   @doc false
-  def to_action_json(%__MODULE__{index: index, id: id, require_alias: require_alias}) do
-    values = %{_index: index, _id: id, require_alias: require_alias}
+  def to_action_json(%__MODULE__{
+        index: index,
+        id: id,
+        require_alias: require_alias,
+        routing: routing
+      }) do
+    values = %{_index: index, _id: id, require_alias: require_alias, routing: routing}
 
     values
     |> Enum.reject(&is_nil(elem(&1, 1)))
