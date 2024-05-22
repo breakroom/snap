@@ -25,6 +25,24 @@ defmodule Snap.Indexes do
   end
 
   @doc """
+  Get an index's mapping.
+  """
+  @spec get_mapping(module(), String.t(), Keyword.t()) :: Snap.Cluster.result()
+  def get_mapping(cluster, index, opts \\ []) do
+    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    Snap.get(cluster, "/#{namespaced_index}/_mapping", [], [], opts)
+  end
+
+  @doc """
+  Updates the given index's mapping.
+  """
+  @spec update_mapping(module(), String.t(), map(), Keyword.t()) :: Snap.Cluster.result()
+  def update_mapping(cluster, index, mapping, opts \\ []) do
+    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    Snap.put(cluster, "/#{namespaced_index}/_mapping", mapping, [], [], opts)
+  end
+
+  @doc """
   Creates and loads a new index, switching the alias to it with zero-downtime.
 
   Takes an `Enumerable` of `Snap.Bulk` actions, and builds a new index from
