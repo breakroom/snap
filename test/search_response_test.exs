@@ -25,6 +25,7 @@ defmodule Snap.SearchResponseTest do
     assert hit.score == 1.0
     assert hit.matched_queries == ["query_a"]
     assert hit.highlight == %{"message" => [" with the <em>number</em>", " <em>1</em>"]}
+    assert hit.sort == nil
 
     assert hit.source == %{
              "adzuna_url" =>
@@ -82,6 +83,15 @@ defmodule Snap.SearchResponseTest do
     comments = first_hit.inner_hits["comments"]
 
     assert Enum.count(comments) == 1
+  end
+
+  test "new/1 with sorted" do
+    json = fixture_json("search_response_sorted")
+
+    response = SearchResponse.new(json)
+    first_hit = Enum.at(response.hits, 0)
+
+    assert [123, "456"] == first_hit.sort
   end
 
   defp fixture_json(name) do
