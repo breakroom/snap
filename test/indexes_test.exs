@@ -4,6 +4,7 @@ defmodule Snap.IndexesTest do
 
   alias Snap
   alias Snap.Bulk.Action.Create
+  alias Snap.Cluster.Namespace
   alias Snap.Document
   alias Snap.Indexes
   alias Snap.Search
@@ -35,6 +36,16 @@ defmodule Snap.IndexesTest do
     assert {:ok, _} = Document.index(Cluster, index, %{foo: "bar"}, 1)
     assert :ok = Indexes.alias(Cluster, index, alias)
     assert {:ok, _} = Document.get(Cluster, alias, 1)
+  end
+
+  test "update an indices mapping" do
+    mapping = %{"properties" => %{"test" => %{"type" => "text"}}}
+
+    assert {:ok, _} = Indexes.create(Cluster, @test_index, %{})
+    assert {:ok, _} = Indexes.update_mapping(Cluster, @test_index, mapping)
+    assert {:ok, result} = Indexes.get_mapping(Cluster, @test_index)
+    index = Namespace.add_namespace_to_index(@test_index, Cluster)
+    assert result[index]["mappings"] == mapping
   end
 
   test "hotswap loading 10,000 documents" do
