@@ -9,9 +9,9 @@ defmodule Snap.Bulk.ActionsTest do
     doc = %{"foo" => "bar"}
 
     actions = [
-      %Action.Index{index: "foo", doc: doc},
+      %Action.Index{index: "foo", doc: doc, routing: "baz"},
       %Action.Create{index: "foo", doc: doc, require_alias: true},
-      %Action.Update{index: "foo", doc: doc, id: 2},
+      %Action.Update{index: "foo", doc: doc, id: 2, routing: "baz"},
       %Action.Delete{index: "foo", id: 1}
     ]
 
@@ -23,11 +23,11 @@ defmodule Snap.Bulk.ActionsTest do
       |> Enum.map(&Jason.decode!/1)
 
     assert lines == [
-             %{"index" => %{"_index" => "foo"}},
+             %{"index" => %{"_index" => "foo", "routing" => "baz"}},
              doc,
              %{"create" => %{"_index" => "foo", "require_alias" => true}},
              doc,
-             %{"update" => %{"_index" => "foo", "_id" => 2}},
+             %{"update" => %{"_index" => "foo", "_id" => 2, "routing" => "baz"}},
              %{"doc" => doc},
              %{"delete" => %{"_index" => "foo", "_id" => 1}}
            ]
