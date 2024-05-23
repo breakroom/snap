@@ -17,7 +17,7 @@ defmodule Snap.HTTPError do
   @type t :: %__MODULE__{
           status: pos_integer(),
           body: String.t(),
-          headers: Mint.Types.headers()
+          headers: [{header_name :: String.t(), header_value :: String.t()}]
         }
 
   @doc false
