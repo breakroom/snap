@@ -15,7 +15,8 @@ defmodule Snap.TelemetryTest do
                path: "/_cluster/health",
                host: "localhost",
                port: 9200,
-               body: nil
+               body: nil,
+               status: 200
              } = metadata
 
       assert measurements.total_time ==

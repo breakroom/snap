@@ -39,6 +39,7 @@ defmodule Snap.Request do
       response_time = System.monotonic_time() - start_time
 
       result = parse_response(response, json_library)
+      status = parse_status(response)
 
       decode_time = System.monotonic_time() - response_time - start_time
       total_time = response_time + decode_time
@@ -47,6 +48,7 @@ defmodule Snap.Request do
         """
         Elasticsearch #{http_method_to_string(method)} request \
         path=#{path} \
+        status=#{status} \
         response=#{format_time_to_ms(response_time)}ms \
         decode=#{format_time_to_ms(decode_time)}ms \
         total=#{format_time_to_ms(total_time)}ms\
@@ -63,7 +65,7 @@ defmodule Snap.Request do
 
       uri = URI.parse(url)
 
-      metadata = telemetry_metadata(method, uri, headers, body, result)
+      metadata = telemetry_metadata(method, uri, headers, body, status, result)
 
       :telemetry.execute(event, measurements, metadata)
 
@@ -94,6 +96,9 @@ defmodule Snap.Request do
     end
   end
 
+  defp parse_status({:ok, %HTTPClient.Response{status: status}}), do: status
+  defp parse_status({:error, _}), do: nil
+
   defp telemetry_prefix(cluster) do
     config = cluster.config()
 
@@ -103,11 +108,12 @@ defmodule Snap.Request do
     end)
   end
 
-  defp telemetry_metadata(method, uri, _headers, body, result) do
+  defp telemetry_metadata(method, uri, _headers, body, status, result) do
     method_str = http_method_to_string(method)
 
     %{
       method: method_str,
+      status: status,
       host: uri.host,
       port: uri.port,
       path: uri.path,

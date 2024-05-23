@@ -112,6 +112,7 @@ defmodule Snap do
   * `headers` - a list of the headers sent
   * `body` - the body sent
   * `result` - the result returned to the user
+  * `status` - the HTTP status code of the response
 
   ## Testing
 
