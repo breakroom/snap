@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.11.1
+
+- Added `sort` field to `Snap.Hit` struct
+- Added `routing` param to `Snap.Bulk` actions
+- Added `get_mapping` and `update_mapping` functions to `Snap.Indexes`
+- Added `status` attribute to telemetry metadata, representing the HTTP status code of the response, if any
+
 ## 0.11.0
 
 - Breaking change: changed the field names in `Snap.Bulk.Action` to drop underscore prefix
