@@ -24,6 +24,7 @@ defmodule Snap.ResponseError do
           raw: map() | nil
         }
 
+  @doc false
   def exception_from_json(json) do
     attrs = build(json)
     struct(__MODULE__, attrs)

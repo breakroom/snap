@@ -25,19 +25,23 @@ defmodule Snap.HTTPClient.Error do
           origin: any()
         }
 
+  @doc false
   def new(reason, origin) when is_atom(reason) do
     %__MODULE__{reason: reason, origin: origin}
   end
 
+  @doc false
   def unknown(origin) do
     new(:unknown, origin)
   end
 
+  @doc false
   @impl true
   def message(%__MODULE__{origin: origin}) when is_exception(origin) do
     Exception.message(origin)
   end
 
+  @doc false
   def message(%__MODULE__{reason: reason}) do
     to_string(reason)
   end

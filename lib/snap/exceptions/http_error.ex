@@ -14,10 +14,18 @@ defmodule Snap.HTTPError do
   @enforce_keys @keys
   defexception @keys
 
+  @type t :: %__MODULE__{
+          status: pos_integer(),
+          body: String.t(),
+          headers: Mint.Types.headers()
+        }
+
+  @doc false
   def exception_from_response(%HTTPClient.Response{status: status, body: body, headers: headers}) do
     %__MODULE__{status: status, body: body, headers: headers}
   end
 
+  @doc false
   def message(%__MODULE__{} = e) do
     "HTTP status #{e.status}"
   end
