@@ -48,6 +48,111 @@ defmodule Snap.IndexesTest do
     assert result[index]["mappings"] == mapping
   end
 
+  test "get an indices settings" do
+    index = Namespace.add_namespace_to_index(@test_index, Cluster)
+
+    assert {:ok, _} = Indexes.create(Cluster, @test_index, %{})
+    assert {:ok, result} = Indexes.get_settings(Cluster, @test_index)
+    assert %{^index => %{"settings" => %{"index" => _}}} = result
+  end
+
+  test "get an indices setting" do
+    index = Namespace.add_namespace_to_index(@test_index, Cluster)
+
+    assert {:ok, _} = Indexes.create(Cluster, @test_index, %{})
+    assert {:ok, result} = Indexes.get_setting(Cluster, @test_index, "index.number_of_shards")
+
+    assert %{
+             ^index => %{
+               "settings" => %{
+                 "index" => %{
+                   "number_of_shards" => "1"
+                 }
+               }
+             }
+           } = result
+  end
+
+  test "update an indices setting" do
+    index = Namespace.add_namespace_to_index(@test_index, Cluster)
+
+    assert {:ok, _} = Indexes.create(Cluster, @test_index, %{})
+
+    settings = %{
+      "index" => %{
+        "number_of_replicas" => "0"
+      }
+    }
+
+    assert {:ok, _} = Indexes.update_settings(Cluster, @test_index, settings)
+    assert {:ok, result} = Indexes.get_setting(Cluster, @test_index, "index.number_of_replicas")
+
+    assert %{
+             ^index => %{
+               "settings" => %{
+                 "index" => %{
+                   "number_of_replicas" => "0"
+                 }
+               }
+             }
+           } = result
+  end
+
+  test "get an indices shard store" do
+    index = Namespace.add_namespace_to_index(@test_index, Cluster)
+
+    assert {:ok, _} = Indexes.create(Cluster, @test_index, %{})
+    assert {:ok, result} = Indexes.get_shard_stores(Cluster, @test_index)
+
+    assert %{
+             "indices" => %{
+               ^index => %{
+                 "shards" => _
+               }
+             }
+           } = result
+  end
+
+  test "get an indices stats" do
+    index = Namespace.add_namespace_to_index(@test_index, Cluster)
+
+    assert {:ok, _} = Indexes.create(Cluster, @test_index, %{})
+    assert {:ok, result} = Indexes.get_stats(Cluster, @test_index)
+
+    assert %{
+             "indices" => %{
+               ^index => _
+             }
+           } = result
+  end
+
+  test "get an indices stat" do
+    index = Namespace.add_namespace_to_index(@test_index, Cluster)
+
+    assert {:ok, _} = Indexes.create(Cluster, @test_index, %{})
+    assert {:ok, result} = Indexes.get_stat(Cluster, @test_index, "indexing")
+
+    assert %{
+             "indices" => %{
+               ^index => _
+             }
+           } = result
+
+    assert {:ok, result} = Indexes.get_stat(Cluster, @test_index, "indexing,get")
+
+    assert %{
+             "indices" => %{
+               ^index => _
+             }
+           } = result
+  end
+
+  test "closing and opening index" do
+    assert {:ok, _} = Indexes.create(Cluster, @test_index, %{})
+    assert {:ok, _} = Indexes.close(Cluster, @test_index)
+    assert {:ok, _} = Indexes.open(Cluster, @test_index)
+  end
+
   test "hotswap loading 10,000 documents" do
     result =
       1..10_000

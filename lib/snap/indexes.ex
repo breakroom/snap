@@ -4,12 +4,15 @@ defmodule Snap.Indexes do
   """
   alias Snap
   alias Snap.Bulk
+  alias Snap.BulkError
+  alias Snap.Cluster
   alias Snap.Cluster.Namespace
 
   @doc """
   Creates an index.
   """
-  @spec create(module(), String.t(), map(), Keyword.t()) :: Snap.Cluster.result()
+  @spec create(module(), String.t(), map()) :: Cluster.result()
+  @spec create(module(), String.t(), map(), Keyword.t()) :: Cluster.result()
   def create(cluster, index, mapping, opts \\ []) do
     namespaced_index = Namespace.add_namespace_to_index(index, cluster)
     Snap.put(cluster, "/#{namespaced_index}", mapping, [], [], opts)
@@ -18,7 +21,8 @@ defmodule Snap.Indexes do
   @doc """
   Deletes an index.
   """
-  @spec delete(module(), String.t(), Keyword.t()) :: Snap.Cluster.result()
+  @spec delete(module(), String.t()) :: Cluster.result()
+  @spec delete(module(), String.t(), Keyword.t()) :: Cluster.result()
   def delete(cluster, index, opts \\ []) do
     namespaced_index = Namespace.add_namespace_to_index(index, cluster)
     Snap.delete(cluster, "/#{namespaced_index}", [], [], opts)
@@ -27,7 +31,8 @@ defmodule Snap.Indexes do
   @doc """
   Get an index's mapping.
   """
-  @spec get_mapping(module(), String.t(), Keyword.t()) :: Snap.Cluster.result()
+  @spec get_mapping(module(), String.t()) :: Cluster.result()
+  @spec get_mapping(module(), String.t(), Keyword.t()) :: Cluster.result()
   def get_mapping(cluster, index, opts \\ []) do
     namespaced_index = Namespace.add_namespace_to_index(index, cluster)
     Snap.get(cluster, "/#{namespaced_index}/_mapping", [], [], opts)
@@ -35,11 +40,119 @@ defmodule Snap.Indexes do
 
   @doc """
   Updates the given index's mapping.
+
+  See: https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-get-settings.html
   """
-  @spec update_mapping(module(), String.t(), map(), Keyword.t()) :: Snap.Cluster.result()
+  @spec update_mapping(module(), String.t(), map()) :: Cluster.result()
+  @spec update_mapping(module(), String.t(), map(), Keyword.t()) :: Cluster.result()
   def update_mapping(cluster, index, mapping, opts \\ []) do
     namespaced_index = Namespace.add_namespace_to_index(index, cluster)
     Snap.put(cluster, "/#{namespaced_index}/_mapping", mapping, [], [], opts)
+  end
+
+  @doc """
+  Get all of the index's settings.
+
+  See: https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-get-settings.html
+  """
+  @spec get_settings(module(), String.t()) :: Cluster.result()
+  @spec get_settings(module(), String.t(), Keyword.t()) :: Cluster.result()
+  @spec get_settings(module(), String.t(), Keyword.t(), Keyword.t()) :: Cluster.result()
+  def get_settings(cluster, index, params \\ [], opts \\ []) do
+    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    Snap.get(cluster, "/#{namespaced_index}/_settings", params, [], opts)
+  end
+
+  @doc """
+  Get an index's setting using a comma separate list or wildcard expression
+
+  See: https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-get-settings.html
+  """
+  @spec get_setting(module(), String.t(), String.t()) :: Cluster.result()
+  @spec get_setting(module(), String.t(), String.t(), Keyword.t()) :: Cluster.result()
+  @spec get_setting(module(), String.t(), String.t(), Keyword.t(), Keyword.t()) ::
+          Cluster.result()
+  def get_setting(cluster, index, setting, params \\ [], opts \\ []) do
+    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    Snap.get(cluster, "/#{namespaced_index}/_settings/#{setting}", params, [], opts)
+  end
+
+  @doc """
+  Update an index's settings.
+
+  See: https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-update-settings.html
+  """
+  @spec update_settings(module(), String.t(), map()) :: Cluster.result()
+  @spec update_settings(module(), String.t(), map(), Keyword.t()) :: Cluster.result()
+  @spec update_settings(module(), String.t(), map(), Keyword.t(), Keyword.t()) :: Cluster.result()
+  def update_settings(cluster, index, settings, params \\ [], opts \\ []) do
+    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    Snap.put(cluster, "/#{namespaced_index}/_settings", settings, params, [], opts)
+  end
+
+  @doc """
+  Get an index's shard stores.
+
+  See: https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-shards-stores.html
+  """
+  @spec get_shard_stores(module(), String.t()) :: Cluster.result()
+  @spec get_shard_stores(module(), String.t(), Keyword.t()) :: Cluster.result()
+  @spec get_shard_stores(module(), String.t(), Keyword.t(), Keyword.t()) :: Cluster.result()
+  def get_shard_stores(cluster, index, params \\ [], opts \\ []) do
+    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    Snap.get(cluster, "/#{namespaced_index}/_shard_stores", params, [], opts)
+  end
+
+  @doc """
+  Get an index's stats.
+
+  See: https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-stats.html
+  """
+  @spec get_stats(module(), String.t()) :: Cluster.result()
+  @spec get_stats(module(), String.t(), Keyword.t()) :: Cluster.result()
+  @spec get_stats(module(), String.t(), Keyword.t(), Keyword.t()) :: Cluster.result()
+  def get_stats(cluster, index, params \\ [], opts \\ []) do
+    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    Snap.get(cluster, "/#{namespaced_index}/_stats", params, [], opts)
+  end
+
+  @doc """
+  Get an index's stats using a metric. Metric is a comma separated list of metrics.
+
+  See: https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-stats.html
+  """
+  @spec get_stat(module(), String.t(), String.t()) :: Cluster.result()
+  @spec get_stat(module(), String.t(), String.t(), Keyword.t()) :: Cluster.result()
+  @spec get_stat(module(), String.t(), String.t(), Keyword.t(), Keyword.t()) :: Cluster.result()
+  def get_stat(cluster, index, metric, params \\ [], opts \\ []) do
+    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    Snap.get(cluster, "/#{namespaced_index}/_stats/#{metric}", params, [], opts)
+  end
+
+  @doc """
+  Closes an open index.
+
+  See: https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-close.html
+  """
+  @spec close(module(), String.t()) :: Cluster.result()
+  @spec close(module(), String.t(), Keyword.t()) :: Cluster.result()
+  @spec close(module(), String.t(), Keyword.t(), Keyword.t()) :: Cluster.result()
+  def close(cluster, index, params \\ [], opts \\ []) do
+    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    Snap.post(cluster, "/#{namespaced_index}/_close", [], params, [], opts)
+  end
+
+  @doc """
+  Opens a closed index.
+
+  See: https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-open-close.html
+  """
+  @spec open(module(), String.t()) :: Cluster.result()
+  @spec open(module(), String.t(), Keyword.t()) :: Cluster.result()
+  @spec open(module(), String.t(), Keyword.t(), Keyword.t()) :: Cluster.result()
+  def open(cluster, index, params \\ [], opts \\ []) do
+    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    Snap.post(cluster, "/#{namespaced_index}/_open", [], params, [], opts)
   end
 
   @doc """
@@ -53,7 +166,7 @@ defmodule Snap.Indexes do
   of failed bulk actions.
   """
   @spec hotswap(Enumerable.t(), module(), String.t(), map(), Keyword.t()) ::
-          :ok | Snap.Cluster.error() | {:error, Snap.BulkError.t()}
+          :ok | Cluster.error() | {:error, BulkError.t()}
   def hotswap(stream, cluster, alias, mapping, opts \\ []) do
     index = generate_index_name(alias)
 
@@ -69,7 +182,7 @@ defmodule Snap.Indexes do
   Refreshes an index.
   """
   @spec refresh(cluster :: module(), index :: String.t(), opts :: Keyword.t()) ::
-          :ok | Snap.Cluster.error()
+          :ok | Cluster.error()
   def refresh(cluster, index, opts \\ []) do
     namespaced_index = Namespace.add_namespace_to_index(index, cluster)
 
@@ -81,7 +194,7 @@ defmodule Snap.Indexes do
   @doc """
   Creates an alias for a versioned index, removing any existing aliases.
   """
-  @spec alias(module(), String.t(), String.t(), Keyword.t()) :: :ok | Snap.Cluster.error()
+  @spec alias(module(), String.t(), String.t(), Keyword.t()) :: :ok | Cluster.error()
   def alias(cluster, index, alias, opts \\ []) do
     with {:ok, indexes} <- list_starting_with(cluster, alias, opts) do
       indexes = Enum.reject(indexes, &(&1 == index))
@@ -112,7 +225,7 @@ defmodule Snap.Indexes do
   @doc """
   Lists all the indexes in the cluster.
   """
-  @spec list(module(), Keyword.t()) :: {:ok, list(String.t())} | Snap.Cluster.error()
+  @spec list(module(), Keyword.t()) :: {:ok, list(String.t())} | Cluster.error()
   def list(cluster, opts \\ []) do
     with {:ok, indexes} <- Snap.get(cluster, "/_cat/indices", [format: "json"], [], opts) do
       indexes =
@@ -132,7 +245,7 @@ defmodule Snap.Indexes do
   Lists all the timestamp versioned indexes starting with the prefix.
   """
   @spec list_starting_with(module(), String.t(), Keyword.t()) ::
-          {:ok, list(String.t())} | Snap.Cluster.error()
+          {:ok, list(String.t())} | Cluster.error()
   def list_starting_with(cluster, prefix, opts \\ []) do
     with {:ok, indexes} <- Snap.get(cluster, "/_cat/indices", [format: "json"], [], opts) do
       prefix = prefix |> to_string() |> Regex.escape()
@@ -156,7 +269,7 @@ defmodule Snap.Indexes do
   Deletes older timestamped indexes.
   """
   @spec cleanup(module(), String.t(), non_neg_integer(), Keyword.t()) ::
-          :ok | Snap.Cluster.error()
+          :ok | Cluster.error()
   def cleanup(cluster, alias, preserve \\ 2, opts \\ []) do
     with {:ok, indexes} <- list_starting_with(cluster, alias, opts) do
       indexes
