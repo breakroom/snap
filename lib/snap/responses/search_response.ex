@@ -63,3 +63,31 @@ defmodule Snap.SearchResponse do
     def slice(_response), do: {:error, __MODULE__}
   end
 end
+
+if Code.ensure_loaded?(Table.Reader) do
+  defimpl Table.Reader, for: Snap.SearchResponse do
+    def init(result) do
+      columns = get_columns(result)
+      rows = get_rows(result)
+      {:rows, %{columns: columns}, rows}
+    end
+
+    defp get_columns(response) do
+      if response.hits.hits |> Enum.empty?() do
+        []
+      else
+        hits = response.hits.hits
+        hits |> List.first() |> Map.fetch!(:source) |> Map.keys()
+      end
+    end
+
+    defp get_rows(response) do
+      hits = response.hits.hits
+
+      hits
+      |> Enum.map(fn hit ->
+        hit.source |> Map.values()
+      end)
+    end
+  end
+end
