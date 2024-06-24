@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.11.2
+
+- Added new `Snap.Indexes` utility functions to get and set mappings, settings and more (thanks @warmwaffles)
+- Added Elixir 1.17 to CI matrix
+
 ## 0.11.1
 
 - Added `sort` field to `Snap.Hit` struct
