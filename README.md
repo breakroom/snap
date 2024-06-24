@@ -2,7 +2,7 @@
 
 [![Hex pm](http://img.shields.io/hexpm/v/snap.svg?style=flat)](https://hex.pm/packages/snap)
 
-Snap is an Elasticsearch client. It provides a flexible, performant API on
+Snap is an Elasticsearch/OpenSearch client. It provides a flexible, performant API on
 top of your Elasticsearch cluster, supporting high level features like
 versioned index management, while also providing a convenient interface into
 low level operations.

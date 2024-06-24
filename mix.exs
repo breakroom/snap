@@ -18,7 +18,7 @@ defmodule Snap.MixProject do
       preferred_cli_env: ["test.all": :test],
 
       # Hex
-      description: "A modern Elasticsearch client",
+      description: "A modern Elasticsearch/OpenSearch client",
       package: package(),
 
       # Docs
