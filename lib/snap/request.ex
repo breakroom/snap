@@ -30,6 +30,7 @@ defmodule Snap.Request do
 
     body = encode_body(body, json_library)
     headers = set_default_headers(headers)
+    request_body_bytes = count_bytes(body)
 
     start_time = System.monotonic_time()
 
@@ -40,6 +41,7 @@ defmodule Snap.Request do
 
       result = parse_response(response, json_library)
       status = parse_status(response)
+      response_body_bytes = count_response_bytes(response)
 
       decode_time = System.monotonic_time() - response_time - start_time
       total_time = response_time + decode_time
@@ -60,7 +62,9 @@ defmodule Snap.Request do
       measurements = %{
         response_time: response_time,
         decode_time: decode_time,
-        total_time: total_time
+        total_time: total_time,
+        request_body_bytes: request_body_bytes,
+        response_body_bytes: response_body_bytes
       }
 
       uri = URI.parse(url)
@@ -98,6 +102,16 @@ defmodule Snap.Request do
 
   defp parse_status({:ok, %HTTPClient.Response{status: status}}), do: status
   defp parse_status({:error, _}), do: nil
+
+  defp count_response_bytes({:ok, %HTTPClient.Response{body: body}}) do
+    count_bytes(body)
+  end
+
+  defp count_response_bytes({:error, _}), do: 0
+
+  defp count_bytes(nil), do: 0
+  defp count_bytes(binary) when is_binary(binary), do: byte_size(binary)
+  defp count_bytes(list) when is_list(list), do: IO.iodata_length(list)
 
   defp telemetry_prefix(cluster) do
     config = cluster.config()
