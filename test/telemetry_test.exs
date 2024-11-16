@@ -22,6 +22,9 @@ defmodule Snap.TelemetryTest do
       assert measurements.total_time ==
                measurements.response_time + measurements.decode_time
 
+      assert measurements.request_body_bytes == 0
+      assert measurements.response_body_bytes > 0
+
       send(self(), :logged)
     end
 
