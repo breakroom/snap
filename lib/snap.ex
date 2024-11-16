@@ -102,6 +102,8 @@ defmodule Snap do
   * `decode_time` - how long the response took to decode into a map or
     exception
   * `total_time` - how long everything took in total
+  * `request_body_bytes` - the count of bytes in the request body
+  * `response_body_bytes` - the count of bytes in the response body
 
   In addition, the metadata contains a map of:
 
