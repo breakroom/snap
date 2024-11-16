@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.11.3
+
+- Added new fields to telemetry measurements, `request_body_bytes` and `response_body_bytes`, for logging the size of the request and response
+
 ## 0.11.2
 
 - Added new `Snap.Indexes` utility functions to get and set mappings, settings and more (thanks @warmwaffles)
