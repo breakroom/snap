@@ -54,12 +54,12 @@ defmodule Snap.SearchResponseTest do
              sum_other_doc_count: 0
            }
 
-    assert response.aggregations["people"] == %Snap.Aggregation{
-             value: 8
+    assert response.aggregations["people"] == %Snap.MetricsAggregation{
+             value: %{"value" => 8}
            }
 
-    assert response.aggregations["things"] == %Snap.Aggregation{
-             doc_count: 9
+    assert response.aggregations["things"] == %Snap.MetricsAggregation{
+             value: %{"doc_count" => 9}
            }
 
     assert response.aggregations["histogram"] == %Snap.Aggregation{
