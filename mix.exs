@@ -2,7 +2,7 @@ defmodule Snap.MixProject do
   use Mix.Project
 
   @github_url "https://github.com/breakroom/snap"
-  @version "0.11.3"
+  @version "0.12.0"
 
   def project do
     [
@@ -55,7 +55,7 @@ defmodule Snap.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:finch, "~> 0.8", optional: true},
+      {:finch, "~> 0.19", optional: true},
       {:castore, "~> 1.0"},
       {:jason, "~> 1.0"},
       {:telemetry, "~> 1.0 or ~> 0.4"},
