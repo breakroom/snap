@@ -66,7 +66,7 @@ defmodule Snap.HTTPClient.Adapters.Finch do
     finch_config = [
       name: connection_pool_name(cluster),
       pools: %{
-        url => [size: size, count: 1, conn_opts: conn_opts]
+        url => [size: size, count: 1, conn_opts: conn_opts, start_pool_metrics?: true]
       }
     ]
 
