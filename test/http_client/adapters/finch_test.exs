@@ -13,7 +13,14 @@ defmodule Snap.HTTPClient.Adapters.FinchTest do
       assert {Finch,
               [
                 name: Snap.Test.Cluster.Pool,
-                pools: %{"http://localhost:9200" => [size: 5, count: 1, conn_opts: []]}
+                pools: %{
+                  "http://localhost:9200" => [
+                    size: 5,
+                    count: 1,
+                    conn_opts: [],
+                    start_pool_metrics?: true
+                  ]
+                }
               ]} == FinchAdapter.child_spec(config)
     end
 
@@ -96,6 +103,11 @@ defmodule Snap.HTTPClient.Adapters.FinchTest do
                origin: %Mint.TransportError{reason: :econnrefused}
              } == error
     end
+  end
+
+  test "should be able to retreive Finch pool metrics" do
+    assert {:ok, [%Finch.HTTP1.PoolMetrics{}]} =
+             Finch.get_pool_status(Snap.Test.Cluster.Pool, {:http, "localhost", 9200})
   end
 
   defp build_config(extra_config \\ []) do
