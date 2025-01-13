@@ -152,7 +152,9 @@ defmodule Snap.Cluster.Namespace do
 
   @doc false
   def handle_call({:get, pid}, _from, state) do
-    {:reply, get_namespace_recursive(state, pid), state}
+    namespace = Map.get(state, pid)
+
+    {:reply, namespace, state}
   end
 
   @doc false
@@ -162,29 +164,6 @@ defmodule Snap.Cluster.Namespace do
     state = Map.delete(state, pid)
 
     {:noreply, state}
-  end
-
-  @spec get_namespace_recursive(state :: %{pid() => String.t()}, process :: pid()) ::
-          String.t() | nil
-  defp get_namespace_recursive(state, process) do
-    case Map.fetch(state, process) do
-      {:ok, namespace} ->
-        namespace
-
-      :error ->
-        case Process.info(process, {:dictionary, :"$ancestors"}) do
-          {{:dictionary, :"$ancestors"}, :undefined} ->
-            nil
-
-          {{:dictionary, :"$ancestors"}, ancestors} ->
-            ancestors
-            |> Enum.map(&GenServer.whereis/1)
-            |> Enum.find_value(&get_namespace_recursive(state, &1))
-
-          nil ->
-            nil
-        end
-    end
   end
 
   defp config_namespace(cluster) do

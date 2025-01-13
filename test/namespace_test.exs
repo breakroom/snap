@@ -65,13 +65,6 @@ defmodule Snap.Cluster.NamespaceTest do
       assert "cluster-process-index" ==
                Namespace.add_namespace_to_index("index", NamespaceCluster)
 
-      task =
-        Task.async(fn ->
-          Namespace.add_namespace_to_index("index", NamespaceCluster)
-        end)
-
-      assert "cluster-process-index" == Task.await(task)
-
       Namespace.clear_process_namespace(NamespaceCluster, self())
       assert "cluster-index" == Namespace.add_namespace_to_index("index", NamespaceCluster)
     end
