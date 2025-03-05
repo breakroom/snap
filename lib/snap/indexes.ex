@@ -169,8 +169,9 @@ defmodule Snap.Indexes do
           :ok | Cluster.error() | {:error, BulkError.t()}
   def hotswap(stream, cluster, alias, mapping, opts \\ []) do
     index = generate_index_name(alias)
+    create_opts = [wait_for_active_shards: "all"]
 
-    with {:ok, _} <- create(cluster, index, mapping),
+    with {:ok, _} <- create(cluster, index, mapping, create_opts),
          :ok <- Bulk.perform(stream, cluster, index, opts),
          :ok <- refresh(cluster, index),
          :ok <- alias(cluster, index, alias) do
