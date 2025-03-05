@@ -67,6 +67,69 @@ defmodule Snap.SearchTest do
     assert is_float(score)
   end
 
+  test "search with an autocomplete response" do
+    {:ok, _} =
+      Snap.Indexes.create(Cluster, @test_index, %{
+        mappings: %{
+          properties: %{
+            name: %{
+              type: "completion"
+            }
+          }
+        }
+      })
+
+    [
+      %Action.Index{id: 1, doc: %{name: "Cat"}},
+      %Action.Index{id: 2, doc: %{name: "Caracal"}},
+      %Action.Index{id: 3, doc: %{name: "Dog"}}
+    ]
+    |> Snap.Bulk.perform(Cluster, @test_index, refresh: true)
+
+    query = %{
+      suggest: %{
+        autocomplete: %{
+          prefix: "ca",
+          completion: %{
+            field: "name"
+          }
+        }
+      }
+    }
+
+    {:ok, search_response} = Search.search(Cluster, @test_index, query)
+
+    assert %Snap.SearchResponse{
+             suggest: %{
+               "autocomplete" => [
+                 %Snap.Suggest{
+                   text: "ca",
+                   options: [
+                     %Snap.Suggest.Option{
+                       id: "2",
+                       text: "Caracal",
+                       score: caracal_score,
+                       index: index,
+                       source: %{"name" => "Caracal"}
+                     },
+                     %Snap.Suggest.Option{
+                       id: "1",
+                       text: "Cat",
+                       score: cat_score,
+                       index: index,
+                       source: %{"name" => "Cat"}
+                     }
+                   ]
+                 }
+               ]
+             }
+           } = search_response
+
+    assert is_float(caracal_score)
+    assert is_float(cat_score)
+    assert is_binary(index)
+  end
+
   test "count/2 without a query" do
     {:ok, _} = Snap.Indexes.create(Cluster, @test_index, %{})
     {:ok, _} = Snap.Document.add(Cluster, @test_index, %{foo: "bar"})
