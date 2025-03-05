@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.12.1
+
+- Support parsing the extra fields in suggest options that come back from a completion query
+
+## 0.12.0
+
+- Relax Finch dependency to 0.17, which is the lowest version that emit pool metrics
+
 ## 0.11.3
 
 - Added new fields to telemetry measurements, `request_body_bytes` and `response_body_bytes`, for logging the size of the request and response
