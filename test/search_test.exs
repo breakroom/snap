@@ -54,8 +54,17 @@ defmodule Snap.SearchTest do
     assert first_hit.source["title"] == "Document 1"
 
     assert %Snap.SearchResponse{
-             suggest: %{"title" => [%{text: "doument", options: [%{text: "document"}]}]}
+             suggest: %{
+               "title" => [
+                 %Snap.Suggest{
+                   text: "doument",
+                   options: [%Snap.Suggest.Option{freq: 5, text: "document", score: score}]
+                 }
+               ]
+             }
            } = search_response
+
+    assert is_float(score)
   end
 
   test "count/2 without a query" do
