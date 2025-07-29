@@ -1,4 +1,7 @@
 defmodule Snap.DeleteResponse do
+  @moduledoc """
+  Represents the response from ElasticSearch's [`delete_by_query` request](https://docs.opensearch.org/2.19/api-reference/document-apis/delete-by-query/).
+  """
   defstruct [
     :took,
     :timed_out,

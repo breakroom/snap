@@ -52,6 +52,9 @@ defmodule Snap.Search do
     end
   end
 
+  @doc """
+  Runs a delete operation on an index, given a query.
+  """
   def delete_by_query(cluster, index_or_alias, query, params \\ [], headers \\ [], opts \\ []) do
     namespaced_index = Namespace.add_namespace_to_index(index_or_alias, cluster)
 
