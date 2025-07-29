@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.12.2
+
+- Added `Search.delete_by_query` function to perform delete operations against an index
+
 ## 0.12.1
 
 - Support parsing the extra fields in suggest options that come back from a completion query
