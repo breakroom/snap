@@ -149,4 +149,17 @@ defmodule Snap.SearchTest do
 
     assert {:ok, 1} = Snap.Search.count(Cluster, @test_index, %{query: %{term: %{foo: "bar"}}})
   end
+
+  test "delete_by_query" do
+    {:ok, _} = Snap.Indexes.create(Cluster, @test_index, %{})
+    {:ok, _} = Snap.Document.add(Cluster, @test_index, %{foo: "bar"})
+    {:ok, _} = Snap.Document.add(Cluster, @test_index, %{foo: "baz"})
+
+    assert :ok = Snap.Indexes.refresh(Cluster, @test_index)
+
+    assert {:ok, delete_response} =
+             Snap.Search.delete_by_query(Cluster, @test_index, %{query: %{term: %{foo: "bar"}}})
+
+    assert delete_response.deleted == 1
+  end
 end
