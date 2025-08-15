@@ -111,6 +111,7 @@ defmodule Snap.MixProject do
         ],
         "Response structs": [
           Snap.Aggregation,
+          Snap.DeleteResponse,
           Snap.Hit,
           Snap.Hits,
           Snap.SearchResponse,

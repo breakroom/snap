@@ -73,6 +73,9 @@ Now you can perform operations on your cluster:
 
 ## Testing
 
+See `Snap.Test` for details about to set up process isolated indexes to allow
+async testing against Snap.
+
 If you want to test your app that uses this library, but don't want to have integration tests
 with a Elasticsearch instance running in you local dev environment,
 you can mock the responses using a custom HTTP client adapter.
