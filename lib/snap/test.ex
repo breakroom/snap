@@ -19,7 +19,7 @@ defmodule Snap.Test do
   ```
   setup context do
     if context[:snap] do
-      namespace = Snap.Test.generate_namespace_for_pid(self())
+      namespace = Snap.Test.generate_namespace()
       Snap.Cluster.Namespace.set_process_namespace(Cluster, namespace)
       Snap.Test.drop_indexes(Cluster)
 
@@ -42,15 +42,18 @@ defmodule Snap.Test do
   It setups up a `on_exit/1` callback, which runs in a separate process after
   the test has completed. The namespace is passed through from the test's
   process, so it can teardown all the indexes created by the test.
-  """
 
-  alias Snap.Cluster.Namespace
+  Processes spawned within tests will respect the namespace of the parent test
+  process, as ancestor processes are checked. This makes it easy to test, e.g.
+  LiveViews, which spawn their own process within the test.
+  """
 
   @doc """
-  Generates a `String` namespace for the provided pid, by hashing it.
+  Generates a random `String` namespace.
   """
-  def generate_namespace_for_pid(pid) when is_pid(pid) do
-    pid_to_string(pid)
+  def generate_namespace() do
+    :crypto.strong_rand_bytes(16)
+    |> Base.encode32(padding: false, case: :lower)
   end
 
   @doc """
@@ -63,23 +66,5 @@ defmodule Snap.Test do
     |> Enum.each(fn i ->
       {:ok, _} = Snap.Indexes.delete(cluster, i)
     end)
-  end
-
-  @doc """
-  Takes the process namespace from one process and set it on another. Useful if
-  your tests start multiple processes and they all need to have the same view of
-  your cluster.
-  """
-  def propagate_namespace(cluster, from_pid, to_pid) when is_pid(from_pid) and is_pid(to_pid) do
-    case Namespace.get_process_namespace(cluster, from_pid) do
-      nil -> raise("No namespace set for process #{inspect(from_pid)}")
-      namespace -> Namespace.set_process_namespace(cluster, to_pid, namespace)
-    end
-  end
-
-  defp pid_to_string(pid) do
-    pid
-    |> :erlang.phash2()
-    |> to_string()
   end
 end

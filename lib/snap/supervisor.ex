@@ -13,10 +13,6 @@ defmodule Snap.Cluster.Supervisor do
     Snap.Config.get(config_name(cluster))
   end
 
-  def namespace_pid(cluster) do
-    namespace_name(cluster)
-  end
-
   ## Callbacks
 
   @doc false
@@ -24,8 +20,7 @@ defmodule Snap.Cluster.Supervisor do
   def init({cluster, _otp_app, config}) do
     children =
       [
-        {Snap.Config, {config_name(cluster), config}},
-        {Snap.Cluster.Namespace, namespace_name(cluster)}
+        {Snap.Config, {config_name(cluster), config}}
       ] ++ maybe_initialize_http_client(cluster, config)
 
     Supervisor.init(children, strategy: :one_for_one)
@@ -33,10 +28,6 @@ defmodule Snap.Cluster.Supervisor do
 
   defp config_name(cluster) do
     Module.concat(cluster, Config)
-  end
-
-  defp namespace_name(cluster) do
-    Module.concat(cluster, Namespace)
   end
 
   defp maybe_initialize_http_client(cluster, config) do

@@ -7,7 +7,7 @@ defmodule Snap.Cluster.Namespace do
 
   - Running multiple instances of `Snap`, across completely different
     applications, against a single cluster. You might not want do this in
-    production, but it's useful to only run one copy of ElasticSearch/OpenSearch
+    production, but it's useful to only run one ElasticSearch/OpenSearch server
     locally when working on multiple applications.
 
   - Running multiple environments of the same application. You don't want your
@@ -49,49 +49,33 @@ defmodule Snap.Cluster.Namespace do
 
   For more information, see `Snap.Test`.
   """
-  use GenServer
-
-  alias Snap.Cluster.Supervisor
 
   @separator "-"
 
-  @doc false
-  def start_link(name) do
-    GenServer.start_link(__MODULE__, [], name: name)
-  end
-
-  @doc false
-  def init([]) do
-    {:ok, %{}}
-  end
-
   @doc """
-  Set the index namespace of the provided `pid`. Subsequent operations through
-  convenience APIs are performed on namespaced indexes.
-  """
-  def set_process_namespace(cluster, pid, namespace) when is_pid(pid) and is_binary(namespace) do
-    GenServer.call(Supervisor.namespace_pid(cluster), {:set, pid, namespace})
-  end
-
-  @doc """
-  Same as `set_process_namespace/3`, but for the running process.
+  Sets an index namespace for the currently running process.
   """
   def set_process_namespace(cluster, namespace) when is_binary(namespace) do
-    set_process_namespace(cluster, self(), namespace)
+    Process.put({cluster, :namespace}, namespace)
   end
 
   @doc """
   Returns the previously set process namespace, if any.
+
+  Will walk up to an ancestor process if the current process doesn't have a
+  namespace defined. This makes it easy to set a namespace in a test process,
+  and ensuring that any child processes within the test also respect the
+  namespace (e.g. LiveViews).
   """
-  def get_process_namespace(cluster, pid) when is_pid(pid) do
-    GenServer.call(Supervisor.namespace_pid(cluster), {:get, pid})
+  def get_process_namespace(cluster) do
+    ProcessTree.get({cluster, :namespace})
   end
 
   @doc """
   Clears the previously set process namespace, if any.
   """
-  def clear_process_namespace(cluster, pid) when is_pid(pid) do
-    GenServer.call(Supervisor.namespace_pid(cluster), {:clear, pid})
+  def clear_process_namespace(cluster) do
+    Process.put({cluster, :namespace}, nil)
   end
 
   @doc """
@@ -99,7 +83,7 @@ defmodule Snap.Cluster.Namespace do
   `Snap.Cluster` in the currently running process.
   """
   def add_namespace_to_index(index, cluster) do
-    [config_namespace(cluster), get_process_namespace(cluster, self()), index]
+    [config_namespace(cluster), get_process_namespace(cluster), index]
     |> Enum.reject(&is_nil/1)
     |> merge_elements()
   end
@@ -109,7 +93,7 @@ defmodule Snap.Cluster.Namespace do
   currently running process.
   """
   def index_namespace(cluster) do
-    [config_namespace(cluster), get_process_namespace(cluster, self())]
+    [config_namespace(cluster), get_process_namespace(cluster)]
     |> Enum.reject(&is_nil/1)
     |> merge_elements()
   end
@@ -133,37 +117,6 @@ defmodule Snap.Cluster.Namespace do
       nil -> namespaced_index
       namespace -> String.replace_leading(namespaced_index, "#{namespace}#{@separator}", "")
     end
-  end
-
-  @doc false
-  def handle_call({:set, pid, namespace}, _from, state) do
-    Process.monitor(pid)
-    state = Map.put(state, pid, namespace)
-
-    {:reply, :ok, state}
-  end
-
-  @doc false
-  def handle_call({:clear, pid}, _from, state) do
-    state = Map.delete(state, pid)
-
-    {:reply, :ok, state}
-  end
-
-  @doc false
-  def handle_call({:get, pid}, _from, state) do
-    namespace = Map.get(state, pid)
-
-    {:reply, namespace, state}
-  end
-
-  @doc false
-  # We use this to clear out the namespace for the process when the process
-  # dies, so we don't keep filling up our table.
-  def handle_info({:DOWN, _ref, :process, pid, _reason}, state) do
-    state = Map.delete(state, pid)
-
-    {:noreply, state}
   end
 
   defp config_namespace(cluster) do

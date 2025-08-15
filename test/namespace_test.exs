@@ -50,12 +50,12 @@ defmodule Snap.Cluster.NamespaceTest do
     end
   end
 
-  describe "set_process_namespace/3 and clear_process_namespace/2" do
+  describe "set_process_namespace/2 and clear_process_namespace/1" do
     test "without a cluster index_namespace" do
       Namespace.set_process_namespace(NoNamespaceCluster, "process")
       assert "process-index" == Namespace.add_namespace_to_index("index", NoNamespaceCluster)
 
-      Namespace.clear_process_namespace(NoNamespaceCluster, self())
+      Namespace.clear_process_namespace(NoNamespaceCluster)
       assert "index" == Namespace.add_namespace_to_index("index", NoNamespaceCluster)
     end
 
@@ -65,7 +65,7 @@ defmodule Snap.Cluster.NamespaceTest do
       assert "cluster-process-index" ==
                Namespace.add_namespace_to_index("index", NamespaceCluster)
 
-      Namespace.clear_process_namespace(NamespaceCluster, self())
+      Namespace.clear_process_namespace(NamespaceCluster)
       assert "cluster-index" == Namespace.add_namespace_to_index("index", NamespaceCluster)
     end
   end

@@ -9,7 +9,7 @@ defmodule Snap.IntegrationCase do
 
   # Clean out any indexes remaining after each test run
   setup do
-    namespace = Test.generate_namespace_for_pid(self())
+    namespace = Test.generate_namespace()
     Namespace.set_process_namespace(Cluster, namespace)
     Test.drop_indexes(Cluster)
 
