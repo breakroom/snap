@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.13.0
+
+- Breaking change: changed how index namespaces are propagated between
+  parent/child processes during testing. Specifically:
+
+  - `Snap.Cluster.Namespace.get_process_namespace/1` now checks the namespace of ancestor processes. This makes it possible to use an isolated index in e.g. LiveView testing, where it's difficult to get a handle on the process before Snap queries are executed
+
+  - `Snap.Cluster.Namespace.set_process_namespace/3` and associated get/clear functions which takes a specific PID have been removed
+
+  - `Snap.Test.generate_namespace_for_pid/1` has been replaced with `Snap.Test.generate_namespace/0`. The suggested snippet in `Snap.Test` for use in the `ExUnit` setup block has been updated to reflect that. Updating this call is probably the only change most library users will need to perform.
+
 ## 0.12.2
 
 - Added `Search.delete_by_query` function to perform delete operations against an index
