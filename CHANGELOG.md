@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.14.0
+
+- Breaking change: The `aggregations` and `suggests` fields in `Snap.SearchResponse` are no longer structs and now return the underlying parsed JSON. `Snap.Aggregation` and `Snap.Suggests` have been removed, including any child modules
+
 ## 0.13.0
 
 - Breaking change: changed how index namespaces are propagated between
