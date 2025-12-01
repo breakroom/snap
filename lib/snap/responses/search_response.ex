@@ -12,8 +12,8 @@ defmodule Snap.SearchResponse do
       timed_out: response["timed_out"],
       shards: response["_shards"],
       hits: Snap.Hits.new(response["hits"]),
-      suggest: Snap.Suggests.new(response["suggest"]),
-      aggregations: build_aggregations(response["aggregations"]),
+      suggest: response["suggest"],
+      aggregations: response["aggregations"],
       scroll_id: response["_scroll_id"],
       pit_id: response["pit_id"]
     }
@@ -24,19 +24,11 @@ defmodule Snap.SearchResponse do
           timed_out: boolean(),
           shards: map(),
           hits: Snap.Hits.t(),
-          suggest: Snap.Suggests.t() | nil,
-          aggregations: %{String.t() => Snap.Aggregation.t()} | nil,
+          suggest: map() | nil,
+          aggregations: map() | nil,
           scroll_id: String.t() | nil,
           pit_id: map() | nil
         }
-
-  def build_aggregations(nil) do
-    nil
-  end
-
-  def build_aggregations(aggregations) when is_map(aggregations) do
-    Map.new(aggregations, fn {key, value} -> {key, Snap.Aggregation.new(value)} end)
-  end
 
   defimpl Enumerable do
     def reduce(_, {:halt, acc}, _fun), do: {:halted, acc}

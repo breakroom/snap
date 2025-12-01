@@ -56,9 +56,9 @@ defmodule Snap.SearchTest do
     assert %Snap.SearchResponse{
              suggest: %{
                "title" => [
-                 %Snap.Suggest{
-                   text: "doument",
-                   options: [%Snap.Suggest.Option{freq: 5, text: "document", score: score}]
+                 %{
+                   "text" => "doument",
+                   "options" => [%{"freq" => 5, "text" => "document", "score" => score}]
                  }
                ]
              }
@@ -102,22 +102,22 @@ defmodule Snap.SearchTest do
     assert %Snap.SearchResponse{
              suggest: %{
                "autocomplete" => [
-                 %Snap.Suggest{
-                   text: "ca",
-                   options: [
-                     %Snap.Suggest.Option{
-                       id: "2",
-                       text: "Caracal",
-                       score: caracal_score,
-                       index: index,
-                       source: %{"name" => "Caracal"}
+                 %{
+                   "text" => "ca",
+                   "options" => [
+                     %{
+                       "_id" => "2",
+                       "text" => "Caracal",
+                       "_score" => caracal_score,
+                       "_index" => index,
+                       "_source" => %{"name" => "Caracal"}
                      },
-                     %Snap.Suggest.Option{
-                       id: "1",
-                       text: "Cat",
-                       score: cat_score,
-                       index: index,
-                       source: %{"name" => "Cat"}
+                     %{
+                       "_id" => "1",
+                       "text" => "Cat",
+                       "_score" => cat_score,
+                       "_index" => index,
+                       "_source" => %{"name" => "Cat"}
                      }
                    ]
                  }
