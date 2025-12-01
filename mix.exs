@@ -110,15 +110,10 @@ defmodule Snap.MixProject do
           Snap.Multi.Response
         ],
         "Response structs": [
-          Snap.Aggregation,
+          Snap.SearchResponse,
           Snap.DeleteResponse,
           Snap.Hit,
-          Snap.Hits,
-          Snap.SearchResponse,
-          Snap.Suggest,
-          Snap.Suggest.Option,
-          Snap.Suggest.Options,
-          Snap.Suggests
+          Snap.Hits
         ],
         Exceptions: [
           Snap.ResponseError,
