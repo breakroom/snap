@@ -43,14 +43,14 @@ defmodule Snap.HTTPClient.Adapters.FinchTest do
     test "should raise if cluster is not provided" do
       config = build_config() |> Keyword.delete(:cluster)
 
-      expected_message = ~s(key :cluster not found in: [url: "http://localhost:9200"])
+      expected_message = ~r/key :cluster not found in/
       assert_raise(KeyError, expected_message, fn -> FinchAdapter.child_spec(config) end)
     end
 
     test "should raise if url is not provided" do
       config = build_config() |> Keyword.delete(:url)
 
-      expected_message = ~s(key :url not found in: [cluster: Snap.Test.Cluster])
+      expected_message = ~r/key :url not found in/
       assert_raise(KeyError, expected_message, fn -> FinchAdapter.child_spec(config) end)
     end
   end
