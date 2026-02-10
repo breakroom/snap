@@ -66,6 +66,22 @@ defmodule Snap.ResponseErrorTest do
       assert exception.raw == json
     end
 
+    test "parses a raw string error with status" do
+      json = %{
+        "error" => "Service temporarily unavailable",
+        "status" => 503
+      }
+
+      exception = ResponseError.exception_from_json(json)
+
+      assert exception.status == 503
+      assert exception.message == "Service temporarily unavailable"
+      assert exception.type == nil
+      assert exception.line == nil
+      assert exception.col == nil
+      assert exception.raw == json
+    end
+
     test "parses a result-based response" do
       json = %{"result" => "not_found"}
 
@@ -114,15 +130,17 @@ defmodule Snap.ResponseErrorTest do
 
   describe "message/1" do
     test "formats message with type and reason" do
-      exception = ResponseError.exception_from_json(%{
-        "status" => 400,
-        "error" => %{
-          "type" => "parsing_exception",
-          "reason" => "Unknown key for a START_OBJECT"
-        }
-      })
+      exception =
+        ResponseError.exception_from_json(%{
+          "status" => 400,
+          "error" => %{
+            "type" => "parsing_exception",
+            "reason" => "Unknown key for a START_OBJECT"
+          }
+        })
 
-      assert ResponseError.message(exception) == "(parsing_exception) Unknown key for a START_OBJECT"
+      assert ResponseError.message(exception) ==
+               "(parsing_exception) Unknown key for a START_OBJECT"
     end
 
     test "formats message with only type" do
