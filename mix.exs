@@ -15,7 +15,6 @@ defmodule Snap.MixProject do
       deps: deps(),
       dialyzer: dialyzer(),
       aliases: aliases(),
-      preferred_cli_env: ["test.all": :test],
 
       # Hex
       description: "A modern Elasticsearch/OpenSearch client",
@@ -39,6 +38,10 @@ defmodule Snap.MixProject do
     [
       extra_applications: [:logger]
     ]
+  end
+
+  def cli do
+    [preferred_envs: ["test.all": :test]]
   end
 
   defp elixirc_paths(env) when env in ~w(test)a, do: ["lib", "test/support"]
