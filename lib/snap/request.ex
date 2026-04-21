@@ -18,6 +18,12 @@ defmodule Snap.Request do
   Makes an HTTP request against a `Snap.Cluster`
   """
   def request(cluster, method, path, body \\ nil, params \\ [], headers \\ [], opts \\ []) do
+    with :ok <- validate_path(path) do
+      do_request(cluster, method, path, body, params, headers, opts)
+    end
+  end
+
+  defp do_request(cluster, method, path, body, params, headers, opts) do
     config = cluster.config()
     auth = Keyword.get(config, :auth, Snap.Auth.Plain)
     json_library = cluster.json_library()
@@ -25,7 +31,8 @@ defmodule Snap.Request do
     url =
       config
       |> Keyword.fetch!(:url)
-      |> URI.merge(path)
+      |> URI.parse()
+      |> URI.append_path(path)
       |> append_query_params(params)
 
     body = encode_body(body, json_library)
@@ -75,6 +82,20 @@ defmodule Snap.Request do
 
       result
     end
+  end
+
+  defp validate_path("/" <> path = raw_path) do
+    segments = String.split(path, "/")
+
+    if Enum.any?(segments, &(&1 in ["..", ".", ""])) do
+      {:error, Snap.InvalidPathError.exception(path: raw_path)}
+    else
+      :ok
+    end
+  end
+
+  defp validate_path(path) do
+    {:error, Snap.InvalidPathError.exception(path: path)}
   end
 
   defp parse_response(response, json_library) do
