@@ -85,7 +85,9 @@ defmodule Snap.Request do
   end
 
   defp validate_path("/" <> path = raw_path) do
-    segments = String.split(path, "/")
+    # Decode before splitting so percent-encoded variants like `%2E%2E` or
+    # `%2F..%2F` can't smuggle traversal past the segment check.
+    segments = path |> URI.decode() |> String.split("/")
 
     if Enum.any?(segments, &(&1 in ["..", ".", ""])) do
       {:error, Snap.InvalidPathError.exception(path: raw_path)}
