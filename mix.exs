@@ -2,7 +2,7 @@ defmodule Snap.MixProject do
   use Mix.Project
 
   @github_url "https://github.com/breakroom/snap"
-  @version "0.14.0"
+  @version "0.15.0"
 
   def project do
     [
@@ -121,6 +121,7 @@ defmodule Snap.MixProject do
         Exceptions: [
           Snap.ResponseError,
           Snap.BulkError,
+          Snap.InvalidPathError,
           Snap.HTTPClient.Error,
           Snap.HTTPError
         ]

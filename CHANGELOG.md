@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.15.0
+
+- Paths are now validated to prevent potential directory traversal attacks - if you were passing any relative paths to `Snap.Cluster` or `Snap.Request`, this will be a breaking change
+
 ## 0.14.0
 
 - Breaking change: The `aggregations` and `suggests` fields in `Snap.SearchResponse` are no longer structs and now return the underlying parsed JSON. `Snap.Aggregation` and `Snap.Suggests` have been removed, including any child modules
@@ -8,7 +12,6 @@
 
 - Breaking change: changed how index namespaces are propagated between
   parent/child processes during testing. Specifically:
-
   - `Snap.Cluster.Namespace.get_process_namespace/1` now checks the namespace of ancestor processes. This makes it possible to use an isolated index in e.g. LiveView testing, where it's difficult to get a handle on the process before Snap queries are executed
 
   - `Snap.Cluster.Namespace.set_process_namespace/3` and associated get/clear functions which takes a specific PID have been removed
