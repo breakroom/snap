@@ -83,8 +83,6 @@ defmodule Snap.RequestTest do
   end
 
   describe "encode_segment/1" do
-    @describetag integration: false
-
     test "percent-encodes `?` so it can't open a query string" do
       assert Request.encode_segment("1?refresh=wait_for") ==
                "1%3Frefresh%3Dwait_for"
