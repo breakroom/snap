@@ -7,6 +7,7 @@ defmodule Snap.Indexes do
   alias Snap.BulkError
   alias Snap.Cluster
   alias Snap.Cluster.Namespace
+  alias Snap.Request
 
   @doc """
   Creates an index.
@@ -14,7 +15,9 @@ defmodule Snap.Indexes do
   @spec create(module(), String.t(), map()) :: Cluster.result()
   @spec create(module(), String.t(), map(), Keyword.t()) :: Cluster.result()
   def create(cluster, index, mapping, opts \\ []) do
-    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    namespaced_index =
+      index |> Namespace.add_namespace_to_index(cluster) |> Request.encode_segment()
+
     Snap.put(cluster, "/#{namespaced_index}", mapping, [], [], opts)
   end
 
@@ -24,7 +27,9 @@ defmodule Snap.Indexes do
   @spec delete(module(), String.t()) :: Cluster.result()
   @spec delete(module(), String.t(), Keyword.t()) :: Cluster.result()
   def delete(cluster, index, opts \\ []) do
-    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    namespaced_index =
+      index |> Namespace.add_namespace_to_index(cluster) |> Request.encode_segment()
+
     Snap.delete(cluster, "/#{namespaced_index}", [], [], opts)
   end
 
@@ -34,7 +39,9 @@ defmodule Snap.Indexes do
   @spec get_mapping(module(), String.t()) :: Cluster.result()
   @spec get_mapping(module(), String.t(), Keyword.t()) :: Cluster.result()
   def get_mapping(cluster, index, opts \\ []) do
-    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    namespaced_index =
+      index |> Namespace.add_namespace_to_index(cluster) |> Request.encode_segment()
+
     Snap.get(cluster, "/#{namespaced_index}/_mapping", [], [], opts)
   end
 
@@ -46,7 +53,9 @@ defmodule Snap.Indexes do
   @spec update_mapping(module(), String.t(), map()) :: Cluster.result()
   @spec update_mapping(module(), String.t(), map(), Keyword.t()) :: Cluster.result()
   def update_mapping(cluster, index, mapping, opts \\ []) do
-    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    namespaced_index =
+      index |> Namespace.add_namespace_to_index(cluster) |> Request.encode_segment()
+
     Snap.put(cluster, "/#{namespaced_index}/_mapping", mapping, [], [], opts)
   end
 
@@ -59,7 +68,9 @@ defmodule Snap.Indexes do
   @spec get_settings(module(), String.t(), Keyword.t()) :: Cluster.result()
   @spec get_settings(module(), String.t(), Keyword.t(), Keyword.t()) :: Cluster.result()
   def get_settings(cluster, index, params \\ [], opts \\ []) do
-    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    namespaced_index =
+      index |> Namespace.add_namespace_to_index(cluster) |> Request.encode_segment()
+
     Snap.get(cluster, "/#{namespaced_index}/_settings", params, [], opts)
   end
 
@@ -73,7 +84,10 @@ defmodule Snap.Indexes do
   @spec get_setting(module(), String.t(), String.t(), Keyword.t(), Keyword.t()) ::
           Cluster.result()
   def get_setting(cluster, index, setting, params \\ [], opts \\ []) do
-    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    namespaced_index =
+      index |> Namespace.add_namespace_to_index(cluster) |> Request.encode_segment()
+
+    setting = Request.encode_segment(setting)
     Snap.get(cluster, "/#{namespaced_index}/_settings/#{setting}", params, [], opts)
   end
 
@@ -86,7 +100,9 @@ defmodule Snap.Indexes do
   @spec update_settings(module(), String.t(), map(), Keyword.t()) :: Cluster.result()
   @spec update_settings(module(), String.t(), map(), Keyword.t(), Keyword.t()) :: Cluster.result()
   def update_settings(cluster, index, settings, params \\ [], opts \\ []) do
-    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    namespaced_index =
+      index |> Namespace.add_namespace_to_index(cluster) |> Request.encode_segment()
+
     Snap.put(cluster, "/#{namespaced_index}/_settings", settings, params, [], opts)
   end
 
@@ -99,7 +115,9 @@ defmodule Snap.Indexes do
   @spec get_shard_stores(module(), String.t(), Keyword.t()) :: Cluster.result()
   @spec get_shard_stores(module(), String.t(), Keyword.t(), Keyword.t()) :: Cluster.result()
   def get_shard_stores(cluster, index, params \\ [], opts \\ []) do
-    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    namespaced_index =
+      index |> Namespace.add_namespace_to_index(cluster) |> Request.encode_segment()
+
     Snap.get(cluster, "/#{namespaced_index}/_shard_stores", params, [], opts)
   end
 
@@ -112,7 +130,9 @@ defmodule Snap.Indexes do
   @spec get_stats(module(), String.t(), Keyword.t()) :: Cluster.result()
   @spec get_stats(module(), String.t(), Keyword.t(), Keyword.t()) :: Cluster.result()
   def get_stats(cluster, index, params \\ [], opts \\ []) do
-    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    namespaced_index =
+      index |> Namespace.add_namespace_to_index(cluster) |> Request.encode_segment()
+
     Snap.get(cluster, "/#{namespaced_index}/_stats", params, [], opts)
   end
 
@@ -125,7 +145,10 @@ defmodule Snap.Indexes do
   @spec get_stat(module(), String.t(), String.t(), Keyword.t()) :: Cluster.result()
   @spec get_stat(module(), String.t(), String.t(), Keyword.t(), Keyword.t()) :: Cluster.result()
   def get_stat(cluster, index, metric, params \\ [], opts \\ []) do
-    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    namespaced_index =
+      index |> Namespace.add_namespace_to_index(cluster) |> Request.encode_segment()
+
+    metric = Request.encode_segment(metric)
     Snap.get(cluster, "/#{namespaced_index}/_stats/#{metric}", params, [], opts)
   end
 
@@ -138,7 +161,9 @@ defmodule Snap.Indexes do
   @spec close(module(), String.t(), Keyword.t()) :: Cluster.result()
   @spec close(module(), String.t(), Keyword.t(), Keyword.t()) :: Cluster.result()
   def close(cluster, index, params \\ [], opts \\ []) do
-    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    namespaced_index =
+      index |> Namespace.add_namespace_to_index(cluster) |> Request.encode_segment()
+
     Snap.post(cluster, "/#{namespaced_index}/_close", [], params, [], opts)
   end
 
@@ -151,7 +176,9 @@ defmodule Snap.Indexes do
   @spec open(module(), String.t(), Keyword.t()) :: Cluster.result()
   @spec open(module(), String.t(), Keyword.t(), Keyword.t()) :: Cluster.result()
   def open(cluster, index, params \\ [], opts \\ []) do
-    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    namespaced_index =
+      index |> Namespace.add_namespace_to_index(cluster) |> Request.encode_segment()
+
     Snap.post(cluster, "/#{namespaced_index}/_open", [], params, [], opts)
   end
 
@@ -185,7 +212,8 @@ defmodule Snap.Indexes do
   @spec refresh(cluster :: module(), index :: String.t(), opts :: Keyword.t()) ::
           :ok | Cluster.error()
   def refresh(cluster, index, opts \\ []) do
-    namespaced_index = Namespace.add_namespace_to_index(index, cluster)
+    namespaced_index =
+      index |> Namespace.add_namespace_to_index(cluster) |> Request.encode_segment()
 
     with {:ok, _} <- Snap.post(cluster, "/#{namespaced_index}/_refresh", nil, [], [], opts) do
       :ok

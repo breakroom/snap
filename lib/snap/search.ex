@@ -4,6 +4,7 @@ defmodule Snap.Search do
   """
   alias Snap.Cluster.Namespace
   alias Snap.DeleteResponse
+  alias Snap.Request
   alias Snap.SearchResponse
 
   @spec search(
@@ -32,7 +33,8 @@ defmodule Snap.Search do
       Enum.each(response, fn hit -> IO.inspect(hit.score) end)
   """
   def search(cluster, index_or_alias, query, params \\ [], headers \\ [], opts \\ []) do
-    namespaced_index = Namespace.add_namespace_to_index(index_or_alias, cluster)
+    namespaced_index =
+      index_or_alias |> Namespace.add_namespace_to_index(cluster) |> Request.encode_segment()
 
     case cluster.post("/#{namespaced_index}/_search", query, params, headers, opts) do
       {:ok, response} -> {:ok, SearchResponse.new(response)}
@@ -44,7 +46,8 @@ defmodule Snap.Search do
   Runs a count of the documents in an index, using an optional query.
   """
   def count(cluster, index_or_alias, query \\ %{}, params \\ [], headers \\ [], opts \\ []) do
-    namespaced_index = Namespace.add_namespace_to_index(index_or_alias, cluster)
+    namespaced_index =
+      index_or_alias |> Namespace.add_namespace_to_index(cluster) |> Request.encode_segment()
 
     case cluster.post("/#{namespaced_index}/_count", query, params, headers, opts) do
       {:ok, %{"count" => count}} -> {:ok, count}
@@ -56,7 +59,8 @@ defmodule Snap.Search do
   Runs a delete operation on an index, given a query.
   """
   def delete_by_query(cluster, index_or_alias, query, params \\ [], headers \\ [], opts \\ []) do
-    namespaced_index = Namespace.add_namespace_to_index(index_or_alias, cluster)
+    namespaced_index =
+      index_or_alias |> Namespace.add_namespace_to_index(cluster) |> Request.encode_segment()
 
     case cluster.post("/#{namespaced_index}/_delete_by_query", query, params, headers, opts) do
       {:ok, response} -> {:ok, DeleteResponse.new(response)}

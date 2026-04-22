@@ -15,6 +15,16 @@ defmodule Snap.Request do
   ]
 
   @doc """
+  URI-encodes a single path segment using the RFC 3986 unreserved set, so a
+  caller-supplied value (index name, document ID, metric, etc.) can't smuggle
+  `?`, `#`, or `/` into the request path.
+  """
+  @spec encode_segment(String.t() | atom() | number()) :: String.t()
+  def encode_segment(segment) do
+    segment |> to_string() |> URI.encode(&URI.char_unreserved?/1)
+  end
+
+  @doc """
   Makes an HTTP request against a `Snap.Cluster`
   """
   def request(cluster, method, path, body \\ nil, params \\ [], headers \\ [], opts \\ []) do
