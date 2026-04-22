@@ -117,6 +117,7 @@ defmodule Snap.HTTPClient.Adapters.Finch do
   end
 
   defp connection_pool_name(cluster) do
+    # credo:disable-for-this-file Credo.Check.Warning.UnsafeToAtom
     Module.concat(cluster, Pool)
   end
 

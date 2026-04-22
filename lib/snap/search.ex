@@ -2,9 +2,9 @@ defmodule Snap.Search do
   @moduledoc """
   Performs searches against an ElasticSearch cluster.
   """
+  alias Snap.Cluster.Namespace
   alias Snap.DeleteResponse
   alias Snap.SearchResponse
-  alias Snap.Cluster.Namespace
 
   @spec search(
           cluster :: module(),

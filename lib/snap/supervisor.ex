@@ -27,6 +27,7 @@ defmodule Snap.Cluster.Supervisor do
   end
 
   defp config_name(cluster) do
+    # credo:disable-for-this-file Credo.Check.Warning.UnsafeToAtom
     Module.concat(cluster, Config)
   end
 
