@@ -1,5 +1,5 @@
 defmodule Snap.RequestTest do
-  use Snap.IntegrationCase, async: true
+  use ExUnit.Case, async: true
 
   alias Snap.Request
   alias Snap.Test.Cluster
@@ -79,6 +79,50 @@ defmodule Snap.RequestTest do
                {:error, %Snap.InvalidPathError{}},
                Request.request(Cluster, :get, "/users/_doc/hello%20world")
              )
+    end
+  end
+
+  describe "encode_segment/1" do
+    @describetag integration: false
+
+    test "percent-encodes `?` so it can't open a query string" do
+      assert Request.encode_segment("1?refresh=wait_for") ==
+               "1%3Frefresh%3Dwait_for"
+    end
+
+    test "percent-encodes `#` so it can't open a fragment" do
+      assert Request.encode_segment("1#frag") == "1%23frag"
+    end
+
+    test "percent-encodes `/` so it can't add path segments" do
+      assert Request.encode_segment("a/b") == "a%2Fb"
+    end
+
+    test "percent-encodes `&` and `=` that could smuggle extra params" do
+      assert Request.encode_segment("x&y=z") == "x%26y%3Dz"
+    end
+
+    test "leaves RFC 3986 unreserved characters untouched" do
+      assert Request.encode_segment("abcXYZ-._~0123") == "abcXYZ-._~0123"
+    end
+
+    test "coerces non-string inputs via to_string/1" do
+      assert Request.encode_segment(42) == "42"
+      assert Request.encode_segment(:foo) == "foo"
+    end
+
+    test "after encoding, re-parsing the URL does not expose a query string" do
+      malicious = "1?refresh=wait_for&routing=attacker"
+      encoded = Request.encode_segment(malicious)
+
+      url =
+        URI.parse("http://localhost:9200")
+        |> URI.append_path("/idx/_doc/#{encoded}")
+        |> URI.to_string()
+
+      reparsed = URI.parse(url)
+      assert reparsed.query == nil
+      assert reparsed.path == "/idx/_doc/1%3Frefresh%3Dwait_for%26routing%3Dattacker"
     end
   end
 end

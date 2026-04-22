@@ -69,7 +69,9 @@ defmodule Snap.Multi do
     json_library = cluster.json_library()
     body = encode(multi, json_library)
     headers = headers ++ [{"content-type", "application/x-ndjson"}]
-    namespaced_index = Namespace.add_namespace_to_index(index_or_alias, cluster)
+
+    namespaced_index =
+      index_or_alias |> Namespace.add_namespace_to_index(cluster) |> Snap.Request.encode_segment()
 
     case cluster.post("/#{namespaced_index}/_msearch", body, params, headers, opts) do
       {:ok, response} -> {:ok, Response.new(response, ids)}
