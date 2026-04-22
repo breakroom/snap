@@ -16,7 +16,7 @@ jobs:
             search: elasticsearch-7.6.0
           - elixir: 1.18.x
             otp: 27.x
-            search: elasticsearch-8.2.0
+            search: elasticsearch-8.19.14
           - elixir: 1.18.x
             otp: 27.x
             search: opensearch-2.6.0
