@@ -50,6 +50,17 @@ defmodule Snap.ResponseError do
     ]
   end
 
+  defp build(%{"error" => error} = response) when is_binary(error) do
+    [
+      status: response["status"],
+      line: nil,
+      col: nil,
+      message: error,
+      type: nil,
+      raw: response
+    ]
+  end
+
   defp build(%{"result" => type}) do
     [
       status: nil,
