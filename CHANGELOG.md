@@ -3,6 +3,7 @@
 ## 0.15.0
 
 - Paths are now validated to prevent potential directory traversal attacks - if you were passing any relative paths to `Snap.Cluster` or `Snap.Request`, this will be a breaking change
+- Document IDs and indexes are now URI encoded to prevent trailing query params or fragments from being passed through to the URL construction
 
 ## 0.14.0
 
