@@ -51,6 +51,7 @@ defmodule Snap.Cluster.Namespace do
   """
 
   @separator "-"
+  @index_separator ","
 
   @doc """
   Sets an index namespace for the currently running process.
@@ -81,11 +82,38 @@ defmodule Snap.Cluster.Namespace do
   @doc """
   Given an index, adds the namespace to the supplied index for the
   `Snap.Cluster` in the currently running process.
+
+  The index can be:
+
+  - a string or atom naming a single index
+  - a comma-separated string of indexes (e.g. `"foo,bar"`)
+  - a list of strings or atoms (e.g. `["foo", "bar"]`)
+
+  Multi-index inputs are returned as a comma-separated string, with each
+  index individually namespaced.
   """
+  def add_namespace_to_index(indexes, cluster) when is_list(indexes) do
+    prefix = namespace_prefix(cluster)
+    Enum.map_join(indexes, @index_separator, &apply_prefix(prefix, &1))
+  end
+
+  def add_namespace_to_index(index, cluster) when is_binary(index) do
+    String.split(index, @index_separator)
+    |> Enum.map(&String.trim/1)
+    |> add_namespace_to_index(cluster)
+  end
+
   def add_namespace_to_index(index, cluster) do
-    [config_namespace(cluster), get_process_namespace(cluster), index]
+    apply_prefix(namespace_prefix(cluster), index)
+  end
+
+  defp namespace_prefix(cluster) do
+    [config_namespace(cluster), get_process_namespace(cluster)]
     |> Enum.reject(&is_nil/1)
-    |> merge_elements()
+  end
+
+  defp apply_prefix(prefix, index) do
+    merge_elements(prefix ++ [to_string(index)])
   end
 
   @doc """

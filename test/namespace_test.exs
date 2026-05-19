@@ -48,6 +48,38 @@ defmodule Snap.Cluster.NamespaceTest do
       assert "cluster" == Namespace.index_namespace(NamespaceCluster)
       assert "cluster-foo" == Namespace.add_namespace_to_index(:foo, NamespaceCluster)
     end
+
+    test "with a comma-separated string of indexes and no cluster index_namespace" do
+      assert "foo,bar" == Namespace.add_namespace_to_index("foo,bar", NoNamespaceCluster)
+    end
+
+    test "with a comma-separated string of indexes and a cluster index_namespace" do
+      assert "cluster-foo,cluster-bar" ==
+               Namespace.add_namespace_to_index("foo,bar", NamespaceCluster)
+    end
+
+    test "with a comma-and-space-separated string of indexes and a cluster index_namespace" do
+      assert "cluster-foo,cluster-bar" ==
+               Namespace.add_namespace_to_index("foo, bar", NamespaceCluster)
+    end
+
+    test "with a list of string indexes and no cluster index_namespace" do
+      assert "foo,bar" == Namespace.add_namespace_to_index(["foo", "bar"], NoNamespaceCluster)
+    end
+
+    test "with a list of string indexes and a cluster index_namespace" do
+      assert "cluster-foo,cluster-bar" ==
+               Namespace.add_namespace_to_index(["foo", "bar"], NamespaceCluster)
+    end
+
+    test "with a list of atom indexes and a cluster index_namespace" do
+      assert "cluster-foo,cluster-bar" ==
+               Namespace.add_namespace_to_index([:foo, :bar], NamespaceCluster)
+    end
+
+    test "with a single-element list and a cluster index_namespace" do
+      assert "cluster-foo" == Namespace.add_namespace_to_index(["foo"], NamespaceCluster)
+    end
   end
 
   describe "set_process_namespace/2 and clear_process_namespace/1" do
