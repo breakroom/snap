@@ -196,12 +196,14 @@ defmodule Snap.Indexes do
           :ok | Cluster.error() | {:error, BulkError.t()}
   def hotswap(stream, cluster, alias, mapping, opts \\ []) do
     index = generate_index_name(alias)
+    bulk_opts = Keyword.take(opts, [:page_size, :page_wait, :max_errors, :request_opts])
+    request_opts = Keyword.get(opts, :request_opts, [])
 
     with {:ok, _} <- create(cluster, index, mapping),
-         :ok <- Bulk.perform(stream, cluster, index, opts),
-         :ok <- refresh(cluster, index),
-         :ok <- alias(cluster, index, alias) do
-      cleanup(cluster, alias, 2, opts)
+         :ok <- Bulk.perform(stream, cluster, index, bulk_opts),
+         :ok <- refresh(cluster, index, request_opts),
+         :ok <- alias(cluster, index, alias, request_opts) do
+      cleanup(cluster, alias, 2, request_opts)
     end
   end
 
