@@ -100,7 +100,10 @@ defmodule Snap.HTTPClient.Adapters.FinchTest do
 
       assert %Error{
                reason: :econnrefused,
-               origin: %Mint.TransportError{reason: :econnrefused}
+               origin: %Finch.TransportError{
+                 reason: :econnrefused,
+                 source: %Mint.TransportError{reason: :econnrefused}
+               }
              } == error
     end
   end
