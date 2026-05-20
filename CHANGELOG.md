@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.16.0
+
+- Added high level API for streaming an entire result set, using the Scroll API (see `Snap.Scroll` for details)
+- Exposed `Snap.Search.scroll` and `Snap.Search.clear_scroll` for more direct access to the Scroll API
+- Added support for namespacing lists of indexes, so queries pointing to multiple comma separated indexes will be correctly namespaced
+
 ## 0.15.0
 
 - Paths are now validated to prevent potential directory traversal attacks - if you were passing any relative paths to `Snap.Cluster` or `Snap.Request`, this will be a breaking change
