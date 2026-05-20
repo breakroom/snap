@@ -150,6 +150,51 @@ defmodule Snap.SearchTest do
     assert {:ok, 1} = Snap.Search.count(Cluster, @test_index, %{query: %{term: %{foo: "bar"}}})
   end
 
+  test "scroll/2 retrieves subsequent batches" do
+    {:ok, _} = Snap.Indexes.create(Cluster, @test_index, %{})
+
+    1..5
+    |> Enum.map(fn i -> %Action.Index{id: i, doc: %{"title" => "Document #{i}"}} end)
+    |> Snap.Bulk.perform(Cluster, @test_index, refresh: true)
+
+    query = %{"query" => %{"match_all" => %{}}, "sort" => ["_doc"]}
+
+    {:ok, first} = Search.search(Cluster, @test_index, query, scroll: "1m", size: 2)
+    assert Enum.count(first) == 2
+    assert is_binary(first.scroll_id)
+
+    {:ok, second} = Search.scroll(Cluster, first.scroll_id)
+    assert Enum.count(second) == 2
+    assert Enum.at(second, 0).id == "3"
+
+    {:ok, third} = Search.scroll(Cluster, second.scroll_id, "30s")
+    assert Enum.count(third) == 1
+    assert Enum.at(third, 0).id == "5"
+  end
+
+  test "scroll/2 returns an error for an unknown scroll_id" do
+    assert {:error, %Snap.ResponseError{type: type}} =
+             Search.scroll(Cluster, "not-a-real-scroll-id")
+
+    assert type in ["search_context_missing_exception", "illegal_argument_exception"]
+  end
+
+  test "clear_scroll/2 releases the cursor" do
+    {:ok, _} = Snap.Indexes.create(Cluster, @test_index, %{})
+
+    1..3
+    |> Enum.map(fn i -> %Action.Index{id: i, doc: %{"title" => "Document #{i}"}} end)
+    |> Snap.Bulk.perform(Cluster, @test_index, refresh: true)
+
+    query = %{"query" => %{"match_all" => %{}}, "sort" => ["_doc"]}
+    {:ok, first} = Search.search(Cluster, @test_index, query, scroll: "1m", size: 1)
+
+    assert {:ok, %{"succeeded" => true, "num_freed" => freed}} =
+             Search.clear_scroll(Cluster, first.scroll_id)
+
+    assert freed >= 1
+  end
+
   test "delete_by_query" do
     {:ok, _} = Snap.Indexes.create(Cluster, @test_index, %{})
     {:ok, _} = Snap.Document.add(Cluster, @test_index, %{foo: "bar"})
