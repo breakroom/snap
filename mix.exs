@@ -22,14 +22,7 @@ defmodule Snap.MixProject do
 
       # Docs
       source_url: @github_url,
-      docs: docs(),
-
-      # Suppress warnings
-      xref: [
-        exclude: [
-          Finch
-        ]
-      ]
+      docs: docs()
     ]
   end
 
