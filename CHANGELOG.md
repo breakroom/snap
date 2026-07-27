@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.17.0
 
 - Added the remaining Bulk API fields to the `Snap.Bulk.Action` structs:
   - `version`, `version_type`, `if_seq_no` and `if_primary_term` on `Create`, `Index` and `Delete`

@@ -2,7 +2,7 @@ defmodule Snap.MixProject do
   use Mix.Project
 
   @github_url "https://github.com/breakroom/snap"
-  @version "0.16.0"
+  @version "0.17.0"
 
   def project do
     [
