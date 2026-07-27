@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Added the remaining Bulk API fields to the `Snap.Bulk.Action` structs:
+  - `version`, `version_type`, `if_seq_no` and `if_primary_term` on `Create`, `Index` and `Delete`
+  - `pipeline` on `Create` and `Index`
+  - `if_seq_no`, `if_primary_term`, `retry_on_conflict`, `pipeline`, `source`, `upsert`, `scripted_upsert` and `detect_noop` on `Update`
+- `Snap.Bulk.Action.Update` no longer requires `doc`, so updates can be performed with only a `script`
+
 ## 0.16.0
 
 - Added high level API for streaming an entire result set, using the Scroll API (see `Snap.Scroll` for details)
