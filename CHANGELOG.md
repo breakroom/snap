@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Typespec fixes, with no change in runtime behaviour:
+  - `Snap.Bulk.perform/4` no longer claims to return `t:Snap.Cluster.error/0` — request errors are collected into the `Snap.BulkError`, so it only ever returns `:ok` or `{:error, %Snap.BulkError{}}`
+  - `Snap.BulkError`'s `errors` list is no longer typed as containing only `Snap.ResponseError` — it can hold any `t:Snap.Cluster.exception/0`
+  - Added `t:Snap.Cluster.exception/0`, and included the previously missing `Snap.HTTPError` and `Snap.InvalidPathError` in it
+
 ## 0.17.0
 
 - Added the remaining Bulk API fields to the `Snap.Bulk.Action` structs:

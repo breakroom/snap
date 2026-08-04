@@ -118,9 +118,16 @@ defmodule Snap.Cluster do
   @typedoc "A successful results from an HTTP operation"
   @type success :: {:ok, map()}
 
+  @typedoc "An exception raised by an HTTP operation"
+  @type exception ::
+          Snap.ResponseError.t()
+          | Snap.HTTPError.t()
+          | Snap.HTTPClient.Error.t()
+          | Snap.InvalidPathError.t()
+          | Jason.DecodeError.t()
+
   @typedoc "An error from an HTTP operation"
-  @type error ::
-          {:error, Snap.ResponseError.t() | Snap.HTTPClient.Error.t() | Jason.DecodeError.t()}
+  @type error :: {:error, exception()}
 
   @typedoc "Options available for configuring the Cluster"
   @type config_opts :: [

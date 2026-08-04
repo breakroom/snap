@@ -7,7 +7,7 @@ defmodule Snap.BulkError do
 
   @type t :: %__MODULE__{
           message: String.t(),
-          errors: [Snap.ResponseError.t()]
+          errors: [Snap.Cluster.exception()]
         }
 
   def exception(errors) do
